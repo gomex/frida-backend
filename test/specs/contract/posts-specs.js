@@ -53,7 +53,10 @@ describe('Posts:', function() {
         res.body.forEach(function (response) {
           assert.equal(typeof response.name !== 'undefined', true);
           assert.equal(typeof response.path !== 'undefined', true);
-          assert.equal(typeof response.sha !== 'undefined', true);
+          assert.equal(typeof response.organization !== 'undefined', true);
+          assert.equal(typeof response.repository !== 'undefined', true);
+          assert.equal(typeof response.year !== 'undefined', true);
+          assert.equal(typeof response.month !== 'undefined', true);
         });
 
         done();
