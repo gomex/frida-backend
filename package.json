@@ -5,19 +5,29 @@
   "private": true,
   "license": "GPLv2",
   "dependencies": {
-    "compression": "^1.5.2",
-    "express": "~4.0.0",
-    "nodemon": "^1.3.7",
     "basic-auth": "^1.0.3",
     "body-parser": "^1.13.3",
-    "mongodb": "^2.0.40"
+    "compression": "^1.5.2",
+    "express": "~4.0.0",
+    "express-winston": "^0.4.1",
+    "mongodb": "^2.0.40",
+    "pm2": "^0.14.7"
   },
   "engines": {
     "node": "~0.12.5"
   },
   "scripts": {
-    "start": "node index.js",
-    "nodemon": "./node_modules/.bin/nodemon index.js  -e js,json",
+    "start": "npm run pm2:startup",
+    "pm2:start": "./node_modules/.bin/pm2 start .pm2-start.json",
+    "pm2:startup": "npm run pm2:kill && npm run pm2:start",
+    "pm2:kill": "./node_modules/.bin/pm2 kill",
+    "pm2:show": "./node_modules/.bin/pm2 show",
+    "pm2:logs": "./node_modules/.bin/pm2 logs all --raw --timestamp 'HH:mm:ss'",
+    "pm2:update": "./node_modules/.bin/pm2 update",
+    "pm2:list": "./node_modules/.bin/pm2 list",
+    "pm2:monit": "./node_modules/.bin/pm2 monit",
+    "pm2:reload-all": "./node_modules/.bin/pm2 reload all",
+    "pm2:describe": "./node_modules/.bin/pm2 describe 'new-service-node'",
     "test": "./node_modules/mocha/bin/mocha test/specs --recursive --timeout 10000",
     "jshint": "./node_modules/.bin/jshint ."
   },

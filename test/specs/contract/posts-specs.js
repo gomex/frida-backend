@@ -32,7 +32,7 @@ describe('Posts:', function() {
   });
 
   after(function(done) {
-    postsRepository.deleteById(postId, function(err, res){
+    postsRepository.deleteById(postId, function(err){
       done();
     });
   });
