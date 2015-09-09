@@ -15,18 +15,16 @@ describe('Posts:', function() {
     require(CONFIG.ROOT_DIRECTORY + '/lib/server').startServer();
 
     rawData =  {
-      post: {
         body: '',
         metadata: {}
-      }
     };
 
     URL = {
       get :  API + 'brasil-de-fato/site/posts',
-      insert :  API + 'brasil-de-fato/site/post'
+      insert :  API + 'brasil-de-fato/site/posts'
     };
 
-    postsRepository.insert(rawData.post, function(id) {
+    postsRepository.insert(rawData, function(id) {
       postId = id;
       done();
     });
@@ -38,17 +36,29 @@ describe('Posts:', function() {
     });
   });
 
-  it('POST: /api/organization/:organization/:repository/post', function(done) {
+  it('POST: /api/organization/:organization/:repository/posts', function(done) {
+    var raw = {
+      body: 'qualquer coisa',
+      metadata: JSON.stringify({ algo: 12})
+    };
+
     api.post(URL.insert)
-        .send(rawData)
+        .send(raw)
         .expect(201)
         .end(function(err, res) {
-          assert(typeof res.body.id !== 'undefined');
-          postsRepository.deleteById(res.body.id, function(err) {
-            done();
-          })
-        });
+          var id = res.body.id;
+          assert(typeof id !== 'undefined');
 
+          postsRepository.findById(id, function(result) {
+            assert.equal(typeof result._id !== 'undefined', true);
+            assert.equal(typeof result.metadata === 'object', true);
+            assert.equal(result.metadata.algo, 12);
+
+            postsRepository.deleteById(id, function(err) {
+              done();
+            });
+          });
+        });
   });
 
   it('GET: /api/organization/:organization/:repository/posts?:filters', function(done){
@@ -97,5 +107,14 @@ describe('Posts:', function() {
 
         done();
       });
+  });
+
+  it('PUT: /api/organization/:organization/:repository/posts/<id>', function(done) {
+    rawData.test = 'test';
+    api.put(URL.get + '/' + postId)
+        .send(rawData)
+        .expect(204)
+        .end(done);
+
   });
 });
