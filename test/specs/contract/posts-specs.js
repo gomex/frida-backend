@@ -30,6 +30,14 @@ describe('Posts:', function() {
     });
   });
 
+  beforeEach(function(done) {
+    rawData =  {
+        body: '',
+        metadata: {}
+    };
+    done();
+  });
+
   after(function(done) {
     postsRepository.deleteById(postId, function(err){
       done();
@@ -43,22 +51,22 @@ describe('Posts:', function() {
     };
 
     api.post(URL.insert)
-        .send(raw)
-        .expect(201)
-        .end(function(err, res) {
-          var id = res.body.id;
-          assert(typeof id !== 'undefined');
+      .send(raw)
+      .expect(201)
+      .end(function(err, res) {
+        var id = res.body.id;
+        assert(typeof id !== 'undefined');
 
-          postsRepository.findById(id, function(result) {
-            assert.equal(typeof result._id !== 'undefined', true);
-            assert.equal(typeof result.metadata === 'object', true);
-            assert.equal(result.metadata.algo, 12);
+        postsRepository.findById(id, function(result) {
+          assert.equal(typeof result._id !== 'undefined', true);
+          assert.equal(typeof result.metadata === 'object', true);
+          assert.equal(result.metadata.algo, 12);
 
-            postsRepository.deleteById(id, function(err) {
-              done();
-            });
+          postsRepository.deleteById(id, function(err) {
+            done();
           });
         });
+      });
   });
 
   it('GET: /api/organization/:organization/:repository/posts?:filters', function(done){
@@ -111,10 +119,19 @@ describe('Posts:', function() {
 
   it('PUT: /api/organization/:organization/:repository/posts/<id>', function(done) {
     rawData.test = 'test';
+    rawData.metadata = JSON.stringify({ algo: 12});
     api.put(URL.get + '/' + postId)
-        .send(rawData)
-        .expect(204)
-        .end(done);
+      .send(rawData)
+      .expect(204)
+      .end(function(err) {
+
+        postsRepository.findById(postId, function(result) {
+          assert.equal(typeof result._id !== 'undefined', true);
+          assert.equal(typeof result.metadata === 'object', true);
+          assert.equal(result.metadata.algo, 12);
+          done();
+        });
+      });
 
   });
 });
