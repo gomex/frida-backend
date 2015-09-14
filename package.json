@@ -19,18 +19,18 @@
   },
   "scripts": {
     "start": "npm run pm2:startup",
-    "pm2:start": "./node_modules/.bin/pm2 start .pm2-start.json",
+    "pm2:start": "./node_modules/pm2/bin/pm2 start .pm2-start.json",
     "pm2:startup": "npm run pm2:kill && npm run pm2:start",
-    "pm2:kill": "./node_modules/.bin/pm2 kill",
-    "pm2:show": "./node_modules/.bin/pm2 show",
-    "pm2:logs": "./node_modules/.bin/pm2 logs all --raw --timestamp 'HH:mm:ss'",
-    "pm2:update": "./node_modules/.bin/pm2 update",
-    "pm2:list": "./node_modules/.bin/pm2 list",
-    "pm2:monit": "./node_modules/.bin/pm2 monit",
-    "pm2:reload-all": "./node_modules/.bin/pm2 reload all",
-    "pm2:describe": "./node_modules/.bin/pm2 describe 'new-service-node'",
+    "pm2:kill": "./node_modules/pm2/bin/pm2 kill",
+    "pm2:show": "./node_modules/pm2/bin/pm2 show",
+    "pm2:logs": "./node_modules/pm2/bin/pm2 logs all --raw --timestamp 'HH:mm:ss'",
+    "pm2:update": "./node_modules/pm2/bin/pm2 update",
+    "pm2:list": "./node_modules/pm2/bin/pm2 list",
+    "pm2:monit": "./node_modules/pm2/bin/pm2 monit",
+    "pm2:reload-all": "./node_modules/pm2/bin/pm2 reload all",
+    "pm2:describe": "./node_modules/pm2/bin/pm2 describe 'new-service-node'",
     "test": "./node_modules/mocha/bin/mocha test/specs --recursive --timeout 10000",
-    "jshint": "./node_modules/.bin/jshint ."
+    "jshint": "./node_modules/jshint/bin/jshint ."
   },
   "devDependencies": {
     "jshint": "^2.8.0",
