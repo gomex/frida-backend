@@ -132,6 +132,18 @@ describe('Posts:', function() {
           done();
         });
       });
+  });
 
+  it('PUT: /api/organization/:organization/:repository/posts/<id>/status', function(done) {
+    rawData.published = true;
+    api.put(URL.get + '/' + postId + '/status')
+      .send(rawData)
+      .expect(204)
+      .end(function(err) {
+        postsRepository.findById(postId, function(result) {
+          assert.equal(result.published, true);
+          done();
+        });
+      });
   });
 });
