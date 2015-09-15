@@ -2,7 +2,8 @@ var assert = require('assert'),
     CONFIG = require('../helpers/config'),
     supertest = require('supertest'),
     postsRepository = require(CONFIG.ROOT_DIRECTORY + '/lib/posts-repository')(),
-    api = supertest('http://localhost:5000')
+    api = supertest('http://localhost:5000'),
+    fs = require('fs')
 ;
 
 describe('Posts:', function() {
@@ -16,7 +17,7 @@ describe('Posts:', function() {
 
     rawData =  {
         body: '',
-        metadata: {}
+        metadata: {title: 'titulo-sensacionalista' + new Date().getTime()}
     };
 
     URL = {
@@ -135,15 +136,21 @@ describe('Posts:', function() {
   });
 
   it('PUT: /api/organization/:organization/:repository/posts/<id>/status', function(done) {
-    rawData.published = true;
-    api.put(URL.get + '/' + postId + '/status')
-      .send(rawData)
-      .expect(204)
-      .end(function(err) {
-        postsRepository.findById(postId, function(result) {
-          assert.equal(result.published, true);
-          done();
+    rawData =  {
+        body: '',
+        metadata: {title: 'titulo-sensacionalista' + new Date().getTime()}
+    };
+    postsRepository.insert(rawData, function(postIdent) {
+        var expectedPath = '2015/08/' + rawData.metadata.title + '.md';
+        api.put(URL.get + '/' + postIdent + '/status')
+        .expect(202)
+        .end(function(err, result) {
+            assert.equal(expectedPath, result.body.path);
+            postsRepository.findById(postIdent, function(result) {
+                assert.equal('published', result.status);
+                done();
+            });
         });
-      });
+    });
   });
 });
