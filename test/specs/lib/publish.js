@@ -27,11 +27,12 @@ describe('Publish:', function() {
 
   describe('markdown file on file system',function(){
     it('should save a file on a specify path', function(done) {
-      var post = { body:'<strong>Bolo doido</strong>', metadata: {date: '2015-08-10', title: 'Titulo novo 2012'}  };
+      var id = 'a124b124c124';
+      var post = { _id: id, body:'<strong>Bolo doido</strong>', metadata: {date: '2015-08-10', title: 'Titulo novo 2012'}  };
       var expect = "---\ndate: \'2015-08-10\'\ntitle: Titulo novo 2012\n---\n<strong>Bolo doido</strong>\n";
 
-      publish.toYAML(post, 'titulo', '2015', '08').write('/tmp', function(err){
-        var data = fs.readFileSync('/tmp/2015/08/titulo.md','utf8');
+      publish.toYAML(post, id, '2015', '08').write('/tmp', function(err){
+        var data = fs.readFileSync('/tmp/2015/08/'+id+'.md','utf8');
         assert.equal(expect, data);
 
         done();

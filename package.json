@@ -12,6 +12,7 @@
     "express-winston": "^0.4.1",
     "gray-matter": "^2.0.1",
     "mkdirp": "^0.5.1",
+    "moment": "^2.10.6",
     "mongodb": "^2.0.40",
     "pm2": "^0.14.7",
     "winston": "^1.0.1"

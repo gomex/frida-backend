@@ -4,6 +4,7 @@ var assert = require('assert'),
     postsRepository = require(CONFIG.ROOT_DIRECTORY + '/lib/posts-repository')(),
     api = supertest('http://localhost:5000'),
     fs = require('fs')
+    moment = require('moment')
 ;
 
 describe('Posts:', function() {
@@ -141,7 +142,11 @@ describe('Posts:', function() {
         metadata: {title: 'titulo-sensacionalista' + new Date().getTime()}
     };
     postsRepository.insert(rawData, function(postIdent) {
-        var expectedPath = '2015/08/' + rawData.metadata.title + '.md';
+        var month = moment().format('MM');
+        var year  = moment().format('YYYY');
+
+        var expectedPath = [year, month, postIdent + '.md'].join('/');
+
         api.put(URL.get + '/' + postIdent + '/status')
         .expect(202)
         .end(function(err, result) {
