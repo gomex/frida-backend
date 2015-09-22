@@ -136,26 +136,50 @@ describe('Posts:', function() {
       });
   });
 
-  it('PUT: /api/organization/:organization/:repository/posts/<id>/status', function(done) {
-    rawData =  {
+  describe('Change status', function(){
+    var postIdent, month, year;
+    beforeEach(function(done) {
+      rawData =  {
         body: '',
         metadata: {title: 'titulo-sensacionalista' + new Date().getTime()}
-    };
-    postsRepository.insert(rawData, function(postIdent) {
-        var month = moment().format('MM');
-        var year  = moment().format('YYYY');
+      };
+      month = moment().format('MM');
+      year  = moment().format('YYYY');
 
-        var expectedPath = [year, month, postIdent + '.md'].join('/');
+      postsRepository.insert(rawData, function(result) {
+        postIdent = result;
 
-        api.put(URL.get + '/' + postIdent + '/status')
-        .expect(202)
-        .end(function(err, result) {
-            assert.equal(expectedPath, result.body.path);
-            postsRepository.findById(postIdent, function(result) {
-                assert.equal('published', result.status);
-                done();
-            });
-        });
+        done();
+      });
     });
+
+    it('PUT: /api/organization/:organization/:repository/posts/<id>/status/<draft>', function(done) {
+      var expectedPath = '';
+
+      api.put(URL.get + '/' + postIdent + '/status/draft')
+      .expect(202)
+      .end(function(err, result) {
+        assert.equal(expectedPath, result.body.path);
+        postsRepository.findById(postIdent, function(result) {
+          assert.equal('draft', result.status);
+          done();
+        });
+      });
+    });
+
+    it('PUT: /api/organization/:organization/:repository/posts/<id>/status/<published>', function(done) {
+      var expectedPath = [year, month, postIdent + '.md'].join('/');
+
+      api.put(URL.get + '/' + postIdent + '/status/published')
+      .expect(202)
+      .end(function(err, result) {
+        assert.equal(expectedPath, result.body.path);
+        postsRepository.findById(postIdent, function(result) {
+          assert.equal('published', result.status);
+          done();
+        });
+      });
+    });
+
   });
 });
