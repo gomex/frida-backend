@@ -121,16 +121,20 @@ describe('Posts:', function() {
 
   it('PUT: /api/organization/:organization/:repository/posts/<id>', function(done) {
     rawData.test = 'test';
-    rawData.metadata = JSON.stringify({ algo: 12});
+
+    var title = 'titulo-sensacionalista' + new Date().getTime();
+    rawData.metadata = JSON.stringify({title: title});
+
     api.put(URL.get + '/' + postId)
       .send(rawData)
       .expect(204)
       .end(function(err) {
 
         postsRepository.findById(postId, function(result) {
+
           assert.equal(typeof result._id !== 'undefined', true);
           assert.equal(typeof result.metadata === 'object', true);
-          assert.equal(result.metadata.algo, 12);
+          assert.equal(result.metadata.newTitle === title, true);
           done();
         });
       });
