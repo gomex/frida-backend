@@ -1,6 +1,6 @@
 [
   {
-    "name"       : "new-service-node",
+    "name"       : "news-service",
     "script"     : "./index.js",
     "instances"  : 0,
     "merge_logs" : true,
