@@ -23,16 +23,6 @@
   "scripts": {
     "start": "./node_modules/pm2/bin/pm2 startOrRestart pm2-config.json",
     "stop": "./node_modules/pm2/bin/pm2 stop news-service",
-    "pm2:start": "./node_modules/pm2/bin/pm2 start pm2-config.json",
-    "pm2:startup": "npm run pm2:kill && npm run pm2:start",
-    "pm2:kill": "./node_modules/pm2/bin/pm2 kill",
-    "pm2:show": "./node_modules/pm2/bin/pm2 show",
-    "pm2:logs": "./node_modules/pm2/bin/pm2 logs all --raw --timestamp 'HH:mm:ss'",
-    "pm2:update": "./node_modules/pm2/bin/pm2 update",
-    "pm2:list": "./node_modules/pm2/bin/pm2 list",
-    "pm2:monit": "./node_modules/pm2/bin/pm2 monit",
-    "pm2:reload-all": "./node_modules/pm2/bin/pm2 reload all",
-    "pm2:describe": "./node_modules/pm2/bin/pm2 describe 'new-service-node'",
     "test": "./node_modules/mocha/bin/mocha test/specs --recursive --timeout 10000",
     "jshint": "./node_modules/jshint/bin/jshint ."
   },
