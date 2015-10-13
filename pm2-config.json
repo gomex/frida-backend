@@ -1,6 +1,6 @@
 [
   {
-    "name"       : "news-service",
+    "name"       : "frida-news-service",
     "script"     : "./index.js",
     "instances"  : 1,
     "merge_logs" : true,

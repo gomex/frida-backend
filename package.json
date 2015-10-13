@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "./node_modules/pm2/bin/pm2 startOrRestart pm2-config.json",
-    "stop": "./node_modules/pm2/bin/pm2 stop news-service",
+    "stop": "./node_modules/pm2/bin/pm2 stop frida-news-service",
     "test": "./node_modules/mocha/bin/mocha test/specs --recursive --timeout 10000",
     "jshint": "./node_modules/jshint/bin/jshint ."
   },
