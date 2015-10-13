@@ -1,6 +1,6 @@
 {
-  "name": "new-service-node",
-  "description": "new-service-node",
+  "name": "frida-news-service",
+  "description": "Small service to perform CRUD operations for news",
   "main": "index.js",
   "private": true,
   "license": "GPLv2",
