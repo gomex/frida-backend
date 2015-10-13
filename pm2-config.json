@@ -4,7 +4,6 @@
     "script"     : "./index.js",
     "instances"  : 1,
     "merge_logs" : true,
-    "watch" : true,
     "node_args"  : "--harmony"
   }
 ]
