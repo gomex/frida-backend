@@ -54,6 +54,7 @@ describe('Posts:', function() {
 
     api.post(URL.insert)
       .send(raw)
+      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
       .expect(201)
       .end(function(err, res) {
         var id = res.body.id;
@@ -75,6 +76,7 @@ describe('Posts:', function() {
 
     api.get(URL.get + '?year=' + CONFIG.YEAR + '&month=' + CONFIG.MONTH)
       .expect(200)
+      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
 
@@ -99,6 +101,7 @@ describe('Posts:', function() {
 
     api.get(URL.get)
       .expect(200)
+      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
 
@@ -127,6 +130,7 @@ describe('Posts:', function() {
 
     api.put(URL.get + '/' + postId)
       .send(rawData)
+      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
       .expect(204)
       .end(function(err) {
 
@@ -162,6 +166,7 @@ describe('Posts:', function() {
 
       api.put(URL.get + '/' + postIdent + '/status/draft')
       .expect(202)
+      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
       .end(function(err, result) {
         assert.equal(expectedPath, result.body.path);
         postsRepository.findById(postIdent, function(result) {
@@ -176,6 +181,7 @@ describe('Posts:', function() {
 
       api.put(URL.get + '/' + postIdent + '/status/published')
       .expect(202)
+      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
       .end(function(err, result) {
         assert.equal(expectedPath, result.body.path);
         postsRepository.findById(postIdent, function(result) {
