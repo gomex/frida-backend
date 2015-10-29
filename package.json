@@ -21,10 +21,12 @@
   },
   "scripts": {
     "start": "node ./index.js",
-    "test": "./node_modules/mocha/bin/mocha test/specs --recursive --timeout 10000",
+    "test": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly --  test/specs --recursive -R spec --timeout 10000 && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "jshint": "./node_modules/jshint/bin/jshint ."
   },
   "devDependencies": {
+    "coveralls": "^2.11.4",
+    "istanbul": "^0.4.0",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "protractor": "^2.2.0",
