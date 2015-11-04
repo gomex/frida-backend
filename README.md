@@ -12,6 +12,8 @@ DATABASE_URL=<the url for the mongodb instance>
 
 HEXO_POSTS_PATH=<the path where markdown files for publication should be saved>
 
+HEXO_DATA_PATH=<the path where data files should be saved>
+
 EDITOR_USERNAME=<the username used to authorize the use of news service API>
 
 EDITOR_PASSWORD=<the password used to authorize the use of news service API>
