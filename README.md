@@ -2,6 +2,7 @@ News Service
 ============
 
 [![Build Status](https://snap-ci.com/brasil-de-fato/news-service/branch/master/build_image)](https://snap-ci.com/brasil-de-fato/news-service/branch/master)
+[![Coverage Status](https://coveralls.io/repos/brasil-de-fato/news-service/badge.svg?branch=master)](https://coveralls.io/r/brasil-de-fato/news-service?branch=master)
 
 News Service is the component of Frida CMS responsible for taking care of CRUD operations for news, as well as to publish news in the website managed by Frida (although there are plans to move this responsibility to its own service). It uses MongoDB to persist all data and requires an instance of MongoDB running somewhere.
 
