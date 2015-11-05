@@ -33,6 +33,16 @@ describe('Columnists:', function() {
       done();
     });
 
+    it('should ', function(done) {
+      var expect = "a@a.a:\n  name: Alfonso\nb@b.b:\n  name: Baleia\n";
+
+      columnists(data).toDATA().write(undefined, function(err){
+        assert.equal(err, 'Need a path to save data files');
+
+        done();
+      });
+    });
+
     it('should save a file on a specify path', function(done) {
       var expect = "a@a.a:\n  name: Alfonso\nb@b.b:\n  name: Baleia\n";
 
