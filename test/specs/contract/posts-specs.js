@@ -2,8 +2,7 @@ var assert = require('assert'),
     CONFIG = require('../helpers/config'),
     supertest = require('supertest'),
     postsRepository = require(CONFIG.ROOT_DIRECTORY + '/lib/posts-repository')(),
-    api = supertest('http://localhost:5000'),
-    fs = require('fs')
+    api = supertest('https://localhost:5000'),
     moment = require('moment')
 ;
 
@@ -14,6 +13,7 @@ describe('Posts:', function() {
       API = '/api/organization/';
 
   before(function(done){
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
     require(CONFIG.ROOT_DIRECTORY + '/lib/server').startServer();
 
     rawData =  {
