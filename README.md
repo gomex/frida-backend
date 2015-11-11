@@ -18,6 +18,10 @@ HEXO_DATA_PATH=<the path where data files should be saved>
 EDITOR_USERNAME=<the username used to authorize the use of news service API>
 
 EDITOR_PASSWORD=<the password used to authorize the use of news service API>
+
+CERT_FILE_PATH=<the path for the ssl certificate>
+
+KEY_FILE_PATH=<the path for the ssl key>
 ```
 
 ## Installing dependencies
