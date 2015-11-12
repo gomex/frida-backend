@@ -13,7 +13,6 @@ describe('Posts:', function() {
       API = '/api/organization/';
 
   before(function(done){
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
     require(CONFIG.ROOT_DIRECTORY + '/lib/server').startServer();
 
     rawData =  {
