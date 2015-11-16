@@ -24,6 +24,8 @@ CERT_FILE_PATH=<the path for the ssl certificate>
 KEY_FILE_PATH=<the path for the ssl key>
 ```
 
+**NOTICE**: News Service only runs over SSL. If you are using a self signed cert (as the one we use for testing) make sure Frida UI can make calls to it by adding an exception for the certificate in the browser. To do so, make a request through the browser to the API and when prompted by the browser, add an exception for the certificate.
+
 ## Installing dependencies
 
 
