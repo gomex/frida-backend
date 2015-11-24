@@ -137,7 +137,7 @@ describe('Posts:', function() {
 
           assert.equal(typeof result._id !== 'undefined', true);
           assert.equal(typeof result.metadata === 'object', true);
-          assert.equal(result.metadata.newTitle === title, true);
+          assert.equal(result.metadata.title === title, true);
           done();
         });
       });
