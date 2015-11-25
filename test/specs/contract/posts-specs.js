@@ -3,8 +3,9 @@ var assert = require('assert'),
     supertest = require('supertest'),
     postsRepository = require(CONFIG.ROOT_DIRECTORY + '/lib/posts-repository')(),
     api = supertest('https://localhost:5000'),
-    moment = require('moment')
-;
+    moment = require('moment'),
+    PostUtil = require(CONFIG.ROOT_DIRECTORY + '/lib/post-util');
+
 
 describe('Posts:', function() {
   var rawData,
@@ -25,7 +26,7 @@ describe('Posts:', function() {
       insert :  API + 'brasil-de-fato/site/posts'
     };
 
-    postsRepository.insert(rawData, function(id) {
+    postsRepository.insert(PostUtil.prepare(rawData), function(id) {
       postId = id;
       done();
     });
@@ -45,17 +46,14 @@ describe('Posts:', function() {
     });
   });
 
-  it('POST: /api/organization/:organization/:repository/posts', function(done) {
-    var raw = {
-      body: 'qualquer coisa',
-      metadata: JSON.stringify({ algo: 12})
-    };
+  describe('insert news using POST contract', function() {
+    it('POST: /api/organization/:organization/:repository/posts', function(done) {
+      var raw = {
+        body: 'qualquer coisa',
+        metadata: JSON.stringify({ algo: 12})
+      };
 
-    api.post(URL.insert)
-      .send(raw)
-      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-      .expect(201)
-      .end(function(err, res) {
+      var callback = function(err, res) {
         var id = res.body.id;
         assert(typeof id !== 'undefined');
 
@@ -68,7 +66,40 @@ describe('Posts:', function() {
             done();
           });
         });
-      });
+      };
+
+      api.post(URL.insert)
+        .send(raw)
+        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+        .expect(201)
+        .end(callback);
+    });
+
+    it('create url using title', function(done) {
+      var raw = {
+        body: 'qualquer coisa',
+        metadata: JSON.stringify({ title: 'Barragem Estoura'})
+      };
+
+      var callback = function(err, res) {
+        var id = res.body.id;
+
+        postsRepository.findById(id, function(result) {
+          assert.equal(result.metadata.url, 'barragem-estoura/');
+
+
+          postsRepository.deleteById(id, function(err) {
+            done();
+          });
+        });
+      };
+
+      api.post(URL.insert)
+        .send(raw)
+        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+        .expect(201)
+        .end(callback);
+    });
   });
 
   it('GET: /api/organization/:organization/:repository/posts?:filters', function(done){
@@ -153,7 +184,7 @@ describe('Posts:', function() {
       month = moment().format('MM');
       year  = moment().format('YYYY');
 
-      postsRepository.insert(rawData, function(result) {
+      postsRepository.insert(PostUtil.prepare(rawData), function(result) {
         postIdent = result;
 
         done();
