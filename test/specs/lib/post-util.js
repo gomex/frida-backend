@@ -6,8 +6,8 @@ describe('post-util:', function() {
 
   describe('Prepare post to insert',function(){
     it('should slugify url using title on metadata', function(done) {
-      var body = { metadata: {title: 'como vai'}  };
-      var expect = 'como-vai/';
+      var body = { metadata: {title: 'como vai', date: '2014-08-25T15:32:36-03:00'}  };
+      var expect = '2014/08/25/como-vai/';
       var result = PostUtil.prepare(body);
 
       assert.equal(expect, result.metadata.url);
@@ -34,8 +34,17 @@ describe('post-util:', function() {
 
   describe('format url',function(){
     it('should be lower case', function(done) {
-      var body = { metadata: {title: 'Como Vai'}  };
-      var expect = 'como-vai/';
+      var body = { metadata: {title: 'Como Vai', date: '2014-08-25T15:32:36-03:00'}  };
+      var expect = '2014/08/25/como-vai/';
+      var result = PostUtil.prepare(body);
+
+      assert.equal(expect, result.metadata.url);
+      done();
+    });
+
+    it('should have year, month and day of the news date on begining of url', function(done) {
+      var body = { metadata: {title: 'Como Vai', date: '2014-08-25T15:32:36-03:00'}  };
+      var expect = '2014/08/25/como-vai/';
       var result = PostUtil.prepare(body);
 
       assert.equal(expect, result.metadata.url);
@@ -43,8 +52,8 @@ describe('post-util:', function() {
     });
 
     it('should remove quotation marks', function(done) {
-      var body = { metadata: {title: '"Como" Vai'}  };
-      var expect = 'como-vai/';
+      var body = { metadata: {title: '"Como" Vai', date: '2014-08-25T15:32:36-03:00'}  };
+      var expect = '2014/08/25/como-vai/';
       var result = PostUtil.prepare(body);
 
       assert.equal(expect, result.metadata.url);
