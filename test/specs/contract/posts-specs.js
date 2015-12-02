@@ -14,7 +14,7 @@ describe('Posts:', function() {
       API = '/api/organization/';
 
   before(function(done){
-    require(CONFIG.ROOT_DIRECTORY + '/lib/server').startServer();
+    require(CONFIG.ROOT_DIRECTORY + '/lib/http/server').startServer();
 
     rawData =  {
         body: '',

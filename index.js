@@ -1,2 +1,2 @@
 require('./lib/columnist-repository')().write(),
-require('./lib/server').startServer();
+require('./lib/http/server').startServer();
