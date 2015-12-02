@@ -1,4 +1,4 @@
-var publish = require('../../../lib/publish')();
+var publish = require('../../../../lib/publisher/hexo')();
 var fs = require('fs');
 var assert = require('assert');
 
