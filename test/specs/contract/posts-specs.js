@@ -4,6 +4,7 @@ var assert = require('assert'),
     postsRepository = require(CONFIG.ROOT_DIRECTORY + '/lib/posts-repository')(),
     api = supertest('https://localhost:5000'),
     moment = require('moment'),
+    MongoClient     = require('mongodb').MongoClient,
     PostUtil = require(CONFIG.ROOT_DIRECTORY + '/lib/post-util');
 
 
@@ -25,6 +26,11 @@ describe('Posts:', function() {
       get :  API + 'brasil-de-fato/site/posts',
       insert :  API + 'brasil-de-fato/site/posts'
     };
+
+    MongoClient.connect(process.env.DATABASE_URL, function(err, db) {
+        db.collection('posts').drop();
+        db.close()
+    });
 
     postsRepository.insert(PostUtil.prepare(rawData), function(id) {
       postId = id;
