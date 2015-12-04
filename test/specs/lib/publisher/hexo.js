@@ -1,88 +1,112 @@
-var publish = require('../../../../lib/publisher/hexo')();
+var hexo = require('../../../../lib/publisher/hexo')();
 var fs = require('fs');
+var slug = require('slug');
+var matters =  require('gray-matter');
 var assert = require('assert');
 
 
-describe('Publish:', function() {
+describe('Hexo publisher:', function() {
 
-  it('should create a empty string when post does not have body and metadata', function(done) {
-    var post = {};
-    var result = publish.post().read();
-    var expect = '';
+  it('creates the news file in the configured hexo posts folder', function(done) {
+     var now = new Date();
+     var title = 'title-' + now;
+     var news =  {
+                    _id: 'news_ident-' + now.getTime(),
+	                body:'<h1>the news content</h1>',
+	                status: 'published',
+	                metadata: {
+	                    date: now,
+                        published_at: now,
+	                    title: title,
+	                    description: 'description',
+	                    cover: {
+	                        link: "//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg",
+	                    }
+	                }
+	            };
 
-    assert.equal(expect, result);
-    done();
-  });
+      hexo.publish(news, function(httpPath) {
+        var year  = news.metadata.published_at.getFullYear();
+        var month = news.metadata.published_at.getMonth() + 1;
 
-  describe('String on FrontMatters pattern',function(){
-    it('should add body on string', function(done) {
-      var post = { body:'<strong>Bolo doido</strong>', metadata: {date: 'como vai'}  };
-      var result = publish.post(post).read();
-      var expect = "---\ndate: como vai\n---\n<strong>Bolo doido</strong>\n";
-
-      assert.equal(expect, result);
-      done();
-    });
-  });
-
-  describe('markdown file on file system',function(){
-    it('should save a file on the specified path', function(done) {
-      var id = 'a124b124c124';
-      var post = { _id: id, body:'<strong>Bolo doido</strong>', metadata: {date: '2015-08-10', title: 'Titulo novo 2012'}  };
-      var expect = "---\ndate: \'2015-08-10\'\ntitle: Titulo novo 2012\n---\n<strong>Bolo doido</strong>\n";
-
-      publish.post(post, id, '2015', '08').write('/tmp', function(err){
-        var data = fs.readFileSync('/tmp/2015/08/'+id+'.md','utf8');
-        assert.equal(expect, data);
+        var httpExpectedPath = year + '/' + month + '/' + slug(news.metadata.title) + '/';
+        var expectedPath = process.env.HEXO_POSTS_PATH + '/' + year + '/' + month + '/' + news._id + '.md';
+        assert.equal(httpPath, httpExpectedPath);
+        assert.ok(fs.existsSync(expectedPath));
 
         done();
       });
-    });
   });
 
-  describe('home markdown',function(){
-    it('should exist a way to generate home markdown', function(done) {
-      assert.ok(publish.home);
-      done();
-    });
+  it('news file is an markdown representation of the news object', function(done) {
+     var now = new Date();
+     var title = 'title-' + now;
+     var news =  {
+                    _id: 'news_ident-' + now.getTime(),
+	                body:'<h1>the news content</h1>',
+	                status: 'published',
+	                metadata: {
+	                    date: now,
+                        published_at: now,
+	                    title: title,
+	                    description: 'description',
+	                    cover: {
+	                        link: "//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg",
+	                    }
+	                }
+	            };
 
-    it('should set layout accordingly to the home', function(done) {
-      var expected = "---\n"+
-                    "layout: nacional\n"+
-                   "---\n\n";
+      hexo.publish(news, function(httpPath) {
+        var year  = news.metadata.published_at.getFullYear();
+        var month = news.metadata.published_at.getMonth() + 1;
+        var expectedPath    = process.env.HEXO_POSTS_PATH + '/' + year + '/' + month + '/' + news._id + '.md';
 
-      assert.equal(publish.home('nacional', { }).read(), expected);
-      done();
-    });
+        var expectedContent = matters.stringify(news.body, news.metadata);
 
-    it('should convert home object to YAML', function(done) {
-      var posts = [{title: 'titulo 1'}, {title: 'titulo 2'}];
-      var expected = "---\n"+
-                   "featured:\n"+
-                   "  - title: titulo 1\n"+
-                   "  - title: titulo 2\n"+
-                   "layout: nacional\n"+
-                   "---\n\n";
-
-      assert.equal(publish.home('nacional', { featured: posts }).read(), expected);
-      done();
-    });
-
-    it('should save a index on the specified path', function(done) {
-      var posts = [{title: 'titulo 1'}, {title: 'titulo 2'}];
-      var expected = "---\n"+
-                   "featured:\n"+
-                   "  - title: titulo 1\n"+
-                   "  - title: titulo 2\n"+
-                   "layout: nacional\n"+
-                   "---\n\n";
-
-      publish.home('nacional',{ featured: posts}).write('/tmp', function(err){
-        var data = fs.readFileSync('/tmp/index.md','utf8');
-        assert.equal(expected, data);
+        var actualContent = fs.readFileSync(expectedPath, 'utf8');
+        assert.equal(actualContent, expectedContent);
 
         done();
       });
+  });
+
+  it('fails if the news object is not well formed', function(done) {
+     var now = new Date();
+     var title = 'title-' + now;
+     var news =  { };
+
+     assert.throws(function() {
+         hexo.publish(news, function(httpPath) {})
+     }, TypeError);
+
+     done();
+  });
+
+  it('creates home metadata file in the configured hexo posts folder', function(done) {
+     var now = new Date();
+     var title = 'title-' + now;
+     var news =  {
+                    _id: 'news_ident-' + now.getTime(),
+	                body:'<h1>the news content</h1>',
+	                status: 'published',
+	                metadata: {
+	                    date: now,
+                        published_at: now,
+	                    title: title,
+	                    description: 'description',
+	                    cover: {
+	                        link: "//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg",
+	                    }
+	                }
+	            };
+
+    var expectedPath = process.env.HEXO_POSTS_PATH + '/../index.md';
+    try { fs.unlinkSync(expectedPath); } catch(e) { /* ignore */ }
+
+    hexo.publish(news, function(httpPath) {
+        assert.ok(fs.existsSync(expectedPath));
+
+        done();
     });
   });
 });

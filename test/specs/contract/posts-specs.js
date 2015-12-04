@@ -213,7 +213,7 @@ describe('Posts:', function() {
     });
 
     it('PUT: /api/organization/:organization/:repository/posts/<id>/status/<published>', function(done) {
-      var expectedPath = [year, month, postIdent + '.md'].join('/');
+      var expectedPath = [year, month, rawData.metadata.title].join('/') + '/';
 
       api.put(URL.get + '/' + postIdent + '/status/published')
       .expect(202)
