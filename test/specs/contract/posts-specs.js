@@ -30,11 +30,10 @@ describe('Posts:', function() {
     MongoClient.connect(process.env.DATABASE_URL, function(err, db) {
         db.collection('posts').drop();
         db.close()
-    });
-
-    postsRepository.insert(PostUtil.prepare(rawData), function(id) {
-      postId = id;
-      done();
+        postsRepository.insert(PostUtil.prepare(rawData), function(id) {
+            postId = id;
+            done();
+        });
     });
   });
 
