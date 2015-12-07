@@ -30,7 +30,7 @@ describe('Hexo publisher:', function() {
         var month = news.metadata.published_at.getMonth() + 1;
 
         var httpExpectedPath = year + '/' + month + '/' + slug(news.metadata.title) + '/';
-        var expectedPath = process.env.HEXO_POSTS_PATH + '/' + year + '/' + month + '/' + news._id + '.md';
+        var expectedPath = process.env.HEXO_SOURCE_PATH + '/_posts/' + year + '/' + month + '/' + news._id + '.md';
         assert.equal(httpPath, httpExpectedPath);
         assert.ok(fs.existsSync(expectedPath));
 
@@ -59,7 +59,7 @@ describe('Hexo publisher:', function() {
       hexo.publish(news, function(httpPath) {
         var year  = news.metadata.published_at.getFullYear();
         var month = news.metadata.published_at.getMonth() + 1;
-        var expectedPath    = process.env.HEXO_POSTS_PATH + '/' + year + '/' + month + '/' + news._id + '.md';
+        var expectedPath    = process.env.HEXO_SOURCE_PATH + '/_posts/' + year + '/' + month + '/' + news._id + '.md';
 
         var expectedContent = matters.stringify(news.body, news.metadata);
 
@@ -100,7 +100,7 @@ describe('Hexo publisher:', function() {
 	                }
 	            };
 
-    var expectedPath = process.env.HEXO_POSTS_PATH + '/../index.md';
+    var expectedPath = process.env.HEXO_SOURCE_PATH + '/index.md';
     try { fs.unlinkSync(expectedPath); } catch(e) { /* ignore */ }
 
     hexo.publish(news, function(httpPath) {

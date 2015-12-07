@@ -11,9 +11,7 @@ Before running news service (or its tests) it is necessary to define the followi
 ```
 DATABASE_URL=<the url for the mongodb instance>
 
-HEXO_POSTS_PATH=<the path where markdown files for publication should be saved>
-
-HEXO_DATA_PATH=<the path where data files should be saved>
+HEXO_SOURCE_PATH=<the folder from where hexo is going to read content files>
 
 EDITOR_USERNAME=<the username used to authorize the use of news service API>
 
