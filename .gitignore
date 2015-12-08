@@ -3,3 +3,5 @@ node_modules/
 npm-debug*
 .tests-localy
 coverage/
+.idea/
+*iml
