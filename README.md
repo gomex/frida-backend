@@ -8,6 +8,11 @@ News Service is the backend of [Frida CMS](https://github.com/brasil-de-fato/cms
 All operations are avaible through REST services.
 
 
+**Interaction Between project components:**
+
+![](http://farm6.staticflickr.com/5653/22986735544_e026af9699_b.jpg)
+
+
 **Technology Stack**
 
 News service uses MongoDB to persist news so it requires an instance of [MongoDB](https://www.mongodb.org/) running somewhere.
@@ -100,6 +105,6 @@ $ pm2 start pm2-config.json
 ```
 
 #### Service API URL
-Starting with node: https://localhost:5000/api
+**https://localhost:5000/api**
 
 Remember to access the API URL and add the certificate to the browser you'll be using Frida(CMS) with.
