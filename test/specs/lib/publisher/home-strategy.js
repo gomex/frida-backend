@@ -27,6 +27,7 @@ describe('Posts for home strategy:', function() {
 	                body:'<h1>the news content</h1>',
 	                status: 'published',
 	                metadata: {
+                        layout: 'post',
 	                    title: 'title-' + date,
                         hat: 'Nacional',
 	                    description: 'description',
@@ -67,6 +68,11 @@ describe('Posts for home strategy:', function() {
           return transformedNews;
         };
 
+         var fakeOpinions = [
+            {columnist: "rodrigovieira18@gmail.com", title: "Direitos minerários x direitos sociais: que as mineradoras paguem o justo", date: '2015-12-02T13:47:40-03:00'},
+            {columnist: "wandecleya@gmail.com", title: "O funk e o fim da música popular brasileira", date: '2015-12-02T13:47:40-03:00'},
+            {columnist: "snowden@gmail.com", title: "Movimento negro: esboço de um caminho que não lorem ipsum lorem ipsum lorem ipsum lorem ipsum", date: '2015-12-02T13:47:40-03:00'}];
+
         it('should return the last news grouped by category', function(done) {
             var news = createNews(10);
 
@@ -78,7 +84,8 @@ describe('Posts for home strategy:', function() {
                     var expected = {
                         featured: [transformedNews[9], transformedNews[8], transformedNews[7], transformedNews[6]],
                         secondary: [transformedNews[5], transformedNews[4], transformedNews[3], transformedNews[2]],
-                        tertiary: [transformedNews[1], transformedNews[0]]
+                        tertiary: [transformedNews[1], transformedNews[0]],
+                        opinions: fakeOpinions
                     };
 
                     var homePosts = homeStrategy.lastNews(function(homePosts) {
@@ -100,7 +107,8 @@ describe('Posts for home strategy:', function() {
                     var expected = {
                         featured: [transformedNews[0]],
                         secondary: [],
-                        tertiary: []
+                        tertiary: [],
+                        opinions: fakeOpinions
                     };
 
                     var homePosts = homeStrategy.lastNews(function(homePosts) {
