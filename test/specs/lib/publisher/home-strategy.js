@@ -27,13 +27,17 @@ describe('Posts for home strategy:', function() {
 	                body:'<h1>the news content</h1>',
 	                status: 'published',
 	                metadata: {
-	                    date: date,
 	                    title: 'title-' + date,
+                        hat: 'Nacional',
 	                    description: 'description',
 	                    url: '2015/12/03/novo-site-do-brasil-de-fato-e-lancado/',
 	                    cover: {
 	                        link: "//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg",
-	                    }
+	                        small: "//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg",
+                            credits: "credits",
+                            subtitle: "subtitle"
+	                    },
+                        published_at: date
 	                }
 	            });
             }
@@ -41,30 +45,40 @@ describe('Posts for home strategy:', function() {
             return news;
         };
 
-        function removeExtraFields(items) {
-            var strippedClones = [];
+        function formatAsExpected(items) {
+          var transformedNews = [];
 
-            items.forEach(function(item) {
-                var copy = _.omit(_.clone(item), 'status', 'body');
-                copy.metadata = _.omit(_.clone(copy.metadata), 'date');
-                strippedClones.push(copy);
+          items.forEach(function(item) {
+            transformedNews.push({
+              cover: {
+                url: item.metadata.cover.link,
+                small: item.metadata.cover.small,
+                credits: item.metadata.cover.credits,
+                subtitle: item.metadata.cover.subtitle
+              },
+              date: item.metadata.published_at,
+              description: item.metadata.description,
+              title: item.metadata.title,
+              path: item.metadata.url,
+              hat: item.metadata.hat
             });
+          });
 
-            return strippedClones;
+          return transformedNews;
         };
 
         it('should return the last news grouped by category', function(done) {
             var news = createNews(10);
 
-            var strippedNews = removeExtraFields(news);
+            var transformedNews = formatAsExpected(news);
 
             MongoClient.connect(process.env.DATABASE_URL, function(err, db) {
 
                 db.collection('posts').insert(news, function(err, result) {
                     var expected = {
-                        featured: [strippedNews[9], strippedNews[8], strippedNews[7], strippedNews[6]],
-                        secondary: [strippedNews[5], strippedNews[4], strippedNews[3], strippedNews[2]],
-                        tertiary: [strippedNews[1], strippedNews[0]]
+                        featured: [transformedNews[9], transformedNews[8], transformedNews[7], transformedNews[6]],
+                        secondary: [transformedNews[5], transformedNews[4], transformedNews[3], transformedNews[2]],
+                        tertiary: [transformedNews[1], transformedNews[0]]
                     };
 
                     var homePosts = homeStrategy.lastNews(function(homePosts) {
@@ -78,13 +92,13 @@ describe('Posts for home strategy:', function() {
         it('should not break if there is not enough news to fill all groups', function(done) {
             var news = createNews(1);
 
-            var strippedNews = removeExtraFields(news);
+            var transformedNews = formatAsExpected(news);
 
             MongoClient.connect(process.env.DATABASE_URL, function(err, db) {
 
                 db.collection('posts').insert(news, function(err, result) {
                     var expected = {
-                        featured: [strippedNews[0]],
+                        featured: [transformedNews[0]],
                         secondary: [],
                         tertiary: []
                     };
