@@ -80,6 +80,33 @@ describe('Posts:', function() {
         .end(callback);
     });
 
+    it('create url using portal', function(done){
+      var raw = {
+        body: 'qualquer coisa',
+        metadata: JSON.stringify({ portal: 'dolly', title: 'Barragem Estoura', date: '2014-08-25T15:32:36-03:00'})
+      };
+
+      var callback = function(err, res) {
+        var id = res.body.id;
+
+        postsRepository.findById(id, function(result) {
+          assert.equal(result.metadata.url, 'dolly/2014/08/25/barragem-estoura/');
+
+
+          postsRepository.deleteById(id, function(err) {
+            done();
+          });
+        });
+      };
+
+      api.post(URL.insert)
+        .send(raw)
+        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+        .expect(201)
+        .end(callback);
+
+    });
+
     it('create url using title', function(done) {
       var raw = {
         body: 'qualquer coisa',
