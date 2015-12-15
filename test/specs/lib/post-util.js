@@ -52,7 +52,7 @@ describe('post-util:', function() {
     });
 
     it('should replace [not-a-link] to a empty string', function(done) {
-      var body = { metadata: {portal: '[not-a-link]',title: '"Como" Vai', date: '2014-08-25T15:32:36-03:00'}  };
+      var body = { metadata: {edition: '[not-a-link]',title: '"Como" Vai', date: '2014-08-25T15:32:36-03:00'}  };
       var expect = '2014/08/25/como-vai/';
       var result = PostUtil.prepare(body);
 
