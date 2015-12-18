@@ -92,7 +92,6 @@ describe('Posts for home strategy:', function() {
       function formatOpinionsAsExpecteBySite(opinions) {
         var strippedOpinions = [];
         opinions.forEach(function(opinionFromMongo) {
-          console.log(opinionFromMongo);
           strippedOpinions.push({
             columnist: opinionFromMongo.metadata.columnist,
             title: opinionFromMongo.metadata.title,
