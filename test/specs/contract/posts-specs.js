@@ -80,10 +80,10 @@ describe('Posts:', function() {
         .end(callback);
     });
 
-    it('create url using portal', function(done){
+    it('the edition goes into the path', function(done){
       var raw = {
         body: 'qualquer coisa',
-        metadata: JSON.stringify({ portal: 'dolly', title: 'Barragem Estoura', date: '2014-08-25T15:32:36-03:00'})
+        metadata: JSON.stringify({ edition: 'dolly', title: 'Barragem Estoura', date: '2014-08-25T15:32:36-03:00'})
       };
 
       var callback = function(err, res) {
