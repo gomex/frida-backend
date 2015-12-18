@@ -1,6 +1,6 @@
 var MongoClient     = require('mongodb').MongoClient;
 var postsRepository = require('../../../../lib/posts-repository')();
-var homeStrategy    = require('../../../../lib/publisher/home-strategy')();
+var homeStrategy    = require('../../../../lib/publisher/home-strategy');
 var moment         = require('moment');
 var _               = require('underscore');
 var assert          = require('assert');
@@ -9,44 +9,65 @@ describe('Posts for home strategy:', function() {
 
     describe('lastNews',function() {
 
-        beforeEach(function(done){
-            MongoClient.connect(process.env.DATABASE_URL, function(err, db) {
-                db.collection('posts').drop();
-                db.close()
-                done();
-            });
-        });
+      beforeEach(function(done){
+          MongoClient.connect(process.env.DATABASE_URL, function(err, db) {
+              db.collection('posts').drop();
+              db.close();
+              done();
+          });
+      });
 
-        function createNews(amount) {
-            var news = [];
-            var startTime = moment();
-
-            for(var i = 0; i < amount; i++) {
-                var date = startTime.add(1, 'days').toISOString();
-	            news.push({
-	                body:'<h1>the news content</h1>',
-	                status: 'published',
-	                metadata: {
-                        layout: 'post',
-	                    title: 'title-' + date,
-                        hat: 'Nacional',
-	                    description: 'description',
-	                    url: '2015/12/03/novo-site-do-brasil-de-fato-e-lancado/',
-	                    cover: {
-	                        link: "//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg",
-	                        small: "//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg",
-                            credits: "credits",
-                            subtitle: "subtitle"
-	                    },
-                        published_at: date
-	                }
-	            });
-            }
-
-            return news;
+      function basePost(date) {
+        var basePost = {
+          body: '<h1>the news content</h1>',
+          status: 'published',
+          metadata: {
+            title: 'title-' + date,
+            hat: 'Nacional',
+            description: 'description',
+            url: '2015/12/03/novo-site-do-brasil-de-fato-e-lancado/',
+            cover: {
+              link: "//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg",
+              small: "//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg",
+              credits: "credits",
+              subtitle: "subtitle"
+            },
+            published_at: date
+          }
         };
 
-        function formatAsExpected(items) {
+        return basePost;
+      };
+
+      function createNews(date) {
+        var news = basePost(date);
+        news.metadata.layout = 'post';
+        return news;
+      };
+
+      function createOpinion(date) {
+        var opinion = basePost(date);
+        opinion.metadata.layout = 'opinion';
+        opinion.metadata.columnist = 'wandecleya@gmail.com';
+        return opinion;
+      };
+
+
+      function createPosts(amount, type) {
+            var posts = [];
+            var startTime = moment();
+
+            var createPost = type === 'post'? createNews : createOpinion;
+
+            for(var i = 0; i < amount; i++) {
+              var date = startTime.add(1, 'days').toISOString();
+	            posts.push(createPost(date));
+            }
+
+            return posts;
+        };
+
+        function formatNewsAsExpectedBySite(items) {
           var transformedNews = [];
 
           items.forEach(function(item) {
@@ -68,24 +89,37 @@ describe('Posts for home strategy:', function() {
           return transformedNews;
         };
 
-         var fakeOpinions = [
-            {columnist: "rodrigovieira18@gmail.com", title: "Direitos minerários x direitos sociais: que as mineradoras paguem o justo", date: '2015-12-02T13:47:40-03:00'},
-            {columnist: "wandecleya@gmail.com", title: "O funk e o fim da música popular brasileira", date: '2015-12-02T13:47:40-03:00'},
-            {columnist: "snowden@gmail.com", title: "Movimento negro: esboço de um caminho que não lorem ipsum lorem ipsum lorem ipsum lorem ipsum", date: '2015-12-02T13:47:40-03:00'}];
+      function formatOpinionsAsExpecteBySite(opinions) {
+        var strippedOpinions = [];
+        opinions.forEach(function(opinionFromMongo) {
+          console.log(opinionFromMongo);
+          strippedOpinions.push({
+            columnist: opinionFromMongo.metadata.columnist,
+            title: opinionFromMongo.metadata.title,
+            date: opinionFromMongo.metadata.published_at,
+            path: opinionFromMongo.metadata.url
+          });
+        });
+        return strippedOpinions;
+      };
 
-        it('should return the last news grouped by category', function(done) {
-            var news = createNews(10);
+      it('should return the last news grouped by category', function(done) {
+            var news = createPosts(10, 'post');
+            var opinions = createPosts(3, 'opinion');
 
-            var transformedNews = formatAsExpected(news);
+            var strippedNews = formatNewsAsExpectedBySite(news);
+            var strippedOpinions = formatOpinionsAsExpecteBySite(opinions);
 
             MongoClient.connect(process.env.DATABASE_URL, function(err, db) {
 
-                db.collection('posts').insert(news, function(err, result) {
+                db.collection('posts').insert(news.concat(opinions), function(err, result) {
+                    console.log(err);
                     var expected = {
-                        featured: [transformedNews[9], transformedNews[8], transformedNews[7], transformedNews[6]],
-                        secondary: [transformedNews[5], transformedNews[4], transformedNews[3], transformedNews[2]],
-                        tertiary: [transformedNews[1], transformedNews[0]],
-                        opinions: fakeOpinions
+                        // TODO forçando a ordem do expected na mão (ruim) conforme como vem do banco - arranjar um jeito da comparação ignorar ordem
+                        featured: [strippedNews[9], strippedNews[8], strippedNews[7], strippedNews[6]],
+                        secondary: [strippedNews[5], strippedNews[4], strippedNews[3], strippedNews[2]],
+                        tertiary: [strippedNews[1], strippedNews[0]],
+                        opinions: [strippedOpinions[2], strippedOpinions[1], strippedOpinions[0]]
                     };
 
                     var homePosts = homeStrategy.lastNews(function(homePosts) {
@@ -97,9 +131,9 @@ describe('Posts for home strategy:', function() {
         });
 
         it('should not break if there is not enough news to fill all groups', function(done) {
-            var news = createNews(1);
+            var news = createPosts(1, 'post');
 
-            var transformedNews = formatAsExpected(news);
+            var transformedNews = formatNewsAsExpectedBySite(news);
 
             MongoClient.connect(process.env.DATABASE_URL, function(err, db) {
 
@@ -108,7 +142,7 @@ describe('Posts for home strategy:', function() {
                         featured: [transformedNews[0]],
                         secondary: [],
                         tertiary: [],
-                        opinions: fakeOpinions
+                        opinions: []
                     };
 
                     var homePosts = homeStrategy.lastNews(function(homePosts) {
