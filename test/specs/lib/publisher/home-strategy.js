@@ -103,8 +103,8 @@ describe('Posts for home strategy:', function() {
       };
 
       it('should return the last news grouped by category', function(done) {
-            var news = createPosts(10, 'post');
-            var opinions = createPosts(3, 'opinion');
+            var news = createPosts(15, 'post');
+            var opinions = createPosts(5, 'opinion');
 
             var strippedNews = formatNewsAsExpectedBySite(news);
             var strippedOpinions = formatOpinionsAsExpecteBySite(opinions);
@@ -114,11 +114,10 @@ describe('Posts for home strategy:', function() {
                 db.collection('posts').insert(news.concat(opinions), function(err, result) {
                     console.log(err);
                     var expected = {
-                        // TODO forçando a ordem do expected na mão (ruim) conforme como vem do banco - arranjar um jeito da comparação ignorar ordem
-                        featured: [strippedNews[9], strippedNews[8], strippedNews[7], strippedNews[6]],
-                        secondary: [strippedNews[5], strippedNews[4], strippedNews[3], strippedNews[2]],
-                        tertiary: [strippedNews[1], strippedNews[0]],
-                        opinions: [strippedOpinions[2], strippedOpinions[1], strippedOpinions[0]]
+                        featured: [strippedNews[14], strippedNews[13], strippedNews[12], strippedNews[11]],
+                        secondary: [strippedNews[10], strippedNews[9], strippedNews[8], strippedNews[7]],
+                        tertiary: [strippedNews[6], strippedNews[5]],
+                        opinions: [strippedOpinions[4], strippedOpinions[3], strippedOpinions[2]]
                     };
 
                     var homePosts = homeStrategy.lastNews(function(homePosts) {
