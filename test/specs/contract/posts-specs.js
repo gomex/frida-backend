@@ -23,8 +23,8 @@ describe('Posts:', function() {
     };
 
     URL = {
-      get :  API + 'brasil-de-fato/site/posts',
-      insert :  API + 'brasil-de-fato/site/posts'
+      get :  '/posts',
+      insert :  '/posts'
     };
 
     MongoClient.connect(process.env.DATABASE_URL, function(err, db) {
