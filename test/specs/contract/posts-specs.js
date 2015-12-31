@@ -25,7 +25,7 @@ describe('Posts:', function() {
 
     MongoClient.connect(process.env.DATABASE_URL, function(err, db) {
         db.collection('posts').drop();
-        db.close()
+        db.close();
         postsRepository.insert(PostUtil.prepare(rawData), function(id) {
             postId = id;
             done();
@@ -48,7 +48,7 @@ describe('Posts:', function() {
   });
 
   describe('insert news using POST contract', function() {
-    it('POST: /api/organization/:organization/:repository/posts', function(done) {
+    it('POST: /posts', function(done) {
       var raw = {
         body: 'qualquer coisa',
         metadata: JSON.stringify({ algo: 12})
@@ -130,7 +130,7 @@ describe('Posts:', function() {
     });
   });
 
-  it('GET: /api/organization/:organization/:repository/posts?:filters', function(done){
+  it('GET: /posts?:filters', function(done){
 
     api.get(NEWS_RESOURCE + '?year=' + CONFIG.YEAR + '&month=' + CONFIG.MONTH)
       .expect(200)
@@ -155,7 +155,7 @@ describe('Posts:', function() {
       });
   });
 
-  it('GET: /api/organization/:organization/:repository/posts', function(done){
+  it('GET: /posts', function(done){
 
     api.get(NEWS_RESOURCE)
       .expect(200)
@@ -180,7 +180,7 @@ describe('Posts:', function() {
       });
   });
 
-  it('PUT: /api/organization/:organization/:repository/posts/<id>', function(done) {
+  it('PUT: /posts/<id>', function(done) {
     rawData.test = 'test';
 
     var title = 'titulo-sensacionalista' + new Date().getTime();
@@ -219,7 +219,7 @@ describe('Posts:', function() {
       });
     });
 
-    it('PUT: /api/organization/:organization/:repository/posts/<id>/status/<draft>', function(done) {
+    it('PUT: /posts/<id>/status/<draft>', function(done) {
       var expectedPath = '';
 
       api.put(NEWS_RESOURCE + '/' + postIdent + '/status/draft')
@@ -234,7 +234,7 @@ describe('Posts:', function() {
       });
     });
 
-    it('PUT: /api/organization/:organization/:repository/posts/<id>/status/<published>', function(done) {
+    it('PUT: /posts/<id>/status/<published>', function(done) {
       var expectedPath = [year, month, rawData.metadata.title].join('/') + '/';
 
       api.put(NEWS_RESOURCE + '/' + postIdent + '/status/published')
