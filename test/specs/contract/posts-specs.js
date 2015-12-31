@@ -11,8 +11,7 @@ var assert = require('assert'),
 describe('Posts:', function() {
   var rawData,
       postId,
-      URL,
-      API = '/api/organization/';
+      NEWS_RESOURCE;
 
   before(function(done){
     require(CONFIG.ROOT_DIRECTORY + '/lib/http/server').startServer();
@@ -22,10 +21,7 @@ describe('Posts:', function() {
         metadata: {title: 'titulo-sensacionalista' + new Date().getTime()}
     };
 
-    URL = {
-      get :  '/posts',
-      insert :  '/posts'
-    };
+    NEWS_RESOURCE = '/posts';
 
     MongoClient.connect(process.env.DATABASE_URL, function(err, db) {
         db.collection('posts').drop();
@@ -73,7 +69,7 @@ describe('Posts:', function() {
         });
       };
 
-      api.post(URL.insert)
+      api.post(NEWS_RESOURCE)
         .send(raw)
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
         .expect(201)
@@ -99,7 +95,7 @@ describe('Posts:', function() {
         });
       };
 
-      api.post(URL.insert)
+      api.post(NEWS_RESOURCE)
         .send(raw)
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
         .expect(201)
@@ -126,7 +122,7 @@ describe('Posts:', function() {
         });
       };
 
-      api.post(URL.insert)
+      api.post(NEWS_RESOURCE)
         .send(raw)
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
         .expect(201)
@@ -136,7 +132,7 @@ describe('Posts:', function() {
 
   it('GET: /api/organization/:organization/:repository/posts?:filters', function(done){
 
-    api.get(URL.get + '?year=' + CONFIG.YEAR + '&month=' + CONFIG.MONTH)
+    api.get(NEWS_RESOURCE + '?year=' + CONFIG.YEAR + '&month=' + CONFIG.MONTH)
       .expect(200)
       .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
       .expect('Content-Type', /json/)
@@ -161,7 +157,7 @@ describe('Posts:', function() {
 
   it('GET: /api/organization/:organization/:repository/posts', function(done){
 
-    api.get(URL.get)
+    api.get(NEWS_RESOURCE)
       .expect(200)
       .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
       .expect('Content-Type', /json/)
@@ -190,7 +186,7 @@ describe('Posts:', function() {
     var title = 'titulo-sensacionalista' + new Date().getTime();
     rawData.metadata = JSON.stringify({title: title});
 
-    api.put(URL.get + '/' + postId)
+    api.put(NEWS_RESOURCE + '/' + postId)
       .send(rawData)
       .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
       .expect(204)
@@ -226,7 +222,7 @@ describe('Posts:', function() {
     it('PUT: /api/organization/:organization/:repository/posts/<id>/status/<draft>', function(done) {
       var expectedPath = '';
 
-      api.put(URL.get + '/' + postIdent + '/status/draft')
+      api.put(NEWS_RESOURCE + '/' + postIdent + '/status/draft')
       .expect(202)
       .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
       .end(function(err, result) {
@@ -241,7 +237,7 @@ describe('Posts:', function() {
     it('PUT: /api/organization/:organization/:repository/posts/<id>/status/<published>', function(done) {
       var expectedPath = [year, month, rawData.metadata.title].join('/') + '/';
 
-      api.put(URL.get + '/' + postIdent + '/status/published')
+      api.put(NEWS_RESOURCE + '/' + postIdent + '/status/published')
       .expect(202)
       .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
       .end(function(err, result) {
