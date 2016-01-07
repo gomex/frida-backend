@@ -3,6 +3,7 @@ var fs = require('fs');
 var slug = require('slug');
 var matters =  require('gray-matter');
 var assert = require('assert');
+var moment = require('moment');
 
 
 describe('Hexo publisher:', function() {
@@ -27,8 +28,9 @@ describe('Hexo publisher:', function() {
   	            };
 
         hexo.publish(news, function(httpPath) {
-          var year  = news.metadata.published_at.getFullYear();
-          var month = news.metadata.published_at.getMonth() + 1;
+          var newsPublishedAt = moment(news.metadata.published_at);
+          var year  = newsPublishedAt.format('YYYY');
+          var month = newsPublishedAt.format('MM');
 
           var httpExpectedPath = year + '/' + month + '/' + slug(news.metadata.title) + '/';
           var expectedPath = process.env.HEXO_SOURCE_PATH + '/_posts/' + year + '/' + month + '/' + news._id + '.md';
@@ -58,8 +60,9 @@ describe('Hexo publisher:', function() {
   	            };
 
         hexo.publish(news, function(httpPath) {
-          var year  = news.metadata.published_at.getFullYear();
-          var month = news.metadata.published_at.getMonth() + 1;
+          var newsPublishedAt = moment(news.metadata.published_at);
+          var year  = newsPublishedAt.format('YYYY');
+          var month = newsPublishedAt.format('MM');
           var expectedPath    = process.env.HEXO_SOURCE_PATH + '/_posts/' + year + '/' + month + '/' + news._id + '.md';
 
           var expectedContent = matters.stringify(news.body, news.metadata);
