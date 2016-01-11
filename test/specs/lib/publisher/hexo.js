@@ -1,4 +1,4 @@
-var hexo = require('../../../../lib/publisher/hexo')();
+var hexo = require('../../../../lib/publisher/hexo');
 var fs = require('fs');
 var slug = require('slug');
 var matters =  require('gray-matter');

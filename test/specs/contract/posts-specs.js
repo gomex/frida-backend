@@ -1,7 +1,7 @@
 var assert = require('assert'),
     CONFIG = require('../helpers/config'),
     supertest = require('supertest'),
-    postsRepository = require(CONFIG.ROOT_DIRECTORY + '/lib/posts-repository')(),
+    postsRepository = require(CONFIG.ROOT_DIRECTORY + '/lib/posts-repository'),
     api = supertest('https://localhost:5000'),
     moment = require('moment'),
     MongoClient     = require('mongodb').MongoClient,
