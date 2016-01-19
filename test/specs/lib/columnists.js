@@ -1,5 +1,5 @@
 
-var columnists = require('../../../lib/columnists')();
+var columnists = require('../../../lib/columnists');
 var fs = require('fs');
 var assert = require('assert');
 
@@ -19,7 +19,7 @@ describe('Columnists:', function() {
 
   describe('columnists data',function(){
     it('should toDATA data to right format', function(done) {
-      var result = columnists(data).toDATA().read();
+      var result = columnists.read(data);
       var expect = {
         "a@a.a": {
            "name": "Alfonso"
@@ -36,7 +36,7 @@ describe('Columnists:', function() {
     it('should ', function(done) {
       var expect = "a@a.a:\n  name: Alfonso\nb@b.b:\n  name: Baleia\n";
 
-      columnists(data).toDATA().write(undefined, function(err){
+      columnists.write(undefined, data, function(err){
         assert.equal(err, 'Need a path to save data files');
 
         done();
@@ -46,7 +46,7 @@ describe('Columnists:', function() {
     it('should save a file on a specify path', function(done) {
       var expect = "a@a.a:\n  name: Alfonso\nb@b.b:\n  name: Baleia\n";
 
-      columnists(data).toDATA().write('/tmp', function(err){
+      columnists.write('/tmp', data, function(err){
         var data = fs.readFileSync('/tmp/columnists.yml','utf8');
         assert.equal(expect, data);
 
