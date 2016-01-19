@@ -1,24 +1,24 @@
 var MongoClient     = require('mongodb').MongoClient;
-var postsRepository = require('../../../../lib/posts-repository');
+var newsRepository = require('../../../../lib/news-repository');
 var homeStrategy    = require('../../../../lib/publisher/home-strategy');
 var moment         = require('moment');
 var _               = require('underscore');
 var assert          = require('assert');
 
-describe('Posts for home strategy:', function() {
+describe('News for home strategy:', function() {
 
     describe('lastNews',function() {
 
       beforeEach(function(done){
           MongoClient.connect(process.env.DATABASE_URL, function(err, db) {
-              db.collection('posts').drop();
+              db.collection('news').drop();
               db.close();
               done();
           });
       });
 
-      function basePost(date) {
-        var basePost = {
+      function baseNews(date) {
+        var baseNews = {
           body: '<h1>the news content</h1>',
           status: 'published',
           metadata: {
@@ -36,35 +36,35 @@ describe('Posts for home strategy:', function() {
           }
         };
 
-        return basePost;
+        return baseNews;
       };
 
       function createNews(date) {
-        var news = basePost(date);
+        var news = baseNews(date);
         news.metadata.layout = 'post';
         return news;
       };
 
       function createOpinion(date) {
-        var opinion = basePost(date);
+        var opinion = baseNews(date);
         opinion.metadata.layout = 'opinion';
         opinion.metadata.columnist = 'wandecleya@gmail.com';
         return opinion;
       };
 
 
-      function createPosts(amount, type) {
-            var posts = [];
+      function createNewsOfType(amount, type) {
+            var news = [];
             var startTime = moment();
 
-            var createPost = type === 'post'? createNews : createOpinion;
+            var funciontToCall = type === 'post'? createNews : createOpinion;
 
             for(var i = 0; i < amount; i++) {
               var date = startTime.add(1, 'days').toISOString();
-	            posts.push(createPost(date));
+	            news.push(funciontToCall(date));
             }
 
-            return posts;
+            return news;
         };
 
         function formatNewsAsExpectedBySite(items) {
@@ -103,15 +103,15 @@ describe('Posts for home strategy:', function() {
       };
 
       it('should return the last news grouped by category', function(done) {
-            var news = createPosts(15, 'post');
-            var opinions = createPosts(5, 'opinion');
+            var news = createNewsOfType(15, 'post');
+            var opinions = createNewsOfType(5, 'opinion');
 
             var strippedNews = formatNewsAsExpectedBySite(news);
             var strippedOpinions = formatOpinionsAsExpecteBySite(opinions);
 
             MongoClient.connect(process.env.DATABASE_URL, function(err, db) {
 
-                db.collection('posts').insert(news.concat(opinions), function(err, result) {
+                db.collection('news').insert(news.concat(opinions), function(err, result) {
                     console.log(err);
                     var expected = {
                         featured: [strippedNews[14], strippedNews[13], strippedNews[12], strippedNews[11]],
@@ -120,8 +120,8 @@ describe('Posts for home strategy:', function() {
                         opinions: [strippedOpinions[4], strippedOpinions[3], strippedOpinions[2]]
                     };
 
-                    var homePosts = homeStrategy.lastNews(function(homePosts) {
-                        assert.deepEqual(homePosts, expected);
+                    var homeNews = homeStrategy.lastNews(function(homeNews) {
+                        assert.deepEqual(homeNews, expected);
                         done();
                     });
                 });
@@ -129,13 +129,13 @@ describe('Posts for home strategy:', function() {
         });
 
         it('should not break if there is not enough news to fill all groups', function(done) {
-            var news = createPosts(1, 'post');
+            var news = createNewsOfType(1, 'post');
 
             var transformedNews = formatNewsAsExpectedBySite(news);
 
             MongoClient.connect(process.env.DATABASE_URL, function(err, db) {
 
-                db.collection('posts').insert(news, function(err, result) {
+                db.collection('news').insert(news, function(err, result) {
                     var expected = {
                         featured: [transformedNews[0]],
                         secondary: [],
@@ -143,8 +143,8 @@ describe('Posts for home strategy:', function() {
                         opinions: []
                     };
 
-                    var homePosts = homeStrategy.lastNews(function(homePosts) {
-                        assert.deepEqual(homePosts, expected);
+                    var homeNews = homeStrategy.lastNews(function(homeNews) {
+                        assert.deepEqual(homeNews, expected);
                         done();
                     });
                 });

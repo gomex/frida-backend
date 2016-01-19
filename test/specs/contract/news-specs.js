@@ -1,16 +1,16 @@
 var assert = require('assert'),
     CONFIG = require('../helpers/config'),
     supertest = require('supertest'),
-    postsRepository = require(CONFIG.ROOT_DIRECTORY + '/lib/posts-repository'),
+    newsRepository = require(CONFIG.ROOT_DIRECTORY + '/lib/news-repository'),
     api = supertest('https://localhost:5000'),
     moment = require('moment'),
     MongoClient     = require('mongodb').MongoClient,
-    PostUtil = require(CONFIG.ROOT_DIRECTORY + '/lib/post-util');
+    NewsUtil = require(CONFIG.ROOT_DIRECTORY + '/lib/news-util');
 
 
-describe('Posts:', function() {
+describe('News:', function() {
   var rawData,
-      postId,
+      newsId,
       NEWS_RESOURCE;
 
   before(function(done){
@@ -21,13 +21,13 @@ describe('Posts:', function() {
         metadata: {title: 'titulo-sensacionalista' + new Date().getTime()}
     };
 
-    NEWS_RESOURCE = '/posts';
+    NEWS_RESOURCE = '/news';
 
     MongoClient.connect(process.env.DATABASE_URL, function(err, db) {
-        db.collection('posts').drop();
+        db.collection('news').drop();
         db.close();
-        postsRepository.insert(PostUtil.prepare(rawData), function(id) {
-            postId = id;
+        newsRepository.insert(NewsUtil.prepare(rawData), function(id) {
+            newsId = id;
             done();
         });
     });
@@ -42,13 +42,13 @@ describe('Posts:', function() {
   });
 
   after(function(done) {
-    postsRepository.deleteById(postId, function(err){
+    newsRepository.deleteById(newsId, function(err){
       done();
     });
   });
 
   describe('insert news using POST contract', function() {
-    it('POST: /posts', function(done) {
+    it('NEWS: /news', function(done) {
       var raw = {
         body: 'qualquer coisa',
         metadata: JSON.stringify({ algo: 12})
@@ -58,12 +58,12 @@ describe('Posts:', function() {
         var id = res.body.id;
         assert(typeof id !== 'undefined');
 
-        postsRepository.findById(id, function(result) {
+        newsRepository.findById(id, function(result) {
           assert.equal(typeof result._id !== 'undefined', true);
           assert.equal(typeof result.metadata === 'object', true);
           assert.equal(result.metadata.algo, 12);
 
-          postsRepository.deleteById(id, function(err) {
+          newsRepository.deleteById(id, function(err) {
             done();
           });
         });
@@ -85,11 +85,11 @@ describe('Posts:', function() {
       var callback = function(err, res) {
         var id = res.body.id;
 
-        postsRepository.findById(id, function(result) {
+        newsRepository.findById(id, function(result) {
           assert.equal(result.metadata.url, 'dolly/2014/08/25/barragem-estoura/');
 
 
-          postsRepository.deleteById(id, function(err) {
+          newsRepository.deleteById(id, function(err) {
             done();
           });
         });
@@ -112,11 +112,11 @@ describe('Posts:', function() {
       var callback = function(err, res) {
         var id = res.body.id;
 
-        postsRepository.findById(id, function(result) {
+        newsRepository.findById(id, function(result) {
           assert.equal(result.metadata.url, '2014/08/25/barragem-estoura/');
 
 
-          postsRepository.deleteById(id, function(err) {
+          newsRepository.deleteById(id, function(err) {
             done();
           });
         });
@@ -130,7 +130,7 @@ describe('Posts:', function() {
     });
   });
 
-  it('GET: /posts?:filters', function(done){
+  it('GET: /news?:filters', function(done){
 
     api.get(NEWS_RESOURCE + '?year=' + CONFIG.YEAR + '&month=' + CONFIG.MONTH)
       .expect(200)
@@ -155,7 +155,7 @@ describe('Posts:', function() {
       });
   });
 
-  it('GET: /posts', function(done){
+  it('GET: /news', function(done){
 
     api.get(NEWS_RESOURCE)
       .expect(200)
@@ -180,19 +180,19 @@ describe('Posts:', function() {
       });
   });
 
-  it('PUT: /posts/<id>', function(done) {
+  it('PUT: /news/<id>', function(done) {
     rawData.test = 'test';
 
     var title = 'titulo-sensacionalista' + new Date().getTime();
     rawData.metadata = JSON.stringify({title: title});
 
-    api.put(NEWS_RESOURCE + '/' + postId)
+    api.put(NEWS_RESOURCE + '/' + newsId)
       .send(rawData)
       .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
       .expect(204)
       .end(function(err) {
 
-        postsRepository.findById(postId, function(result) {
+        newsRepository.findById(newsId, function(result) {
 
           assert.equal(typeof result._id !== 'undefined', true);
           assert.equal(typeof result.metadata === 'object', true);
@@ -203,7 +203,7 @@ describe('Posts:', function() {
   });
 
   describe('Change status', function(){
-    var postIdent, month, year;
+    var newsIdent, month, year;
     beforeEach(function(done) {
       rawData =  {
         body: '',
@@ -212,37 +212,37 @@ describe('Posts:', function() {
       month = moment().format('MM');
       year  = moment().format('YYYY');
 
-      postsRepository.insert(PostUtil.prepare(rawData), function(result) {
-        postIdent = result;
+      newsRepository.insert(NewsUtil.prepare(rawData), function(result) {
+        newsIdent = result;
 
         done();
       });
     });
 
-    it('PUT: /posts/<id>/status/<draft>', function(done) {
+    it('PUT: /news/<id>/status/<draft>', function(done) {
       var expectedPath = '';
 
-      api.put(NEWS_RESOURCE + '/' + postIdent + '/status/draft')
+      api.put(NEWS_RESOURCE + '/' + newsIdent + '/status/draft')
       .expect(202)
       .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
       .end(function(err, result) {
         assert.equal(expectedPath, result.body.path);
-        postsRepository.findById(postIdent, function(result) {
+        newsRepository.findById(newsIdent, function(result) {
           assert.equal('draft', result.status);
           done();
         });
       });
     });
 
-    it('PUT: /posts/<id>/status/<published>', function(done) {
+    it('PUT: /news/<id>/status/<published>', function(done) {
       var expectedPath = [year, month, rawData.metadata.title].join('/') + '/';
 
-      api.put(NEWS_RESOURCE + '/' + postIdent + '/status/published')
+      api.put(NEWS_RESOURCE + '/' + newsIdent + '/status/published')
       .expect(202)
       .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
       .end(function(err, result) {
         assert.equal(expectedPath, result.body.path);
-        postsRepository.findById(postIdent, function(result) {
+        newsRepository.findById(newsIdent, function(result) {
           assert.equal('published', result.status);
           done();
         });
