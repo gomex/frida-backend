@@ -4,7 +4,7 @@ Frida Backend
 [![Build Status](https://snap-ci.com/brasil-de-fato/frida-backend/branch/master/build_image)](https://snap-ci.com/brasil-de-fato/frida-backend/branch/master)
 [![Coverage Status](https://coveralls.io/repos/brasil-de-fato/news-service/badge.svg?branch=master)](https://coveralls.io/r/brasil-de-fato/news-service?branch=master)
 
-This is the backend for the Frida CMS (you can find the frontend code [here](https://github.com/brasil-de-fato/frida-frontend), it is responsible for taking care of CRUP operations for news: Create, Read, Update and Publish.
+This is the backend for the Frida CMS (you can find the frontend code [here](https://github.com/brasil-de-fato/frida-frontend)), it is responsible for taking care of CRUP operations for news: Create, Read, Update and Publish.
 All operations are avaible through REST services.
 
 
