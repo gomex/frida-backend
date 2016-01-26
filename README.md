@@ -1,10 +1,10 @@
-News Service
+Frida Backend
 ============
 
-[![Build Status](https://snap-ci.com/brasil-de-fato/news-service/branch/master/build_image)](https://snap-ci.com/brasil-de-fato/news-service/branch/master)
+[![Build Status](https://snap-ci.com/brasil-de-fato/frida-backend/branch/master/build_image)](https://snap-ci.com/brasil-de-fato/frida-backend/branch/master)
 [![Coverage Status](https://coveralls.io/repos/brasil-de-fato/news-service/badge.svg?branch=master)](https://coveralls.io/r/brasil-de-fato/news-service?branch=master)
 
-News Service is the backend of [Frida CMS](https://github.com/brasil-de-fato/cms), it is responsible for taking care of CRUP operations for news: Create, Read, Update and Publish.
+This is the backend for the Frida CMS (you can find the frontend code [here](https://github.com/brasil-de-fato/frida-frontend), it is responsible for taking care of CRUP operations for news: Create, Read, Update and Publish.
 All operations are avaible through REST services.
 
 
@@ -15,7 +15,7 @@ All operations are avaible through REST services.
 
 **Technology Stack**
 
-News service uses MongoDB to persist news so it requires an instance of [MongoDB](https://www.mongodb.org/) running somewhere.
+frida-backend uses MongoDB to persist news so it requires an instance of [MongoDB](https://www.mongodb.org/) running somewhere.
 
 The code is written in Node.js and Express.
 
@@ -24,7 +24,7 @@ When published news will be available in a folder, pointed by an environment var
 
 **Development Environment**
 
-Before running news service (or its tests) it is necessary to: 
+Before running frida-backend (or its tests) it is necessary to: 
 
 * install
    * Node.js v.0.12.7
@@ -70,7 +70,7 @@ export KEY_FILE_PATH=<path_to_news_service>/test/specs/ssl/ssl.key
 ```
 
 
-**NOTICE**: News Service only runs over SSL. If you are using a self signed cert (as the one we use for testing) make sure Frida UI can make calls to it by adding an exception for the certificate in the browser. To do so, make a request through the browser to the API and when prompted by the browser, add an exception for the certificate.
+**NOTICE**: frida-backend only runs over SSL. If you are using a self signed cert (as the one we use for testing) make sure frida-frontend can make calls to it by adding an exception for the certificate in the browser. To do so, make a request through the browser to the API and when prompted by the browser, add an exception for the certificate.
 
 ## Installing dependencies
 
@@ -104,7 +104,4 @@ make sure pm2 is installed globally and run
 $ pm2 start pm2-config.json
 ```
 
-#### Service API URL
-**https://localhost:5000/api**
-
-Remember to access the API URL and add the certificate to the browser you'll be using Frida(CMS) with.
+Remember to make a request to some resource in the API URL (ex.: https://localhost:5000/news) and add the certificate to the browser you'll be using frida-frontend with.
