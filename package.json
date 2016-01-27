@@ -1,5 +1,5 @@
 {
-  "name": "frida-news-service",
+  "name": "frida-backend",
   "description": "Small service to perform CRUD operations for news",
   "main": "index.js",
   "private": true,

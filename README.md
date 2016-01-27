@@ -47,26 +47,26 @@ export DATABASE_URL=mongodb://localhost/bdf
 export HEXO_SOURCE_PATH=<sites_path>/source
 
 #
-# The username used to authorize the use of news service API
+# The username used to authorize the use of frida backend
 #
 export EDITOR_USERNAME=user
 
 #
-# The password used to authorize the use of news service API
+# The password used to authorize the use of frida backend
 #
 export EDITOR_PASSWORD=pass
 
 #
 # The path for the ssl certificate
-# There is a certificate inside the test folder of news-service
+# There is a certificate inside the test folder of frida backend
 #
-export CERT_FILE_PATH=<path_to_news_service>/test/specs/ssl/ssl.crt
+export CERT_FILE_PATH=<path_to_frida_backend>/test/specs/ssl/ssl.crt
 
 #
 # The path for the ssl key
-# There is a certificate inside the test folder of news-service
+# There is a certificate inside the test folder of frida backend
 #
-export KEY_FILE_PATH=<path_to_news_service>/test/specs/ssl/ssl.key
+export KEY_FILE_PATH=<path_to_frida_backend>/test/specs/ssl/ssl.key
 ```
 
 
