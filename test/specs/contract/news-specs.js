@@ -202,7 +202,7 @@ describe('News:', function() {
       });
   });
 
-  describe('Change status', function(){
+  describe('on status update', function(){
     var newsIdent, month, year;
     beforeEach(function(done) {
       rawData =  {
@@ -249,5 +249,28 @@ describe('News:', function() {
       });
     });
 
+    it('published_at date should not change if it is already set', function(done) {
+      var past = new Date(1000);
+
+      var news =  {
+        body: '',
+        metadata: {
+          title: 'titulo-sensacionalista' + new Date().getTime(),
+          published_at: past
+        }
+      };
+
+      newsRepository.insert(NewsUtil.prepare(news), function(newsIdent) {
+        api.put(NEWS_RESOURCE + '/' + newsIdent + '/status/published')
+        .expect(202)
+        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+        .end(function(err, result) {
+          newsRepository.findById(newsIdent, function(result) {
+            assert.equal(past.valueOf(), result.metadata.published_at.valueOf());
+            done();
+          });
+        });
+      });
+    });
   });
 });
