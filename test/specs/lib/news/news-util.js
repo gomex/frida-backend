@@ -1,4 +1,4 @@
-var NewsUtil = require('../../../lib/news-util');
+var NewsUtil = require('../../../../lib/news/news-util');
 var assert = require('assert');
 
 

@@ -1,5 +1,5 @@
 
-var columnists = require('../../../lib/columnists');
+var columnists = require('../../../../lib/columnist/columnists');
 var fs = require('fs');
 var assert = require('assert');
 

@@ -1,5 +1,5 @@
 var MongoClient     = require('mongodb').MongoClient;
-var newsRepository = require('../../../../lib/news-repository');
+var newsRepository = require('../../../../lib/news/news-repository');
 var homeStrategy    = require('../../../../lib/publisher/home-strategy');
 var moment         = require('moment');
 var _               = require('underscore');

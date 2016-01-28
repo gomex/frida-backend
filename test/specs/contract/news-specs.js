@@ -1,11 +1,11 @@
 var assert = require('assert'),
     CONFIG = require('../helpers/config'),
     supertest = require('supertest'),
-    newsRepository = require(CONFIG.ROOT_DIRECTORY + '/lib/news-repository'),
+    newsRepository = require(CONFIG.ROOT_DIRECTORY + '/lib/news/news-repository'),
     api = supertest('https://localhost:5000'),
     moment = require('moment'),
     MongoClient     = require('mongodb').MongoClient,
-    NewsUtil = require(CONFIG.ROOT_DIRECTORY + '/lib/news-util');
+    NewsUtil = require(CONFIG.ROOT_DIRECTORY + '/lib/news/news-util');
 
 
 describe('News:', function() {
