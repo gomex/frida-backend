@@ -256,8 +256,8 @@ describe('News:', function() {
         body: '',
         metadata: {
           title: 'titulo-sensacionalista' + new Date().getTime(),
-          published_at: past
-        }
+        },
+        published_at: past
       };
 
       newsRepository.insert(NewsUtil.prepare(news), function(newsIdent) {
@@ -266,7 +266,7 @@ describe('News:', function() {
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
         .end(function(err, result) {
           newsRepository.findById(newsIdent, function(result) {
-            assert.equal(past.valueOf(), result.metadata.published_at.valueOf());
+            assert.equal(past.valueOf(), result.published_at.valueOf());
             done();
           });
         });

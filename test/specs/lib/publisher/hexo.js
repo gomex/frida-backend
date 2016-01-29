@@ -16,9 +16,9 @@ describe('Hexo publisher:', function() {
                       _id: 'news_ident-' + now.getTime(),
   	                body:'<h1>the news content</h1>',
   	                status: 'published',
+                    published_at: now,
   	                metadata: {
   	                    date: now,
-                          published_at: now,
   	                    title: title,
   	                    description: 'description',
   	                    cover: {
@@ -28,7 +28,7 @@ describe('Hexo publisher:', function() {
   	            };
 
         hexo.publish(news, function(httpPath) {
-          var newsPublishedAt = moment(news.metadata.published_at);
+          var newsPublishedAt = moment(news.published_at);
           var year  = newsPublishedAt.format('YYYY');
           var month = newsPublishedAt.format('MM');
 
@@ -48,9 +48,9 @@ describe('Hexo publisher:', function() {
                       _id: 'news_ident-' + now.getTime(),
   	                body:'<h1>the news content</h1>',
   	                status: 'published',
+                    published_at: now,
   	                metadata: {
   	                    date: now,
-                          published_at: now,
   	                    title: title,
   	                    description: 'description',
   	                    cover: {
@@ -60,7 +60,7 @@ describe('Hexo publisher:', function() {
   	            };
 
         hexo.publish(news, function(httpPath) {
-          var newsPublishedAt = moment(news.metadata.published_at);
+          var newsPublishedAt = moment(news.published_at);
           var year  = newsPublishedAt.format('YYYY');
           var month = newsPublishedAt.format('MM');
           var expectedPath    = process.env.HEXO_SOURCE_PATH + '/_posts/' + year + '/' + month + '/' + news._id + '.md';
@@ -95,9 +95,9 @@ describe('Hexo publisher:', function() {
                       _id: 'news_ident-' + now.getTime(),
   	                body:'<h1>the news content</h1>',
   	                status: 'published',
+                    published_at: now,
   	                metadata: {
   	                    date: now,
-                          published_at: now,
   	                    title: title,
   	                    description: 'description',
   	                    cover: {
