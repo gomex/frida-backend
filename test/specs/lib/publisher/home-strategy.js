@@ -21,6 +21,7 @@ describe('News for home strategy:', function() {
         var baseNews = {
           body: '<h1>the news content</h1>',
           status: 'published',
+          published_at: date,
           metadata: {
             title: 'title-' + date,
             hat: 'Nacional',
@@ -32,7 +33,6 @@ describe('News for home strategy:', function() {
               credits: "credits",
               subtitle: "subtitle"
             },
-            published_at: date
           }
         };
 
@@ -78,7 +78,7 @@ describe('News for home strategy:', function() {
                 credits: item.metadata.cover.credits,
                 subtitle: item.metadata.cover.subtitle
               },
-              date: item.metadata.published_at,
+              date: item.published_at,
               description: item.metadata.description,
               title: item.metadata.title,
               path: item.metadata.url,
@@ -95,7 +95,7 @@ describe('News for home strategy:', function() {
           strippedOpinions.push({
             columnist: opinionFromMongo.metadata.columnist,
             title: opinionFromMongo.metadata.title,
-            date: opinionFromMongo.metadata.published_at,
+            date: opinionFromMongo.published_at,
             path: opinionFromMongo.metadata.url
           });
         });

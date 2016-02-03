@@ -4,7 +4,7 @@ var assert = require('assert'),
     newsRepository = require(CONFIG.ROOT_DIRECTORY + '/lib/news/news-repository'),
     api = supertest('https://localhost:5000'),
     moment = require('moment'),
-    MongoClient     = require('mongodb').MongoClient,
+    mongoose        = require('mongoose'),
     NewsUtil = require(CONFIG.ROOT_DIRECTORY + '/lib/news/news-util');
 
 
@@ -23,13 +23,14 @@ describe('News:', function() {
 
     NEWS_RESOURCE = '/news';
 
-    MongoClient.connect(process.env.DATABASE_URL, function(err, db) {
-        db.collection('news').drop();
-        db.close();
+    mongoose.connect(process.env.DATABASE_URL);
+    mongoose.connection.once('open', function() {
+      newsRepository.deleteAll(function() {
         newsRepository.insert(NewsUtil.prepare(rawData), function(id) {
-            newsId = id;
-            done();
+          newsId = id;
+          done();
         });
+      });
     });
   });
 
@@ -51,7 +52,7 @@ describe('News:', function() {
     it('NEWS: /news', function(done) {
       var raw = {
         body: 'qualquer coisa',
-        metadata: JSON.stringify({ algo: 12})
+        metadata: {}
       };
 
       var callback = function(err, res) {
@@ -60,8 +61,7 @@ describe('News:', function() {
 
         newsRepository.findById(id, function(result) {
           assert.equal(typeof result._id !== 'undefined', true);
-          assert.equal(typeof result.metadata === 'object', true);
-          assert.equal(result.metadata.algo, 12);
+          assert.equal(result.body, 'qualquer coisa');
 
           newsRepository.deleteById(id, function(err) {
             done();
@@ -202,7 +202,7 @@ describe('News:', function() {
       });
   });
 
-  describe('Change status', function(){
+  describe('on status update', function(){
     var newsIdent, month, year;
     beforeEach(function(done) {
       rawData =  {
@@ -249,5 +249,28 @@ describe('News:', function() {
       });
     });
 
+    it('published_at date should not change if it is already set', function(done) {
+      var past = new Date(1000);
+
+      var news =  {
+        body: '',
+        metadata: {
+          title: 'titulo-sensacionalista' + new Date().getTime(),
+        },
+        published_at: past
+      };
+
+      newsRepository.insert(NewsUtil.prepare(news), function(newsIdent) {
+        api.put(NEWS_RESOURCE + '/' + newsIdent + '/status/published')
+        .expect(202)
+        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+        .end(function(err, result) {
+          newsRepository.findById(newsIdent, function(result) {
+            assert.equal(past.valueOf(), result.published_at.valueOf());
+            done();
+          });
+        });
+      });
+    });
   });
 });
