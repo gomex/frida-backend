@@ -22,14 +22,6 @@ describe('news-util:', function() {
       done();
     });
 
-    it('should not have an _id field', function(done){
-      var body = { metadata: {title: 'como vai'}, _id: 123233  };
-      var result = NewsUtil.prepare(body);
-
-      assert.ok(!result._id, 'id field was not deleted');
-      done();
-    });
-
   });
 
   describe('format url',function(){

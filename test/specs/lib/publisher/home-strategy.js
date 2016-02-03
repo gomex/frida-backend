@@ -9,6 +9,8 @@ describe('News for home strategy:', function() {
 
     describe('lastNews',function() {
 
+      var nationalEdition = '[not-a-link]';
+
       beforeEach(function(done){
           MongoClient.connect(process.env.DATABASE_URL, function(err, db) {
               db.collection('news').drop();
@@ -24,6 +26,7 @@ describe('News for home strategy:', function() {
           published_at: date,
           metadata: {
             title: 'title-' + date,
+            edition: nationalEdition,
             hat: 'Nacional',
             description: 'description',
             url: '2015/12/03/novo-site-do-brasil-de-fato-e-lancado/',
@@ -120,7 +123,7 @@ describe('News for home strategy:', function() {
                         opinions: [strippedOpinions[4], strippedOpinions[3], strippedOpinions[2]]
                     };
 
-                    var homeNews = homeStrategy.lastNews(function(homeNews) {
+                    var homeNews = homeStrategy.lastNews(nationalEdition, function(homeNews) {
                         assert.deepEqual(homeNews, expected);
                         done();
                     });
@@ -143,7 +146,7 @@ describe('News for home strategy:', function() {
                         opinions: []
                     };
 
-                    var homeNews = homeStrategy.lastNews(function(homeNews) {
+                    var homeNews = homeStrategy.lastNews(nationalEdition, function(homeNews) {
                         assert.deepEqual(homeNews, expected);
                         done();
                     });

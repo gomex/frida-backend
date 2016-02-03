@@ -79,14 +79,14 @@ describe('News:', function() {
     it('the edition goes into the path', function(done){
       var raw = {
         body: 'qualquer coisa',
-        metadata: JSON.stringify({ edition: 'dolly', title: 'Barragem Estoura', date: '2014-08-25T15:32:36-03:00'})
+        metadata: JSON.stringify({ edition: 'pernambuco', title: 'Barragem Estoura', date: '2014-08-25T15:32:36-03:00'})
       };
 
       var callback = function(err, res) {
         var id = res.body.id;
 
         newsRepository.findById(id, function(result) {
-          assert.equal(result.metadata.url, 'dolly/2014/08/25/barragem-estoura/');
+          assert.equal(result.metadata.url, '2014/08/25/barragem-estoura/');
 
 
           newsRepository.deleteById(id, function(err) {
@@ -207,7 +207,10 @@ describe('News:', function() {
     beforeEach(function(done) {
       rawData =  {
         body: '',
-        metadata: {title: 'titulo-sensacionalista' + new Date().getTime()}
+        metadata: {
+          title: 'titulo-sensacionalista' + new Date().getTime(),
+          edition: '[not-a-link]' // nacional
+        }
       };
       month = moment().format('MM');
       year  = moment().format('YYYY');
@@ -256,6 +259,7 @@ describe('News:', function() {
         body: '',
         metadata: {
           title: 'titulo-sensacionalista' + new Date().getTime(),
+          edition: '[not-a-link]' // nacional
         },
         published_at: past
       };

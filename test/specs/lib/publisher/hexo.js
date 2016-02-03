@@ -8,6 +8,8 @@ var moment = require('moment');
 
 describe('Hexo publisher:', function() {
 
+  var nationalEdition = '[not-a-link]';
+
   describe('publish', function() {
     it('creates the news file in the configured hexo posts folder', function(done) {
        var now = new Date();
@@ -23,7 +25,8 @@ describe('Hexo publisher:', function() {
   	                    description: 'description',
   	                    cover: {
   	                        link: "//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg",
-  	                    }
+  	                    },
+                        edition: nationalEdition
   	                }
   	            };
 
@@ -55,7 +58,8 @@ describe('Hexo publisher:', function() {
   	                    description: 'description',
   	                    cover: {
   	                        link: "//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg",
-  	                    }
+  	                    },
+                        edition: nationalEdition
   	                }
   	            };
 
@@ -102,14 +106,15 @@ describe('Hexo publisher:', function() {
   	                    description: 'description',
   	                    cover: {
   	                        link: "//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg",
-  	                    }
+  	                    },
+                        edition: nationalEdition
   	                }
   	            };
 
       var expectedPath = process.env.HEXO_SOURCE_PATH + '/index.md';
       try { fs.unlinkSync(expectedPath); } catch(e) { /* ignore */ }
 
-      hexo.updateHome(function() {
+      hexo.updateHome(nationalEdition, function() {
           assert.ok(fs.existsSync(expectedPath));
 
           done();
