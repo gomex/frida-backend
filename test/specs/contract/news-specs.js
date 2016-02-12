@@ -23,13 +23,10 @@ describe('News:', function() {
 
     NEWS_RESOURCE = '/news';
 
-    mongoose.connect(process.env.DATABASE_URL);
-    mongoose.connection.once('open', function() {
-      newsRepository.deleteAll(function() {
-        newsRepository.insert(NewsUtil.prepare(rawData), function(id) {
-          newsId = id;
-          done();
-        });
+    newsRepository.deleteAll(function() {
+      newsRepository.insert(NewsUtil.prepare(rawData), function(id) {
+        newsId = id;
+        done();
       });
     });
   });
