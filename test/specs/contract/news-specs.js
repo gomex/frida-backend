@@ -33,7 +33,7 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
   afterEach(function(done){
     if(idsToDelete) {
       newsRepository.deleteInIds(idsToDelete, function(err){
-        if(err){console.log(err);}
+        if(err){done(err);}
         idsToDelete = undefined;
         done();
       });
@@ -54,7 +54,7 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
       var newsDataTest = newsTestHelper.createNews(today, '[not-a-link]');
 
       var callback = function(err, res) {
-        if(err){ console.log(err); }
+        if(err){ done(err); }
         var newsId = res.body.id;
         assert(typeof newsId !== 'undefined');
         newsRepository.findById(newsId, function(result) {
@@ -85,7 +85,7 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
       var opinionTestData = newsTestHelper.createOpinion(today);
 
       var callback = function(err, res) {
-        if(err){ console.log(err); }
+        if(err){ done(err); }
 
         var opinionId = res.body.id;
         assert(typeof opinionId !== 'undefined');
@@ -126,7 +126,7 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
       var newsDataTest = newsTestHelper.createNews(today, '[not-a-link]');
 
       var callback = function(err, res){
-        if(err){ console.log(err); }
+        if(err){ done(err); }
 
         var newsId = res.body.id;
         assert(typeof newsId !== 'undefined');
@@ -149,7 +149,7 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
       var opinionDataTest = newsTestHelper.createOpinion(today);
 
       var callback = function(err, res){
-        if(err){ console.log(err); }
+        if(err){ done(err); }
 
         var opinionId = res.body.id;
         assert(typeof opinionId !== 'undefined');
@@ -177,7 +177,7 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
       var newsId;
 
       var callbackPost = function(err, res){
-        if(err){ console.log(err); }
+        if(err){ done(err); }
 
         newsId = res.body.id;
         assert(typeof newsId !== 'undefined');
@@ -194,7 +194,7 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
       };
 
       var callbackGet = function(err, res){
-        if(err){ console.log(err); }
+        if(err){ done(err); }
         var body = res.body;
         assert.equal(body._id, newsId);
         assert.equal(body.metadata.area, newsDataTest.metadata.area);
@@ -227,7 +227,7 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
 
       var callbackPost = function(err, res) {
         if (err) {
-          console.log(err);
+          done(err);
         }
 
         newsId = res.body.id;
@@ -254,7 +254,7 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
       };
 
       var callbackPut = function(err, res){
-        if(err){ console.log(err); }
+        if(err){ done(err); }
 
         var id = res.body.id;
         assert(typeof id !== 'undefined');
@@ -287,88 +287,104 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
   });
 
   describe('publish NEWS and OPINIONS using rest service: /news', function(){
-    //it('publish NEWS already saved', function(done){
+
+    var calculateYearMonthPath = function(publishedAtDate){
+      var publishedAt = moment(publishedAtDate);
+      var postDir = [publishedAt.format('YYYY'), publishedAt.format('MM')].join('/');
+      return postDir;
+    }
+
+    var calculateHttpPath = function(publishedAtDate, newsTitle) {
+      var postDir = calculateYearMonthPath(publishedAtDate);
+      var slugTitle = slug(newsTitle);
+      var httpPostPath = [postDir, slugTitle].join('/') + '/';
+      return httpPostPath;
+    };
+
+    var calculateIndexPath = function(publishedAtDate, newsTitle) {
+      var postDir = calculateYearMonthPath(publishedAtDate);
+      var slugTitle = slug(newsTitle);
+    };
+
+    it('publish national NEWS already saved - using status: published', function(done){
+      var newsDataTest = newsTestHelper.createNews(today, '[not-a-link]');
+      var newsId;
+      var httpPath;
+      var callbackPost = function(err, res) {
+        if (err) {
+          done(err);
+        }
+
+        newsId = res.body.id;
+        assert(typeof newsId !== 'undefined');
+
+        newsRepository.findById(newsId, function (result) {
+          assert.equal(typeof result._id !== 'undefined', true);
+        });
+
+        api.put(NEWS_RESOURCE + '/' + newsId + '/status/' + 'published')
+          .send(newsDataTest)
+          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+          .expect('Content-Type', /json/)
+          .expect(202)
+          .end(callbackPut);
+
+      };
+
+      var callbackPut = function(err, res) {
+        var publishedAt = new Date();
+        if (err) {
+          done(err);
+        }
+        httpPath = calculateHttpPath(publishedAt, newsDataTest.metadata.title);
+        assert.equal(JSON.stringify(res.body), JSON.stringify({path: httpPath}));
+        newsRepository.findById(newsId, function(result) {
+          var published_at = result.published_at;
+          assert.ok(published_at);
+          assert.ok(published_at > today && published_at < new Date());
+          assert.equal(result.status, 'published');
+          //assert.equal(result.metadata.url, httpPath);
+        });
+        done();
+      };
+
+        api.post(NEWS_RESOURCE)
+        .send(newsDataTest)
+        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+        .expect(201)
+        .end(callbackPost);
+
+    });
+
+    //it('published_at date should not change if it is already set', function(done) {
+    //  var past = new Date(1000);
     //
-    //});
+    //  var news =  {
+    //    body: '',
+    //    metadata: {
+    //      title: 'titulo-sensacionalista' + new Date().getTime(),
+    //      edition: '[not-a-link]' // nacional
+    //    },
+    //    published_at: past
+    //  };
     //
-    //it('publish NEWS before saving it', function(done){
-    //
+    //  newsRepository.insert(NewsUtil.prepare(news), function(newsIdent) {
+    //    api.put(NEWS_RESOURCE + '/' + newsIdent + '/status/published')
+    //    .expect(202)
+    //    .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+    //    .end(function(err, result) {
+    //      newsRepository.findById(newsIdent, function(result) {
+    //        assert.equal(past.valueOf(), result.published_at.valueOf());
+    //        done();
+    //      });
+    //    });
+    //  });
     //});
   })
 });
 //  describe('insert news using POST contract', function() {
 //
-//  it('GET: /news?:filters', function(done){
 //
-//    api.get(NEWS_RESOURCE + '?year=' + CONFIG.YEAR + '&month=' + CONFIG.MONTH)
-//      .expect(200)
-//      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-//      .expect('Content-Type', /json/)
-//      .end(function(err, res) {
-//
-//        if (err) {
-//          return done(err);
-//        }
-//
-//        assert(res.body instanceof Array);
-//
-//        res.body.forEach(function (response) {
-//          assert.equal(typeof response._id !== 'undefined', true);
-//          assert.equal(typeof response.insertDate !== 'undefined', true);
-//          assert.equal(typeof response.metadata !== 'undefined', true);
-//          assert.equal(typeof response.body !== 'undefined', true);
-//        });
-//
-//        done();
-//      });
-//  });
-//
-//  it('GET: /news', function(done){
-//
-//    api.get(NEWS_RESOURCE)
-//      .expect(200)
-//      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-//      .expect('Content-Type', /json/)
-//      .end(function(err, res) {
-//
-//        if (err) {
-//          return done(err);
-//        }
-//
-//        assert(res.body instanceof Array);
-//
-//        res.body.forEach(function (response) {
-//          assert.equal(typeof response._id !== 'undefined', true);
-//          assert.equal(typeof response.insertDate !== 'undefined', true);
-//          assert.equal(typeof response.metadata !== 'undefined', true);
-//          assert.equal(typeof response.body !== 'undefined', true);
-//        });
-//
-//        done();
-//      });
-//  });
-//
-//  it('PUT: /news/<id>', function(done) {
-//    rawData.test = 'test';
-//
-//    var title = 'titulo-sensacionalista' + new Date().getTime();
-//    rawData.metadata = JSON.stringify({title: title});
-//
-//    api.put(NEWS_RESOURCE + '/' + newsId)
-//      .send(rawData)
-//      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-//      .expect(204)
-//      .end(function(err) {
-//
-//        newsRepository.findById(newsId, function(result) {
-//
-//          assert.equal(typeof result._id !== 'undefined', true);
-//          assert.equal(typeof result.metadata === 'object', true);
-//          assert.equal(result.metadata.title === title, true);
-//          done();
-//        });
-//      });
-//  });
 //
 //  describe('on status update', function(){
 //    var newsIdent, month, year;
