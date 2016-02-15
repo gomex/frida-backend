@@ -5,7 +5,6 @@ var NewsUtil = require(CONFIG.ROOT_DIRECTORY + '/lib/news/news-util');
 var supertest = require('supertest');
 var api = supertest('https://localhost:5000');
 var moment = require('moment');
-var mongoose        = require('mongoose');
 var newsTestHelper = require('../lib/news/news-test-helper');
 var slug    = require('slug');
 var _       = require('underscore');
