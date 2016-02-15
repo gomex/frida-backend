@@ -26,12 +26,8 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
   before(function(done){
     require(CONFIG.ROOT_DIRECTORY + '/lib/http/server').startServer();
     NEWS_RESOURCE = '/news';
-    mongoose.connect(process.env.DATABASE_URL);
-
-    mongoose.connection.once('open', function() {
-      newsRepository.deleteAll(function () {
-        done();
-      });
+    newsRepository.deleteAll(function () {
+      done();
     });
   });
 
