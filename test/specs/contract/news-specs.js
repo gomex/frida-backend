@@ -1,7 +1,7 @@
 var assert = require('assert');
 var CONFIG = require('../helpers/config');
 var newsRepository = require(CONFIG.ROOT_DIRECTORY + '/lib/news/news-repository');
-//var NewsUtil = require(CONFIG.ROOT_DIRECTORY + '/lib/news/news-util');
+var NewsUtil = require(CONFIG.ROOT_DIRECTORY + '/lib/news/news-util');
 var supertest = require('supertest');
 var api = supertest('https://localhost:5000');
 var moment = require('moment');
@@ -23,11 +23,26 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
     posts: [process.env.HEXO_SOURCE_PATH, '_posts'].join('/')
   };
 
+  var deleteDirSync = function(path, done) {
+    if( fs.existsSync(path) ) {
+      fs.readdirSync(path).forEach(function (file, index) {
+        var curPath = path + "/" + file;
+        fs.unlinkSync(curPath);
+      });
+      fs.rmdir(path, function(err) {
+        done(err);
+      });
+    } else {
+      done();
+    }
+  };
+
   before(function(done){
     require(CONFIG.ROOT_DIRECTORY + '/lib/http/server').startServer();
     NEWS_RESOURCE = '/news';
-    newsRepository.deleteAll(function () {
-      done();
+
+    newsRepository.deleteAll(function(){
+      deleteDirSync(process.env.HEXO_SOURCE_PATH + '/_posts/2016/02/', done);
     });
   });
 
@@ -45,7 +60,7 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
   after(function(done) {
     newsRepository.deleteAll(function() {
       console.log("file: news-specs.js - end of tests. All entries removed.");
-      done();
+      deleteDirSync(process.env.HEXO_SOURCE_PATH + '/_posts/2016/02/', done);
     });
   });
 
@@ -323,8 +338,16 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
             var indexFileAsObj = matters(indexFileAsFrontMatters);
             assert.equal(indexFileAsObj.data.layout, 'nacional');
             assert.equal(indexFileAsObj.data.featured[0].path, '2016/02/14/' + slug(newsDataTest.metadata.title, {lower: true}) + '/');
+          });
+
+          // test news.md file
+          fs.readFile(process.env.HEXO_SOURCE_PATH + '/_posts/2016/02/' + newsId + '.md', 'utf-8', function(err, newsFileAsFrontMatters){
+            var newsFileAsObj = matters(newsFileAsFrontMatters);
+            assert.equal(newsFileAsObj.data.edition, '[not-a-link]');
+            assert.equal(newsFileAsObj.data.url, '2016/02/14/' + slug(newsDataTest.metadata.title, {lower: true}) + '/');
             done();
           });
+
         });
       };
 
@@ -379,12 +402,14 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
             var indexFileAsObj = matters(indexFileAsFrontMatters);
             assert.equal(indexFileAsObj.data.layout, 'tabloide');
             assert.equal(indexFileAsObj.data.featured[0].path, '2016/02/14/' + slug(newsDataTest.metadata.title, {lower: true}) + '/');
-            done();
           });
 
           // test news.md file
-          fs.readFile(process.env.HEXO_SOURCE_PATH + '_posts/2016/02/' + newsId + '.md', function(err, newsFileAsFrontMatters){
-
+          fs.readFile(process.env.HEXO_SOURCE_PATH + '/_posts/2016/02/' + newsId + '.md', 'utf-8', function(err, newsFileAsFrontMatters){
+            var newsFileAsObj = matters(newsFileAsFrontMatters);
+            assert.equal(newsFileAsObj.data.edition, 'minas-gerais');
+            assert.equal(newsFileAsObj.data.url, 'minas-gerais/2016/02/14/' + slug(newsDataTest.metadata.title, {lower: true}) + '/');
+            done();
           });
         });
       };
@@ -396,109 +421,29 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
         .end(callbackPost);
     });
 
-    //it('published_at date should not change if it is already set', function(done) {
-    //  var past = new Date(1000);
-    //
-    //  var news =  {
-    //    body: '',
-    //    metadata: {
-    //      title: 'titulo-sensacionalista' + new Date().getTime(),
-    //      edition: '[not-a-link]' // nacional
-    //    },
-    //    published_at: past
-    //  };
-    //
-    //  newsRepository.insert(NewsUtil.prepare(news), function(newsIdent) {
-    //    api.put(NEWS_RESOURCE + '/' + newsIdent + '/status/published')
-    //    .expect(202)
-    //    .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-    //    .end(function(err, result) {
-    //      newsRepository.findById(newsIdent, function(result) {
-    //        assert.equal(past.valueOf(), result.published_at.valueOf());
-    //        done();
-    //      });
-    //    });
-    //  });
-    //});
+    it('published_at date should not change if it is already set', function(done) {
+      var past = new Date(1000);
+
+      var news =  {
+        body: '',
+        metadata: {
+          title: 'titulo-sensacionalista' + new Date().getTime(),
+          edition: '[not-a-link]' // nacional
+        },
+        published_at: past
+      };
+
+      newsRepository.insert(NewsUtil.prepare(news), function(newsIdent) {
+        api.put(NEWS_RESOURCE + '/' + newsIdent + '/status/published')
+        .expect(202)
+        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+        .end(function(err, result) {
+          newsRepository.findById(newsIdent, function(result) {
+            assert.equal(past.valueOf(), result.published_at.valueOf());
+            done();
+          });
+        });
+      });
+    });
   })
 });
-//  describe('insert news using POST contract', function() {
-//
-//
-//
-//  describe('on status update', function(){
-//    var newsIdent, month, year;
-//    beforeEach(function(done) {
-//      rawData =  {
-//        body: '',
-//        metadata: {
-//          title: 'titulo-sensacionalista' + new Date().getTime(),
-//          edition: '[not-a-link]' // nacional
-//        }
-//      };
-//      month = moment().format('MM');
-//      year  = moment().format('YYYY');
-//
-//      newsRepository.insert(NewsUtil.prepare(rawData), function(result) {
-//        newsIdent = result;
-//
-//        done();
-//      });
-//    });
-//
-//    it('PUT: /news/<id>/status/<draft>', function(done) {
-//      var expectedPath = '';
-//
-//      api.put(NEWS_RESOURCE + '/' + newsIdent + '/status/draft')
-//      .expect(202)
-//      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-//      .end(function(err, result) {
-//        assert.equal(expectedPath, result.body.path);
-//        newsRepository.findById(newsIdent, function(result) {
-//          assert.equal('draft', result.status);
-//          done();
-//        });
-//      });
-//    });
-//
-//    it('PUT: /news/<id>/status/<published>', function(done) {
-//      var expectedPath = [year, month, rawData.metadata.title].join('/') + '/';
-//
-//      api.put(NEWS_RESOURCE + '/' + newsIdent + '/status/published')
-//      .expect(202)
-//      .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-//      .end(function(err, result) {
-//        assert.equal(expectedPath, result.body.path);
-//        newsRepository.findById(newsIdent, function(result) {
-//          assert.equal('published', result.status);
-//          done();
-//        });
-//      });
-//    });
-//
-//    it('published_at date should not change if it is already set', function(done) {
-//      var past = new Date(1000);
-//
-//      var news =  {
-//        body: '',
-//        metadata: {
-//          title: 'titulo-sensacionalista' + new Date().getTime(),
-//          edition: '[not-a-link]' // nacional
-//        },
-//        published_at: past
-//      };
-//
-//      newsRepository.insert(NewsUtil.prepare(news), function(newsIdent) {
-//        api.put(NEWS_RESOURCE + '/' + newsIdent + '/status/published')
-//        .expect(202)
-//        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-//        .end(function(err, result) {
-//          newsRepository.findById(newsIdent, function(result) {
-//            assert.equal(past.valueOf(), result.published_at.valueOf());
-//            done();
-//          });
-//        });
-//      });
-//    });
-//  });
-//});
