@@ -16,7 +16,7 @@ var matters =  require('gray-matter');
 
 describe('file: news-specs.js. Test NEWS operations using REST API:', function() {
   var NEWS_RESOURCE;
-  var testDate = new Date("Sun Feb 14 2016 22:00:00 GMT-0200(BRST)");
+  var testDate = new Date("Feb 14, 2016 01:15:00");
   var idsToDelete;
 
   var hexoPaths = {
