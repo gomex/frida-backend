@@ -434,11 +434,11 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
       };
 
       newsRepository.insert(NewsUtil.prepare(news), function(newsIdent) {
-        api.put(NEWS_RESOURCE + '/' + newsIdent + '/status/published')
+        api.put(NEWS_RESOURCE + '/' + newsIdent.valueOf() + '/status/published')
         .expect(202)
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
         .end(function(err, result) {
-          newsRepository.findById(newsIdent, function(result) {
+          newsRepository.findById(newsIdent.valueOf(), function(result) {
             assert.equal(past.valueOf(), result.published_at.valueOf());
             done();
           });
