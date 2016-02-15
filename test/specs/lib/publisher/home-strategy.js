@@ -115,7 +115,6 @@ describe('News for home strategy:', function() {
             MongoClient.connect(process.env.DATABASE_URL, function(err, db) {
 
                 db.collection('news').insert(news.concat(opinions), function(err, result) {
-                    console.log(err);
                     var expected = {
                         featured: [strippedNews[14], strippedNews[13], strippedNews[12], strippedNews[11]],
                         secondary: [strippedNews[10], strippedNews[9], strippedNews[8], strippedNews[7]],
