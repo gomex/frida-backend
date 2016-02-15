@@ -14,8 +14,7 @@ var async = require('async');
 
 describe('file: news-specs.js. Test NEWS operations using REST API:', function() {
   var NEWS_RESOURCE;
-  var today = new Date();
-  var todayAsMoment = moment(today);
+  var testDate = new Date("Sun Feb 14 2016 22:00:00 GMT-0200(BRST)");
   var idsToDelete;
 
   before(function(done){
@@ -51,7 +50,7 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
   describe('insert NEWS and OPINIONS using rest service: /news, method: POST', function() {
 
     it('insert NEWS - url: /news, method: POST', function(done) {
-      var newsDataTest = newsTestHelper.createNews(today, '[not-a-link]');
+      var newsDataTest = newsTestHelper.createNews(testDate, '[not-a-link]');
 
       var callback = function(err, res) {
         if(err){ done(err); }
@@ -82,7 +81,7 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
     });
 
     it('insert OPINION - url: /news, method: POST', function(done) {
-      var opinionTestData = newsTestHelper.createOpinion(today);
+      var opinionTestData = newsTestHelper.createOpinion(testDate);
 
       var callback = function(err, res) {
         if(err){ done(err); }
@@ -112,18 +111,8 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
 
   describe('test backend created attributes for NEWS/OPINIONS', function(){
 
-    // construct expected URL to be found on database
-    function createURL(title){
-      var  titleSlug = slug(title, {lower: true});
-      var  year = todayAsMoment.format('YYYY');
-      var  month = todayAsMoment.format('MM');
-      var  day  = todayAsMoment.format('DD');
-
-      return _.compact([year, month, day, titleSlug]).join('/') + '/';
-    };
-
     it('When news is inserted and not published', function(done) {
-      var newsDataTest = newsTestHelper.createNews(today, '[not-a-link]');
+      var newsDataTest = newsTestHelper.createNews(testDate, '[not-a-link]');
 
       var callback = function(err, res){
         if(err){ done(err); }
@@ -132,7 +121,7 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
         assert(typeof newsId !== 'undefined');
         newsRepository.findById(newsId, function(result) {
           assert.equal(typeof result._id !== 'undefined', true);
-          assert.equal(result.metadata.url, createURL(newsDataTest.metadata.title));
+          assert.equal(result.metadata.url, '2016/02/14/' + slug(newsDataTest.metadata.title, {lower: true}) + '/');
           assert.ok(result.insertDate);
           done();
         });
@@ -146,7 +135,7 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
     });
 
     it('When opinion is inserted and not published', function(done){
-      var opinionDataTest = newsTestHelper.createOpinion(today);
+      var opinionDataTest = newsTestHelper.createOpinion(testDate);
 
       var callback = function(err, res){
         if(err){ done(err); }
@@ -155,7 +144,7 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
         assert(typeof opinionId !== 'undefined');
         newsRepository.findById(opinionId, function(result) {
           assert.equal(typeof result._id !== 'undefined', true);
-          assert.equal(result.metadata.url, createURL(opinionDataTest.metadata.title));
+          assert.equal(result.metadata.url, '2016/02/14/' + slug(opinionDataTest.metadata.title, {lower: true}) + '/');
           assert.ok(result.insertDate);
           done();
         });
@@ -173,7 +162,7 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
   describe('get NEWS and OPINIONS using rest service /news/:id, method: GET', function(){
 
     it('insert and get NEWS through REST using NEWS id', function(done){
-      var newsDataTest = newsTestHelper.createNews(today, '[not-a-link]');
+      var newsDataTest = newsTestHelper.createNews(testDate, '[not-a-link]');
       var newsId;
 
       var callbackPost = function(err, res){
@@ -221,7 +210,7 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
   describe('update NEWS and OPINIONS using rest service: /news/:id, method: PUT', function(){
 
     it('insert and update NEWS through REST using NEWS id', function(done){
-      var newsDataTest = newsTestHelper.createNews(today, '[not-a-link]');
+      var newsDataTest = newsTestHelper.createNews(testDate, '[not-a-link]');
       var newsDataTestStringifyed;
       var newsId;
 
@@ -288,28 +277,9 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
 
   describe('publish NEWS and OPINIONS using rest service: /news', function(){
 
-    var calculateYearMonthPath = function(publishedAtDate){
-      var publishedAt = moment(publishedAtDate);
-      var postDir = [publishedAt.format('YYYY'), publishedAt.format('MM')].join('/');
-      return postDir;
-    }
-
-    var calculateHttpPath = function(publishedAtDate, newsTitle) {
-      var postDir = calculateYearMonthPath(publishedAtDate);
-      var slugTitle = slug(newsTitle);
-      var httpPostPath = [postDir, slugTitle].join('/') + '/';
-      return httpPostPath;
-    };
-
-    var calculateIndexPath = function(publishedAtDate, newsTitle) {
-      var postDir = calculateYearMonthPath(publishedAtDate);
-      var slugTitle = slug(newsTitle);
-    };
-
     it('publish national NEWS already saved - using status: published', function(done){
-      var newsDataTest = newsTestHelper.createNews(today, '[not-a-link]');
+      var newsDataTest = newsTestHelper.createNews(testDate, '[not-a-link]');
       var newsId;
-      var httpPath;
       var callbackPost = function(err, res) {
         if (err) {
           done(err);
@@ -336,14 +306,13 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
         if (err) {
           done(err);
         }
-        httpPath = calculateHttpPath(publishedAt, newsDataTest.metadata.title);
-        assert.equal(JSON.stringify(res.body), JSON.stringify({path: httpPath}));
+        assert.equal(JSON.stringify(res.body), JSON.stringify({path : '2016/02/' + slug(newsDataTest.metadata.title) + '/'}));
         newsRepository.findById(newsId, function(result) {
           var published_at = result.published_at;
           assert.ok(published_at);
-          assert.ok(published_at > today && published_at < new Date());
+          assert.ok(published_at > testDate && published_at < new Date());
           assert.equal(result.status, 'published');
-          //assert.equal(result.metadata.url, httpPath);
+          assert.equal(result.metadata.url, '2016/02/14/' + slug(newsDataTest.metadata.title, {lower: true}) + '/');
         });
         done();
       };
@@ -354,6 +323,10 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
         .expect(201)
         .end(callbackPost);
 
+    });
+
+    it('publish tabloide NEWS already saved - using status: published', function(done){
+      done();
     });
 
     //it('published_at date should not change if it is already set', function(done) {
