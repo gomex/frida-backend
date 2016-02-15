@@ -10,12 +10,18 @@ var newsTestHelper = require('../lib/news/news-test-helper');
 var slug    = require('slug');
 var _       = require('underscore');
 var async = require('async');
+var fs =  require('fs');
+var matters =  require('gray-matter');
 
 
 describe('file: news-specs.js. Test NEWS operations using REST API:', function() {
   var NEWS_RESOURCE;
   var testDate = new Date("Sun Feb 14 2016 22:00:00 GMT-0200(BRST)");
   var idsToDelete;
+
+  var hexoPaths = {
+    posts: [process.env.HEXO_SOURCE_PATH, '_posts'].join('/')
+  };
 
   before(function(done){
     require(CONFIG.ROOT_DIRECTORY + '/lib/http/server').startServer();
@@ -313,8 +319,17 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
           assert.ok(published_at > testDate && published_at < new Date());
           assert.equal(result.status, 'published');
           assert.equal(result.metadata.url, '2016/02/14/' + slug(newsDataTest.metadata.title, {lower: true}) + '/');
+
+          // test index.md file
+          fs.readFile(process.env.HEXO_SOURCE_PATH + '/index.md', 'utf-8', function(err, indexFileAsFrontMatters){
+            if(err){done(err);}
+            assert.ok(indexFileAsFrontMatters);
+            var indexFileAsObj = matters(indexFileAsFrontMatters);
+            assert.equal(indexFileAsObj.data.layout, 'nacional');
+            assert.equal(indexFileAsObj.data.featured[0].path, '2016/02/14/' + slug(newsDataTest.metadata.title, {lower: true}) + '/');
+            done();
+          });
         });
-        done();
       };
 
         api.post(NEWS_RESOURCE)
@@ -326,7 +341,63 @@ describe('file: news-specs.js. Test NEWS operations using REST API:', function()
     });
 
     it('publish tabloide NEWS already saved - using status: published', function(done){
-      done();
+      var newsDataTest = newsTestHelper.createNews(testDate, 'minas-gerais');
+      var newsId;
+      var callbackPost = function(err, res) {
+        if (err) {
+          done(err);
+        }
+
+        newsId = res.body.id;
+        assert(typeof newsId !== 'undefined');
+
+        newsRepository.findById(newsId, function (result) {
+          assert.equal(typeof result._id !== 'undefined', true);
+        });
+
+        api.put(NEWS_RESOURCE + '/' + newsId + '/status/' + 'published')
+          .send(newsDataTest)
+          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+          .expect('Content-Type', /json/)
+          .expect(202)
+          .end(callbackPut);
+      };
+
+      var callbackPut = function(err, res) {
+        var publishedAt = new Date();
+        if (err) {
+          done(err);
+        }
+        assert.equal(JSON.stringify(res.body), JSON.stringify({path : '2016/02/' + slug(newsDataTest.metadata.title) + '/'}));
+        newsRepository.findById(newsId, function(result) {
+          var published_at = result.published_at;
+          assert.ok(published_at);
+          assert.ok(published_at > testDate && published_at < new Date());
+          assert.equal(result.status, 'published');
+          assert.equal(result.metadata.url, '2016/02/14/' + slug(newsDataTest.metadata.title, {lower: true}) + '/');
+
+          // test index.md file
+          fs.readFile(process.env.HEXO_SOURCE_PATH + '/minas-gerais/index.md', 'utf-8', function(err, indexFileAsFrontMatters){
+            if(err){done(err);}
+            assert.ok(indexFileAsFrontMatters);
+            var indexFileAsObj = matters(indexFileAsFrontMatters);
+            assert.equal(indexFileAsObj.data.layout, 'tabloide');
+            assert.equal(indexFileAsObj.data.featured[0].path, '2016/02/14/' + slug(newsDataTest.metadata.title, {lower: true}) + '/');
+            done();
+          });
+
+          // test news.md file
+          fs.readFile(process.env.HEXO_SOURCE_PATH + '_posts/2016/02/' + newsId + '.md', function(err, newsFileAsFrontMatters){
+
+          });
+        });
+      };
+
+      api.post(NEWS_RESOURCE)
+        .send(newsDataTest)
+        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+        .expect(201)
+        .end(callbackPost);
     });
 
     //it('published_at date should not change if it is already set', function(done) {
