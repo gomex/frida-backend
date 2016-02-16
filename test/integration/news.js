@@ -14,7 +14,7 @@ var fs = require('fs');
 var matters = require('gray-matter');
 
 
-describe('file: news-itest.js. Test NEWS operations using REST API:', function() {
+describe('file: news.js. Test NEWS operations using REST API:', function() {
   var NEWS_RESOURCE;
   var NATIONAL;
 
@@ -98,7 +98,7 @@ describe('file: news-itest.js. Test NEWS operations using REST API:', function()
 
   after(function(done) {
     newsRepository.deleteAll(function() {
-      console.log("file: news-itest.js - end of tests. All entries removed.");
+      console.log("file: news.js - end of tests. All entries removed.");
       deleteDirSync(newsPublishDir, done);
     });
   });
