@@ -1,5 +1,5 @@
 var assert = require('assert');
-var CONFIG = require('../specs/helpers/config');
+var CONFIG = require('../helpers/config');
 var newsRepository = require(CONFIG.ROOT_DIRECTORY + '/lib/news/news-repository');
 var NewsUtil = require(CONFIG.ROOT_DIRECTORY + '/lib/news/news-util');
 var supertest = require('supertest');
