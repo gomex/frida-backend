@@ -26,7 +26,7 @@
   },
   "scripts": {
     "start": "node ./index.js",
-    "test": "export NODE_TLS_REJECT_UNAUTHORIZED='0'; export KEY_FILE_PATH=./test/specs/ssl/ssl.key; export CERT_FILE_PATH=./test/specs/ssl/ssl.crt; ./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly --  test/ --recursive -R spec --timeout 10000 && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "test": "export NODE_TLS_REJECT_UNAUTHORIZED='0'; export KEY_FILE_PATH=./test/ssl/ssl.key; export CERT_FILE_PATH=./test/ssl/ssl.crt; ./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly --  test/ --recursive -R spec --timeout 10000 && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "debug": "node --debug-brk ./index.js",
     "jshint": "./node_modules/jshint/bin/jshint ."
   },
