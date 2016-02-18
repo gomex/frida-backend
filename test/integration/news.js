@@ -1,10 +1,9 @@
 var assert = require('assert');
-var CONFIG = require('../helpers/config');
-var newsRepository = require(CONFIG.ROOT_DIRECTORY + '/lib/news/news-repository');
-var NewsUtil = require(CONFIG.ROOT_DIRECTORY + '/lib/news/news-util');
+var newsRepository = require('../../lib/news/news-repository');
+var NewsUtil = require('../../lib/news/news-util');
 var supertest = require('supertest');
 var api = supertest('https://localhost:5000');
-var server = require(CONFIG.ROOT_DIRECTORY + '/lib/http/server');
+var server = require('../../lib/http/server');
 var moment = require('moment');
 var newsTestHelper = require('../helpers/news');
 var slug = require('slug');
