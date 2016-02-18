@@ -164,7 +164,6 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
         newsRepository.findById(newsId, function(result) {
           assert.equal(typeof result._id !== 'undefined', true);
           assert.equal(result.metadata.url, buildNewsHTTPPath(newsDataTest.metadata.title));
-          assert.ok(result.insertDate);
           done();
         });
       };
@@ -188,7 +187,6 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
         newsRepository.findById(opinionId, function(result) {
           assert.equal(typeof result._id !== 'undefined', true);
           assert.equal(result.metadata.url, newsYearMonthDayURL + slug(opinionDataTest.metadata.title, {lower: true}) + '/');
-          assert.ok(result.insertDate);
           done();
         });
       };

@@ -14,15 +14,6 @@ describe('news-util:', function() {
       assert.equal(expect, result.metadata.url);
       done();
     });
-
-    it('should have the inserted date field', function(done){
-      var body = { metadata: {title: 'como vai'}  };
-      var result = NewsUtil.prepare(body);
-
-      assert.ok(result.insertDate, 'Insert date need be created');
-      done();
-    });
-
   });
 
   describe('format url',function(){
