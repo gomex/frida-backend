@@ -1,9 +1,10 @@
-var MongoClient     = require('mongodb').MongoClient;
-var newsRepository = require('../../../../lib/news/news-repository');
-var homeStrategy    = require('../../../../lib/publisher/home-strategy');
-var moment         = require('moment');
 var _               = require('underscore');
 var assert          = require('assert');
+var MongoClient     = require('mongodb').MongoClient;
+var moment          = require('moment');
+
+var homeStrategy    = require('../../../../lib/publisher/home-strategy');
+var newsRepository  = require('../../../../lib/news/news-repository');
 
 describe('News for home strategy:', function() {
 

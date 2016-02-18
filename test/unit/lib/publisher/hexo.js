@@ -1,10 +1,10 @@
-var hexo = require('../../../../lib/publisher/hexo');
-var fs = require('fs');
-var slug = require('slug');
+var assert  = require('assert');
+var fs      = require('fs');
 var matters =  require('gray-matter');
-var assert = require('assert');
-var moment = require('moment');
+var moment  = require('moment');
+var slug =   require('slug');
 
+var hexo = require('../../../../lib/publisher/hexo');
 
 describe('Hexo publisher:', function() {
 

@@ -1,8 +1,7 @@
+var assert  = require('assert');
+var fs      = require('fs');
 
 var columnists = require('../../../../lib/columnist/columnists');
-var fs = require('fs');
-var assert = require('assert');
-
 
 describe('Columnists:', function() {
 

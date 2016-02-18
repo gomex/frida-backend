@@ -1,17 +1,19 @@
-var assert = require('assert');
-var newsRepository = require('../../lib/news/news-repository');
-var NewsUtil = require('../../lib/news/news-util');
-var supertest = require('supertest');
-var api = supertest('https://localhost:5000');
-var server = require('../../lib/http/server');
-var moment = require('moment');
-var newsTestHelper = require('../helpers/news');
-var slug = require('slug');
-var _ = require('underscore');
-var async = require('async');
-var fs = require('fs');
-var matters = require('gray-matter');
+var _           = require('underscore');
+var assert      = require('assert');
+var async       = require('async');
+var fs          = require('fs');
+var matters     = require('gray-matter');
+var moment      = require('moment');
+var slug        = require('slug');
+var supertest   = require('supertest');
 
+var newsRepository  = require('../../lib/news/news-repository');
+var NewsUtil        = require('../../lib/news/news-util');
+var server          = require('../../lib/http/server');
+
+var newsTestHelper  = require('../helpers/news');
+
+var api             = supertest('https://localhost:5000');
 
 describe('file: news.js. Test NEWS operations using REST API:', function() {
   var NEWS_RESOURCE;
