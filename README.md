@@ -60,13 +60,13 @@ export EDITOR_PASSWORD=pass
 # The path for the ssl certificate
 # There is a certificate inside the test folder of frida backend
 #
-export CERT_FILE_PATH=<path_to_frida_backend>/test/specs/ssl/ssl.crt
+export CERT_FILE_PATH=<path_to_frida_backend>/test/ssl/ssl.crt
 
 #
 # The path for the ssl key
 # There is a certificate inside the test folder of frida backend
 #
-export KEY_FILE_PATH=<path_to_frida_backend>/test/specs/ssl/ssl.key
+export KEY_FILE_PATH=<path_to_frida_backend>/test/ssl/ssl.key
 ```
 
 
