@@ -3,6 +3,7 @@ var fs      = require('fs');
 var matters =  require('gray-matter');
 var moment  = require('moment');
 var slug =   require('slug');
+var _ = require('underscore');
 
 var hexo = require('../../../../lib/publisher/hexo');
 
@@ -69,7 +70,8 @@ describe('Hexo publisher:', function() {
           var month = newsPublishedAt.format('MM');
           var expectedPath    = process.env.HEXO_SOURCE_PATH + '/_posts/' + year + '/' + month + '/' + news._id + '.md';
 
-          var expectedContent = matters.stringify(news.body, news.metadata);
+          var data = _.extend(news.metadata, {published_at: news.published_at});
+          var expectedContent = matters.stringify(news.body, data);
 
           var actualContent = fs.readFileSync(expectedPath, 'utf8');
           assert.equal(actualContent, expectedContent);
