@@ -356,7 +356,6 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
       };
 
       var callbackPut = function(err, res) {
-        var publishedAt = new Date();
         if (err) {
           done(err);
         }
@@ -417,7 +416,6 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
       };
 
       var callbackPut = function(err, res) {
-        var publishedAt = new Date();
         if (err) {
           done(err);
         }
