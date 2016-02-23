@@ -1,17 +1,34 @@
-var assert = require('assert');
+var assert  = require('assert');
+var sinon   = require('sinon');
 
-var NewsUtil = require('../../../../lib/news/news-util');
+var NewsUtil        = require('../../../../lib/news/news-util');
+var newsTestHelper  = require('../../../helpers/news');
 
 
 describe('news-util:', function() {
 
   describe('Prepare news to insert',function(){
+    var clock;
+
+    before(function () { clock = sinon.useFakeTimers('Date'); });
+
+    after(function () { clock.restore(); });
+
     it('should slugify url using title on metadata', function(done) {
       var body = { metadata: {title: 'como vai', date: '2014-08-25T15:32:36-03:00'}  };
       var expect = '2014/08/25/como-vai/';
       var result = NewsUtil.prepare(body);
 
       assert.equal(expect, result.metadata.url);
+      done();
+    });
+
+    it('sets created_at', function(done) {
+      var news = newsTestHelper.createNews();
+      var expect = Date.now();
+      var result = NewsUtil.prepare(news);
+
+      assert.equal(expect, result.created_at);
       done();
     });
   });
@@ -50,14 +67,6 @@ describe('news-util:', function() {
       var result = NewsUtil.prepare(body);
 
       assert.equal(expect, result.metadata.url);
-      done();
-    });
-
-    it('should create url when title does not exist', function(done) {
-      var body = { metadata: {} };
-      var result = NewsUtil.prepare(body);
-
-      assert.ok(!!result.metadata.url);
       done();
     });
 

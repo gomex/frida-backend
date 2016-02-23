@@ -5,6 +5,7 @@ var fs          = require('fs');
 var matters     = require('gray-matter');
 var moment      = require('moment');
 var slug        = require('slug');
+var sinon       = require('sinon');
 var supertest   = require('supertest');
 
 var newsRepository  = require('../../lib/news/news-repository');
@@ -49,6 +50,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
     assert.equal(calculatedObject.body, expectedObject.body);
     assert.equal(calculatedObject.metadata.created_date.getTime(), expectedObject.metadata.created_date.getTime());
     assert.equal(calculatedObject.metadata.date.getTime(), expectedObject.metadata.date.getTime());
+    assert.equal(calculatedObject.created_at.getTime(), newsCreatedAt);
     assert.equal(calculatedObject.metadata.description, expectedObject.metadata.description);
     assert.equal(calculatedObject.metadata.hat, expectedObject.metadata.hat);
     assert.equal(calculatedObject.metadata.layout, expectedObject.metadata.layout);
@@ -80,6 +82,10 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
     return NEWS_RESOURCE + '/' + newsId;
   };
 
+  var clock;
+
+  var newsCreatedAt;
+
   before(function(done){
     server.startServer();
 
@@ -92,6 +98,9 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
     newsYearMonthDayURL = '2016/02/14/';
     newsPublishDir = hexoPaths.postsPath + newsYearMonthURL;
 
+    clock = sinon.useFakeTimers(testDate.getTime(), 'Date');
+    newsCreatedAt = Date.now();
+
     newsRepository.deleteAll(function(){
       deleteDirSync(newsPublishDir, done);
     });
@@ -102,6 +111,8 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
       console.log("file: news.js - end of tests. All entries removed.");
       deleteDirSync(newsPublishDir, done);
     });
+
+    clock.restore();
   });
 
   describe('insert NEWS and OPINIONS using rest service: /news, method: POST', function() {
@@ -355,7 +366,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
         newsRepository.findById(newsId, function(result) {
           var published_at = result.published_at;
           assert.ok(published_at);
-          assert.ok(published_at > testDate && published_at < new Date());
+          assert.equal(Date.now(), published_at.getTime());
           assert.equal(result.status, 'published');
           assert.equal(result.metadata.url, buildNewsHTTPPath(newsDataTest.metadata.title));
 
@@ -383,6 +394,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
     it('publish tabloide NEWS already saved - using status: published', function(done){
       var newsDataTest = newsTestHelper.createNews(testDate, 'minas-gerais');
       var newsId;
+
       var callbackPost = function(err, res) {
         if (err) {
           done(err);
@@ -395,6 +407,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
           assert.equal(typeof result._id !== 'undefined', true);
         });
 
+        clock.tick(100000);
         api.put(buildPublishURL(newsId))
           .send(newsDataTest)
           .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
@@ -414,7 +427,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
         newsRepository.findById(newsId, function(result) {
           var published_at = result.published_at;
           assert.ok(published_at);
-          assert.ok(published_at > testDate && published_at < new Date());
+          assert.equal(Date.now(), published_at.getTime());
           assert.equal(result.status, 'published');
           assert.equal(result.metadata.url, buildNewsHTTPPath(newsDataTest.metadata.title));
 
