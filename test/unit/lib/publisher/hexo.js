@@ -52,7 +52,7 @@ describe('Hexo publisher:', function() {
                       _id: 'news_ident-' + now.getTime(),
   	                body:'<h1>the news content</h1>',
   	                status: 'published',
-                    published_at: now,
+                    published_at: new Date(12345),
   	                metadata: {
   	                    date: now,
   	                    title: title,
@@ -70,7 +70,7 @@ describe('Hexo publisher:', function() {
           var month = newsPublishedAt.format('MM');
           var expectedPath    = process.env.HEXO_SOURCE_PATH + '/_posts/' + year + '/' + month + '/' + news._id + '.md';
 
-          var data = _.extend(news.metadata, {published_at: news.published_at});
+          var data = _.extend(news.metadata, {date: news.published_at});
           var expectedContent = matters.stringify(news.body, data);
 
           var actualContent = fs.readFileSync(expectedPath, 'utf8');
