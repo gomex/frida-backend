@@ -9,8 +9,6 @@ function baseNews(date) {
   var baseNews = {
     body: '<p>São testes e testes. &nbsp;Testes de notícia</p>\n',
     metadata: {
-      created_date: date,
-      date: date,
       description: 'A notícia sensacionalista',
       hat: 'Sensacional',
       title: 'Título Sensacional',

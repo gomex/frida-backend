@@ -48,8 +48,6 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
   var testColumnistNewsCommonAttributes = function (calculatedObject, expectedObject) {
     assert.equal(typeof calculatedObject._id !== 'undefined', true);
     assert.equal(calculatedObject.body, expectedObject.body);
-    assert.equal(calculatedObject.metadata.created_date.getTime(), expectedObject.metadata.created_date.getTime());
-    assert.equal(calculatedObject.metadata.date.getTime(), expectedObject.metadata.date.getTime());
     assert.equal(calculatedObject.created_at.getTime(), newsCreatedAt);
     assert.equal(calculatedObject.metadata.description, expectedObject.metadata.description);
     assert.equal(calculatedObject.metadata.hat, expectedObject.metadata.hat);
@@ -241,8 +239,6 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
         assert.equal(newsReturnedFromGet._id, newsId);
         assert.equal(newsReturnedFromGet.metadata.area, newsDataTest.metadata.area);
         assert.equal(newsReturnedFromGet.metadata.author, newsDataTest.metadata.author);
-        assert.equal(new Date(newsReturnedFromGet.metadata.created_date).getTime(), newsDataTest.metadata.created_date.getTime());
-        assert.equal(new Date(newsReturnedFromGet.metadata.date).getTime(), newsDataTest.metadata.date.getTime());
         assert.equal(newsReturnedFromGet.metadata.description, newsDataTest.metadata.description);
         assert.equal(newsReturnedFromGet.metadata.edition, newsDataTest.metadata.edition);
         assert.equal(newsReturnedFromGet.metadata.hat, newsDataTest.metadata.hat);
