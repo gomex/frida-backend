@@ -116,7 +116,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
   describe('insert NEWS and OPINIONS using rest service: /news, method: POST', function() {
 
     it('insert NEWS - url: /news, method: POST', function(done) {
-      var newsDataTest = newsTestHelper.createNews(testDate, NATIONAL);
+      var newsDataTest = newsTestHelper.createNews(NATIONAL);
 
       var callback = function(err, res) {
         if(err){ done(err); }
@@ -137,7 +137,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
     });
 
     it('insert OPINION - url: /news, method: POST', function(done) {
-      var opinionTestData = newsTestHelper.createOpinion(testDate);
+      var opinionTestData = newsTestHelper.createOpinion();
 
       var callback = function(err, res) {
         if(err){ done(err); }
@@ -162,7 +162,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
   describe('test backend created attributes for NEWS/OPINIONS', function(){
 
     it('When news is inserted and not published', function(done) {
-      var newsDataTest = newsTestHelper.createNews(testDate, NATIONAL);
+      var newsDataTest = newsTestHelper.createNews(NATIONAL);
 
       var callback = function(err, res){
         if(err){ done(err); }
@@ -185,7 +185,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
     });
 
     it('When opinion is inserted and not published', function(done){
-      var opinionDataTest = newsTestHelper.createOpinion(testDate);
+      var opinionDataTest = newsTestHelper.createOpinion();
 
       var callback = function(err, res){
         if(err){ done(err); }
@@ -212,7 +212,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
   describe('get NEWS and OPINIONS using rest service /news/:id, method: GET', function(){
 
     it('insert and get NEWS through REST using NEWS id', function(done){
-      var newsDataTest = newsTestHelper.createNews(testDate, NATIONAL);
+      var newsDataTest = newsTestHelper.createNews(NATIONAL);
       var newsId;
 
       var callbackPost = function(err, res){
@@ -259,7 +259,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
   describe('update NEWS and OPINIONS using rest service: /news/:id, method: PUT', function(){
 
     it('insert and update NEWS through REST using NEWS id', function(done){
-      var newsDataTest = newsTestHelper.createNews(testDate, NATIONAL);
+      var newsDataTest = newsTestHelper.createNews(NATIONAL);
       var newsDataTestStringifyed;
       var newsId;
 
@@ -327,7 +327,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
     };
 
     it('publish national NEWS already saved - using status: published', function(done){
-      var newsDataTest = newsTestHelper.createNews(testDate, NATIONAL);
+      var newsDataTest = newsTestHelper.createNews(NATIONAL);
       var newsId;
 
       var callbackPost = function(err, res) {
@@ -387,7 +387,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
     });
 
     it('publish tabloide NEWS already saved - using status: published', function(done){
-      var newsDataTest = newsTestHelper.createNews(testDate, 'minas-gerais');
+      var newsDataTest = newsTestHelper.createNews('minas-gerais');
       var newsId;
 
       var callbackPost = function(err, res) {

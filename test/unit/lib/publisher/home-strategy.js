@@ -24,7 +24,6 @@ describe('News for home strategy:', function() {
         var baseNews = {
           body: '<h1>the news content</h1>',
           status: 'published',
-          published_at: date,
           metadata: {
             title: 'title-' + date,
             edition: nationalEdition,
@@ -46,6 +45,8 @@ describe('News for home strategy:', function() {
       function createNews(date) {
         var news = baseNews(date);
         news.metadata.layout = 'post';
+        news.created_at = date;
+        news.published_at = date;
         return news;
       };
 
@@ -53,6 +54,8 @@ describe('News for home strategy:', function() {
         var opinion = baseNews(date);
         opinion.metadata.layout = 'opinion';
         opinion.metadata.columnist = 'wandecleya@gmail.com';
+        opinion.created_at = date;
+        opinion.published_at = date;
         return opinion;
       };
 
@@ -123,7 +126,7 @@ describe('News for home strategy:', function() {
                         opinions: [strippedOpinions[4], strippedOpinions[3], strippedOpinions[2]]
                     };
 
-                    var homeNews = homeStrategy.lastNews(nationalEdition, function(homeNews) {
+                    homeStrategy.lastNews(nationalEdition, function(homeNews) {
                         assert.deepEqual(homeNews, expected);
                         done();
                     });

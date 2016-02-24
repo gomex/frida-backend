@@ -5,7 +5,7 @@ var moment = require('moment');
  * @param date when news where created
  * @returns news base object. Common parts between news and opinion layout.
  */
-function baseNews(date) {
+function baseNews() {
   var baseNews = {
     body: '<p>São testes e testes. &nbsp;Testes de notícia</p>\n',
     metadata: {
@@ -28,8 +28,8 @@ function baseNews(date) {
   return baseNews;
 };
 
-function createNews(date, edition) {
-  var news = baseNews(date);
+function createNews(edition) {
+  var news = baseNews();
   news.metadata.area = 'bem_viver';
   news.metadata.author = 'Osvald Grunt';
   news.metadata.edition = edition;
@@ -38,9 +38,16 @@ function createNews(date, edition) {
   return news;
 };
 
+function createPublishedNews() {
+  var news = baseNews();
+  news.created_at = new Date(2016, 01, 01);
+  news.published_at = new Date(2016, 01, 02);
+  return
+}
+
 // TODO tabloide, how colunists will be linked to tabloides?
-function createOpinion(date) {
-  var opinion = baseNews(date);
+function createOpinion() {
+  var opinion = baseNews();
   opinion.metadata.layout = 'opinion';
   opinion.metadata.columnist = 'wandecleya@gmail.com';
   return opinion;

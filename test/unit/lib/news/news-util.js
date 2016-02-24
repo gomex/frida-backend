@@ -15,7 +15,7 @@ describe('news-util:', function() {
     after(function () { clock.restore(); });
 
     it('should slugify url using title on metadata', function(done) {
-      var body = { metadata: {title: 'como vai', date: '2014-08-25T15:32:36-03:00'}  };
+      var body = { metadata: {title: 'como vai', created_at: '2014-08-25T15:32:36-03:00'}  };
       var expect = '2014/08/25/como-vai/';
       var result = NewsUtil.prepare(body);
 
@@ -35,7 +35,7 @@ describe('news-util:', function() {
 
   describe('format url',function(){
     it('should be lower case', function(done) {
-      var body = { metadata: {title: 'Como Vai', date: '2014-08-25T15:32:36-03:00'}  };
+      var body = { metadata: {title: 'Como Vai', created_at: '2014-08-25T15:32:36-03:00'}  };
       var expect = '2014/08/25/como-vai/';
       var result = NewsUtil.prepare(body);
 
@@ -44,7 +44,7 @@ describe('news-util:', function() {
     });
 
     it('should have year, month and day of the news date on begining of url', function(done) {
-      var body = { metadata: {title: 'Como Vai', date: '2014-08-25T15:32:36-03:00'}  };
+      var body = { metadata: {title: 'Como Vai', created_at: '2014-08-25T15:32:36-03:00'}  };
       var expect = '2014/08/25/como-vai/';
       var result = NewsUtil.prepare(body);
 
@@ -53,7 +53,7 @@ describe('news-util:', function() {
     });
 
     it('should replace [not-a-link] to a empty string', function(done) {
-      var body = { metadata: {edition: '[not-a-link]',title: '"Como" Vai', date: '2014-08-25T15:32:36-03:00'}  };
+      var body = { metadata: {edition: '[not-a-link]', title: '"Como" Vai', created_at: '2014-08-25T15:32:36-03:00'}  };
       var expect = '2014/08/25/como-vai/';
       var result = NewsUtil.prepare(body);
 
@@ -62,7 +62,7 @@ describe('news-util:', function() {
     });
 
     it('should remove quotation marks', function(done) {
-      var body = { metadata: {title: '"Como" Vai', date: '2014-08-25T15:32:36-03:00'}  };
+      var body = { metadata: {title: '"Como" Vai', created_at: '2014-08-25T15:32:36-03:00'}  };
       var expect = '2014/08/25/como-vai/';
       var result = NewsUtil.prepare(body);
 
