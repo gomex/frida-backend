@@ -24,51 +24,16 @@ When published news will be available in a folder, pointed by an environment var
 
 **Development Environment**
 
-Before running frida-backend (or its tests) it is necessary to: 
+Before running frida-backend (or its tests) it is necessary to:
 
 * install
-   * Node.js v.0.12.7
-   * MongoDB v.3.0
+  * Node.js v.0.12.7
+  * MongoDB v.3.0
+* create a `.env` file from the `.env_example` and edit the values
 
-* define the following environment variables, example written for mac/linux:
-
-
+```bash
+  $ cp .env_example .env
 ```
-#
-# URL for mongodb instance.
-# In this example mongo is running locally with database named: bdf
-# 
-export DATABASE_URL=mongodb://localhost/bdf
-
-#
-# Folder from where hexo is going to read content files
-# You'll have to download https://github.com/brasil-de-fato/site project and point to its source folder.
-#
-export HEXO_SOURCE_PATH=<sites_path>/source
-
-#
-# The username used to authorize the use of frida backend
-#
-export EDITOR_USERNAME=user
-
-#
-# The password used to authorize the use of frida backend
-#
-export EDITOR_PASSWORD=pass
-
-#
-# The path for the ssl certificate
-# There is a certificate inside the test folder of frida backend
-#
-export CERT_FILE_PATH=<path_to_frida_backend>/test/ssl/ssl.crt
-
-#
-# The path for the ssl key
-# There is a certificate inside the test folder of frida backend
-#
-export KEY_FILE_PATH=<path_to_frida_backend>/test/ssl/ssl.key
-```
-
 
 **NOTICE**: frida-backend only runs over SSL. If you are using a self signed cert (as the one we use for testing) make sure frida-frontend can make calls to it by adding an exception for the certificate in the browser. To do so, make a request through the browser to the API and when prompted by the browser, add an exception for the certificate.
 

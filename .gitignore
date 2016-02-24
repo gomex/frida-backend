@@ -5,3 +5,4 @@ npm-debug*
 coverage/
 .idea/
 *iml
+.env
