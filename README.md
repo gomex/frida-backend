@@ -52,20 +52,16 @@ $ npm test
 
 ## Running the service
 
-### with node
+### to run with node
+
 ```
 $ npm start
 ```
-### with nodemon
-make sure nodemon is installed globally and run
+### to run with [pm2](https://github.com/Unitech/pm2)
+PM2 is a production process manager. Make sure it is installed globally and run.
 
-```
-$ nodemon ./index.js
-```
-### with pm2
-make sure pm2 is installed globally and run
-
-```
+```bash
+$ npm install pm2 -g
 $ pm2 start pm2-config.json
 ```
 
