@@ -7,15 +7,20 @@ var newsTestHelper  = require('../../../helpers/news');
 
 describe('news-util:', function() {
 
+  var clock;
+  var createdAt;
+
+  before(function () {
+    createdAt = new Date(2014, 07, 25);
+    clock = sinon.useFakeTimers(createdAt.getTime(), 'Date');
+  });
+
+  after(function () { clock.restore(); });
+
   describe('Prepare news to insert',function(){
-    var clock;
-
-    before(function () { clock = sinon.useFakeTimers('Date'); });
-
-    after(function () { clock.restore(); });
 
     it('should slugify url using title on metadata', function(done) {
-      var body = { metadata: {title: 'como vai', created_at: '2014-08-25T15:32:36-03:00'}  };
+      var body = { metadata: {title: 'como vai'}  };
       var expect = '2014/08/25/como-vai/';
       var result = NewsUtil.prepare(body);
 
@@ -35,7 +40,7 @@ describe('news-util:', function() {
 
   describe('format url',function(){
     it('should be lower case', function(done) {
-      var body = { metadata: {title: 'Como Vai', created_at: '2014-08-25T15:32:36-03:00'}  };
+      var body = { metadata: {title: 'Como Vai'}  };
       var expect = '2014/08/25/como-vai/';
       var result = NewsUtil.prepare(body);
 
@@ -44,7 +49,7 @@ describe('news-util:', function() {
     });
 
     it('should have year, month and day of the news date on begining of url', function(done) {
-      var body = { metadata: {title: 'Como Vai', created_at: '2014-08-25T15:32:36-03:00'}  };
+      var body = { metadata: {title: 'Como Vai'}  };
       var expect = '2014/08/25/como-vai/';
       var result = NewsUtil.prepare(body);
 
@@ -53,7 +58,7 @@ describe('news-util:', function() {
     });
 
     it('should replace [not-a-link] to a empty string', function(done) {
-      var body = { metadata: {edition: '[not-a-link]', title: '"Como" Vai', created_at: '2014-08-25T15:32:36-03:00'}  };
+      var body = { metadata: {edition: '[not-a-link]', title: '"Como" Vai'}  };
       var expect = '2014/08/25/como-vai/';
       var result = NewsUtil.prepare(body);
 
@@ -62,7 +67,7 @@ describe('news-util:', function() {
     });
 
     it('should remove quotation marks', function(done) {
-      var body = { metadata: {title: '"Como" Vai', created_at: '2014-08-25T15:32:36-03:00'}  };
+      var body = { metadata: {title: '"Como" Vai'}  };
       var expect = '2014/08/25/como-vai/';
       var result = NewsUtil.prepare(body);
 
