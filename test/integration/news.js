@@ -76,6 +76,10 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
     return NEWS_RESOURCE + '/' + newsId + '/status/published';
   };
 
+  var buildDraftURL = function(newsId) {
+    return NEWS_RESOURCE + '/' + newsId + '/status/draft';
+  };
+
   var buildGetNewsByIdURL = function(newsId) {
     return NEWS_RESOURCE + '/' + newsId;
   };
@@ -439,6 +443,43 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
       };
 
       api.post(NEWS_RESOURCE)
+        .send(newsDataTest)
+        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+        .expect(201)
+        .end(callbackPost);
+    });
+
+    it('does not create yaml front matter file on status update if status is different from published', function(done) {
+      var newsDataTest = newsTestHelper.createNews(NATIONAL);
+      var newsId;
+
+      var callbackPost = function(err, res) {
+        if (err) {
+          done(err);
+        }
+
+        newsId = res.body.id;
+
+        api.put(buildDraftURL(newsId))
+          .send(newsDataTest)
+          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+          .expect(200)
+          .end(callbackPut);
+      };
+
+      var callbackPut = function(err, res) {
+        if (err) {
+          done(err);
+        }
+
+        newsRepository.findById(newsId, function(result) {
+          assert.equal(result.published_at, undefined);
+          assert.equal(fs.existsSync(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md'), false);
+          done();
+        });
+      };
+
+        api.post(NEWS_RESOURCE)
         .send(newsDataTest)
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
         .expect(201)
