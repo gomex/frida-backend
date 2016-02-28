@@ -26,6 +26,14 @@ describe('news-util:', function() {
       assert.equal(expect, result.created_at);
       done();
     });
+
+    it('sets status to draft', function(done) {
+      var news = newsAttributeFactory.build();
+      var result = NewsUtil.prepare(news);
+
+      assert.equal(result.status, 'draft');
+      done();
+    });
   });
 
   describe('format url', function() {

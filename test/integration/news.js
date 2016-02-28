@@ -129,6 +129,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
         assert(typeof newsId !== 'undefined');
         newsRepository.findById(newsId, function(result) {
           testNewsAttributes(result, newsDataTest);
+          assert.equal(result.status, 'draft');
           done();
         });
       };
@@ -151,6 +152,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
 
         newsRepository.findById(opinionId, function(result) {
           testColumnistAttributes(result, opinionTestData);
+          assert.equal(result.status, 'draft');
           done();
         });
       };
