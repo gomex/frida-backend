@@ -13,20 +13,20 @@ function baseNews() {
       hat: 'Sensacional',
       title: 'Título Sensacional',
       cover: {
-        link: "//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg",
-        thumbnail: "//farm9.staticflickr.com/8796/17306389125_7f60267c76_t.jpg",
-        medium: "//farm9.staticflickr.com/8796/17306389125_7f60267c76_z.jpg",
-        small: "//farm9.staticflickr.com/8796/17306389125_7f60267c76_n.jpg",
-        title: "Carlos Marighella.jpg",
-        cover: "true",
-        credits: "Rodolfo R. Mirelli",
-        subtitle: "Foto de destruição"
+        link: '//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg',
+        thumbnail: '//farm9.staticflickr.com/8796/17306389125_7f60267c76_t.jpg',
+        medium: '//farm9.staticflickr.com/8796/17306389125_7f60267c76_z.jpg',
+        small: '//farm9.staticflickr.com/8796/17306389125_7f60267c76_n.jpg',
+        title: 'Carlos Marighella.jpg',
+        cover: 'true',
+        credits: 'Rodolfo R. Mirelli',
+        subtitle: 'Foto de destruição'
       }
     }
   };
 
   return baseNews;
-};
+}
 
 function createNews(edition) {
   var news = baseNews();
@@ -36,13 +36,13 @@ function createNews(edition) {
   news.metadata.layout = 'post';
   news.metadata.place = 'Paulista';
   return news;
-};
+}
 
 function createPublishedNews() {
   var news = baseNews();
   news.created_at = new Date(2016, 01, 01);
   news.published_at = new Date(2016, 01, 02);
-  return
+  return;
 }
 
 // TODO tabloide, how colunists will be linked to tabloides?
@@ -51,7 +51,7 @@ function createOpinion() {
   opinion.metadata.layout = 'opinion';
   opinion.metadata.columnist = 'wandecleya@gmail.com';
   return opinion;
-};
+}
 
 /**
  * Create news or opinions as expected to be sent by whomever is using news services rest api.
@@ -73,7 +73,7 @@ function createNewsOfType(amount, type, edition) {
   }
 
   return news;
-};
+}
 
 module.exports = {
   createNews: createNews,

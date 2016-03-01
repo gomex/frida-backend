@@ -7,12 +7,12 @@ describe('Columnists:', function() {
 
   var data = [
     {
-      "email": "a@a.a",
-      "name": "Alfonso",
+      'email': 'a@a.a',
+      'name': 'Alfonso',
     },
     {
-      "email": "b@b.b",
-      "name": "Baleia",
+      'email': 'b@b.b',
+      'name': 'Baleia',
     }
   ];
 
@@ -20,11 +20,11 @@ describe('Columnists:', function() {
     it('should toDATA data to right format', function(done) {
       var result = columnists.read(data);
       var expect = {
-        "a@a.a": {
-           "name": "Alfonso"
+        'a@a.a': {
+          'name': 'Alfonso'
         },
-        "b@b.b": {
-           "name": "Baleia"
+        'b@b.b': {
+          'name': 'Baleia'
         }
       };
 
@@ -33,7 +33,7 @@ describe('Columnists:', function() {
     });
 
     it('should ', function(done) {
-      var expect = "a@a.a:\n  name: Alfonso\nb@b.b:\n  name: Baleia\n";
+      var expect = 'a@a.a:\n  name: Alfonso\nb@b.b:\n  name: Baleia\n';
 
       columnists.write(undefined, data, function(err){
         assert.equal(err, 'Need a path to save data files');
@@ -43,7 +43,7 @@ describe('Columnists:', function() {
     });
 
     it('should save a file on a specify path', function(done) {
-      var expect = "a@a.a:\n  name: Alfonso\nb@b.b:\n  name: Baleia\n";
+      var expect = 'a@a.a:\n  name: Alfonso\nb@b.b:\n  name: Baleia\n';
 
       columnists.write('/tmp', data, function(err){
         var data = fs.readFileSync('/tmp/columnists.yml','utf8');

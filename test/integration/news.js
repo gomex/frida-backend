@@ -34,7 +34,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
   var deleteDirSync = function(path, done) {
     if(fs.existsSync(path)) {
       fs.readdirSync(path).forEach(function (file, index) {
-        var curPath = path + "/" + file;
+        var curPath = path + '/' + file;
         fs.unlinkSync(curPath);
       });
       fs.rmdir(path, function(err) {
@@ -69,7 +69,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
   };
 
   var buildNewsHTTPPath = function(newsTitle) {
-    return newsYearMonthDayURL + slug(newsTitle, {lower: true}) + '/'
+    return newsYearMonthDayURL + slug(newsTitle, {lower: true}) + '/';
   };
 
   var buildPublishURL = function(newsId) {
@@ -94,7 +94,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
     NEWS_RESOURCE = '/news';
     NATIONAL = '[not-a-link]';
 
-    testDate = new Date("Feb 14, 2016 01:15:00");
+    testDate = new Date('Feb 14, 2016 01:15:00');
 
     newsYearMonthURL = '/2016/02/';
     newsYearMonthDayURL = '2016/02/14/';
@@ -110,7 +110,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
 
   after(function(done) {
     newsRepository.deleteAll(function() {
-      console.log("file: news.js - end of tests. All entries removed.");
+      console.log('file: news.js - end of tests. All entries removed.');
       deleteDirSync(newsPublishDir, done);
     });
 
@@ -384,7 +384,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
         });
       };
 
-        api.post(NEWS_RESOURCE)
+      api.post(NEWS_RESOURCE)
         .send(newsDataTest)
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
         .expect(201)
@@ -512,5 +512,5 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
         });
       });
     });
-  })
+  });
 });
