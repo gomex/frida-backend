@@ -22,6 +22,13 @@ module.exports = {
             2,
             "always"
         ],
+        "no-unused-vars": [
+          2,
+          {
+            "args": "after-used",
+            "argsIgnorePattern": "^_"
+          }
+        ],
         "no-console": 0
     },
   "globals": {

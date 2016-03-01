@@ -1,10 +1,8 @@
-var _               = require('underscore');
 var assert          = require('assert');
 var MongoClient     = require('mongodb').MongoClient;
 var moment          = require('moment');
 
 var homeStrategy    = require('../../../../lib/publisher/home-strategy');
-var newsRepository  = require('../../../../lib/news/news-repository');
 
 describe('News for home strategy:', function() {
 
@@ -35,7 +33,7 @@ describe('News for home strategy:', function() {
             small: '//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg',
             credits: 'credits',
             subtitle: 'subtitle'
-          },
+          }
         }
       };
 
@@ -118,7 +116,7 @@ describe('News for home strategy:', function() {
 
       MongoClient.connect(process.env.DATABASE_URL, function(err, db) {
 
-        db.collection('news').insert(news.concat(opinions), function(err, result) {
+        db.collection('news').insert(news.concat(opinions), function(err, _result) {
           var expected = {
             featured: [strippedNews[14], strippedNews[13], strippedNews[12], strippedNews[11]],
             secondary: [strippedNews[10], strippedNews[9], strippedNews[8], strippedNews[7]],
@@ -141,7 +139,7 @@ describe('News for home strategy:', function() {
 
       MongoClient.connect(process.env.DATABASE_URL, function(err, db) {
 
-        db.collection('news').insert(news, function(err, result) {
+        db.collection('news').insert(news, function(err, _result) {
           var expected = {
             featured: [transformedNews[0]],
             secondary: [],
@@ -149,7 +147,7 @@ describe('News for home strategy:', function() {
             opinions: []
           };
 
-          var homeNews = homeStrategy.lastNews(nationalEdition, function(homeNews) {
+          homeStrategy.lastNews(nationalEdition, function(homeNews) {
             assert.deepEqual(homeNews, expected);
             done();
           });

@@ -25,7 +25,7 @@ describe('Hexo publisher:', function() {
           title: title,
           description: 'description',
           cover: {
-            link: '//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg',
+            link: '//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg'
           },
           edition: nationalEdition
         }
@@ -58,13 +58,13 @@ describe('Hexo publisher:', function() {
           title: title,
           description: 'description',
           cover: {
-            link: '//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg',
+            link: '//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg'
           },
           edition: nationalEdition
         }
       };
 
-      hexo.publish(news, function(httpPath) {
+      hexo.publish(news, function(_httpPath) {
         var newsPublishedAt = moment(news.published_at);
         var year  = newsPublishedAt.format('YYYY');
         var month = newsPublishedAt.format('MM');
@@ -81,12 +81,10 @@ describe('Hexo publisher:', function() {
     });
 
     it('fails if the news object is not well formed', function(done) {
-      var now = new Date();
-      var title = 'title-' + now;
       var news =  { };
 
       assert.throws(function() {
-        hexo.publish(news, function(httpPath) {});
+        hexo.publish(news, function(_httpPath) {});
       }, TypeError);
 
       done();
@@ -95,24 +93,6 @@ describe('Hexo publisher:', function() {
 
   describe('updateHome', function() {
     it('creates home metadata file in the configured hexo posts folder', function(done) {
-      var now = new Date();
-      var title = 'title-' + now;
-      var news =  {
-        _id: 'news_ident-' + now.getTime(),
-        body:'<h1>the news content</h1>',
-        status: 'published',
-        published_at: now,
-        metadata: {
-          date: now,
-          title: title,
-          description: 'description',
-          cover: {
-            link: '//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg',
-          },
-          edition: nationalEdition
-        }
-      };
-
       var expectedPath = process.env.HEXO_SOURCE_PATH + '/index.md';
       try { fs.unlinkSync(expectedPath); } catch(e) { /* ignore */ }
 

@@ -38,13 +38,6 @@ function createNews(edition) {
   return news;
 }
 
-function createPublishedNews() {
-  var news = baseNews();
-  news.created_at = new Date(2016, 01, 01);
-  news.published_at = new Date(2016, 01, 02);
-  return;
-}
-
 // TODO tabloide, how colunists will be linked to tabloides?
 function createOpinion() {
   var opinion = baseNews();

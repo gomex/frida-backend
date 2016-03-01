@@ -11,7 +11,7 @@ describe('news-util:', function() {
   var createdAt;
 
   before(function () {
-    createdAt = new Date(2014, 07, 25);
+    createdAt = new Date(2014, 7, 25);
     clock = sinon.useFakeTimers(createdAt.getTime(), 'Date');
   });
 

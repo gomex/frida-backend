@@ -8,11 +8,11 @@ describe('Columnists:', function() {
   var data = [
     {
       'email': 'a@a.a',
-      'name': 'Alfonso',
+      'name': 'Alfonso'
     },
     {
       'email': 'b@b.b',
-      'name': 'Baleia',
+      'name': 'Baleia'
     }
   ];
 
@@ -33,8 +33,6 @@ describe('Columnists:', function() {
     });
 
     it('should ', function(done) {
-      var expect = 'a@a.a:\n  name: Alfonso\nb@b.b:\n  name: Baleia\n';
-
       columnists.write(undefined, data, function(err){
         assert.equal(err, 'Need a path to save data files');
 
@@ -45,7 +43,7 @@ describe('Columnists:', function() {
     it('should save a file on a specify path', function(done) {
       var expect = 'a@a.a:\n  name: Alfonso\nb@b.b:\n  name: Baleia\n';
 
-      columnists.write('/tmp', data, function(err){
+      columnists.write('/tmp', data, function(_err){
         var data = fs.readFileSync('/tmp/columnists.yml','utf8');
         assert.equal(expect, data);
 

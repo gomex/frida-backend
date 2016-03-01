@@ -1,9 +1,7 @@
 var _           = require('underscore');
 var assert      = require('assert');
-var async       = require('async');
 var fs          = require('fs');
 var matters     = require('gray-matter');
-var moment      = require('moment');
 var slug        = require('slug');
 var sinon       = require('sinon');
 var supertest   = require('supertest');
@@ -33,7 +31,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
   // helper functions
   var deleteDirSync = function(path, done) {
     if(fs.existsSync(path)) {
-      fs.readdirSync(path).forEach(function (file, index) {
+      fs.readdirSync(path).forEach(function (file, _index) {
         var curPath = path + '/' + file;
         fs.unlinkSync(curPath);
       });
@@ -318,7 +316,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
     });
   });
 
-  describe('publish NEWS and OPINIONS using rest service: /news', function(){
+  describe('publish NEWS and OPINIONS using rest service: /news', function(done){
 
     var testIndexFile = function(filePath, layout, newsTitle) {
       fs.readFile(filePath, 'utf-8', function(err, indexFileAsFrontMatters){
@@ -469,7 +467,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
           .end(callbackPut);
       };
 
-      var callbackPut = function(err, res) {
+      var callbackPut = function(err, _res) {
         if (err) {
           done(err);
         }
@@ -481,7 +479,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
         });
       };
 
-        api.post(NEWS_RESOURCE)
+      api.post(NEWS_RESOURCE)
         .send(newsDataTest)
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
         .expect(201)
@@ -504,7 +502,7 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
         api.put(buildPublishURL(newsIdent.valueOf()))
         .expect(202)
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-        .end(function(err, result) {
+        .end(function(err, _result) {
           newsRepository.findById(newsIdent.valueOf(), function(result) {
             assert.equal(past.valueOf(), result.published_at.valueOf());
             done();
