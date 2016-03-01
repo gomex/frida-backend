@@ -66,3 +66,17 @@ $ pm2 start pm2-config.json
 ```
 
 Remember to make a request to some resource in the API URL (ex.: https://localhost:5000/news) and add the certificate to the browser you'll be using frida-frontend with.
+
+# Code Style
+
+We are using [ESLint](http://eslint.org/) to lint javascript files.
+
+```bash
+$ npm run eslint
+```
+
+To fix all files:
+
+```bash
+$ npm run eslint-fix
+```
