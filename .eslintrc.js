@@ -1,6 +1,8 @@
 module.exports = {
     "env": {
-        "node": true
+        "node": true,
+        "jasmine": true,
+        "mocha": true
     },
     "extends": "eslint:recommended",
     "rules": {
@@ -19,6 +21,10 @@ module.exports = {
         "semi": [
             2,
             "always"
-        ]
-    }
+        ],
+        "no-console": 0
+    },
+  "globals": {
+    "mongoose": true
+  }
 };
