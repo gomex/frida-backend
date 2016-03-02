@@ -428,9 +428,6 @@ describe('Test NEWS operations using REST API:', function() {
           assert.equal(result.status, 'published');
           assert.equal(result.metadata.url, buildNewsHTTPPath(newsDataTest.metadata.title));
 
-          // test index.md file
-          testIndexFile(hexoPaths.sourcePath + '/minas-gerais/index.md', 'tabloide', newsDataTest.metadata.title);
-
           // test news.md file
           fs.readFile(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md', 'utf-8', function(err, newsFileAsFrontMatters){
             var newsFileAsObj = matters(newsFileAsFrontMatters);
