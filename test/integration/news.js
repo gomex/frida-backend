@@ -229,7 +229,6 @@ describe('Test NEWS operations using REST API:', function() {
           assert.equal(typeof result._id !== 'undefined', true);
         });
 
-        //TODO(geisly) usar async waterfall
         api.get(buildGetNewsByIdURL(newsId))
           .send()
           .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
