@@ -21,7 +21,6 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
   var testDate;
   var newsYearMonthURL;
   var newsYearMonthDayURL;
-  var newsPublishDir;
 
   var hexoPaths = {
     sourcePath: process.env.HEXO_SOURCE_PATH + '/',
@@ -29,17 +28,18 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
   };
 
   // helper functions
-  var deleteDirSync = function(path, done) {
+  var deleteDirSync = function(path) {
     if(fs.existsSync(path)) {
       fs.readdirSync(path).forEach(function (file, _index) {
         var curPath = path + '/' + file;
-        fs.unlinkSync(curPath);
+        if(fs.lstatSync(curPath).isDirectory()) {
+          deleteDirSync(curPath);
+        } else {
+          fs.unlinkSync(curPath);
+        }
       });
-      fs.rmdir(path, function(err) {
-        done(err);
-      });
-    } else {
-      done();
+
+      fs.rmdirSync(path);
     }
   };
 
@@ -96,20 +96,21 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
 
     newsYearMonthURL = '/2016/02/';
     newsYearMonthDayURL = '2016/02/14/';
-    newsPublishDir = hexoPaths.postsPath + newsYearMonthURL;
 
     clock = sinon.useFakeTimers(testDate.getTime(), 'Date');
     newsCreatedAt = Date.now();
 
     newsRepository.deleteAll(function(){
-      deleteDirSync(newsPublishDir, done);
+      deleteDirSync(hexoPaths.sourcePath);
+      done();
     });
   });
 
   after(function(done) {
     newsRepository.deleteAll(function() {
       console.log('file: news.js - end of tests. All entries removed.');
-      deleteDirSync(newsPublishDir, done);
+      deleteDirSync(hexoPaths.sourcePath);
+      done();
     });
 
     clock.restore();
