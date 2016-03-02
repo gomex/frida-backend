@@ -14,7 +14,7 @@ var newsTestHelper  = require('../helpers/news');
 
 var api             = supertest('https://localhost:5000');
 
-describe('file: news.js. Test NEWS operations using REST API:', function() {
+describe('Test NEWS operations using REST API:', function() {
   var NEWS_RESOURCE;
   var NATIONAL;
 
@@ -108,7 +108,6 @@ describe('file: news.js. Test NEWS operations using REST API:', function() {
 
   after(function(done) {
     newsRepository.deleteAll(function() {
-      console.log('file: news.js - end of tests. All entries removed.');
       deleteDirSync(hexoPaths.sourcePath);
       done();
     });
