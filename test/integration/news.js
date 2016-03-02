@@ -315,19 +315,7 @@ describe('Test NEWS operations using REST API:', function() {
     });
   });
 
-  describe('publish NEWS and OPINIONS using rest service: /news', function(done){
-
-    var testIndexFile = function(filePath, layout, newsTitle) {
-      fs.readFile(filePath, 'utf-8', function(err, indexFileAsFrontMatters){
-        if(err){done(err);}
-
-        assert.ok(indexFileAsFrontMatters);
-        var indexFileAsObj = matters(indexFileAsFrontMatters);
-
-        assert.equal(indexFileAsObj.data.layout, layout);
-        assert.equal(indexFileAsObj.data.featured[0].path, buildNewsHTTPPath(newsTitle));
-      });
-    };
+  describe('publish NEWS and OPINIONS using rest service: /news', function(){
 
     it('publish national NEWS already saved - using status: published', function(done){
       var newsDataTest = newsTestHelper.createNews(NATIONAL);
@@ -369,15 +357,20 @@ describe('Test NEWS operations using REST API:', function() {
           assert.equal(result.metadata.url, buildNewsHTTPPath(newsDataTest.metadata.title));
 
           // test index.md file
-          testIndexFile(hexoPaths.sourcePath + '/index.md', 'nacional', newsDataTest.metadata.title);
+          var indexFileAsFrontMatters = fs.readFileSync(hexoPaths.sourcePath + '/index.md', 'utf-8');
+          assert.ok(indexFileAsFrontMatters);
+
+          var indexFileAsObj = matters(indexFileAsFrontMatters);
+          assert.equal(indexFileAsObj.data.layout, 'nacional');
+          assert.equal(indexFileAsObj.data.featured[0].path, buildNewsHTTPPath(newsDataTest.metadata.title));
 
           // test news.md file
-          fs.readFile(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md', 'utf-8', function(err, newsFileAsFrontMatters){
-            var newsFileAsObj = matters(newsFileAsFrontMatters);
-            assert.equal(newsFileAsObj.data.edition, NATIONAL);
-            assert.equal(newsFileAsObj.data.url, buildNewsHTTPPath(newsDataTest.metadata.title));
-            done();
-          });
+          var newsFileAsFrontMatters = fs.readFileSync(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md', 'utf-8');
+          var newsFileAsObj = matters(newsFileAsFrontMatters);
+          assert.equal(newsFileAsObj.data.edition, NATIONAL);
+          assert.equal(newsFileAsObj.data.url, buildNewsHTTPPath(newsDataTest.metadata.title));
+
+          done();
         });
       };
 
@@ -429,12 +422,11 @@ describe('Test NEWS operations using REST API:', function() {
           assert.equal(result.metadata.url, buildNewsHTTPPath(newsDataTest.metadata.title));
 
           // test news.md file
-          fs.readFile(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md', 'utf-8', function(err, newsFileAsFrontMatters){
-            var newsFileAsObj = matters(newsFileAsFrontMatters);
-            assert.equal(newsFileAsObj.data.edition, 'minas-gerais');
-            assert.equal(newsFileAsObj.data.url, 'minas-gerais/' + newsYearMonthDayURL + slug(newsDataTest.metadata.title, {lower: true}) + '/');
-            done();
-          });
+          var newsFileAsFrontMatters = fs.readFileSync(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md', 'utf-8');
+          var newsFileAsObj = matters(newsFileAsFrontMatters);
+          assert.equal(newsFileAsObj.data.edition, 'minas-gerais');
+          assert.equal(newsFileAsObj.data.url, 'minas-gerais/' + newsYearMonthDayURL + slug(newsDataTest.metadata.title, {lower: true}) + '/');
+          done();
         });
       };
 
