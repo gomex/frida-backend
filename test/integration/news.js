@@ -486,7 +486,9 @@ describe('Test NEWS operations using REST API:', function() {
         published_at: past
       };
 
-      newsRepository.insert(NewsUtil.prepare(news), function(newsIdent) {
+      newsRepository.insert(NewsUtil.prepare(news), function(err, newsIdent) {
+        if(err) throw err;
+
         api.put(buildPublishURL(newsIdent.valueOf()))
         .expect(202)
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
