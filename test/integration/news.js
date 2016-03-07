@@ -125,7 +125,7 @@ describe('Test NEWS operations using REST API:', function() {
 
         var newsId = res.body.id;
         assert(typeof newsId !== 'undefined');
-        newsRepository.findById(newsId, function(result) {
+        newsRepository.findById(newsId, function(err, result) {
           testNewsAttributes(result, newsDataTest);
           assert.equal(result.status, 'draft');
           done();
@@ -148,7 +148,7 @@ describe('Test NEWS operations using REST API:', function() {
         var opinionId = res.body.id;
         assert(typeof opinionId !== 'undefined');
 
-        newsRepository.findById(opinionId, function(result) {
+        newsRepository.findById(opinionId, function(err, result) {
           testColumnistAttributes(result, opinionTestData);
           assert.equal(result.status, 'draft');
           done();
@@ -174,7 +174,7 @@ describe('Test NEWS operations using REST API:', function() {
         var newsId = res.body.id;
         assert(typeof newsId !== 'undefined');
 
-        newsRepository.findById(newsId, function(result) {
+        newsRepository.findById(newsId, function(err, result) {
           assert.equal(typeof result._id !== 'undefined', true);
           assert.equal(result.metadata.url, buildNewsHTTPPath(newsDataTest.metadata.title));
           done();
@@ -197,7 +197,7 @@ describe('Test NEWS operations using REST API:', function() {
         var opinionId = res.body.id;
         assert(typeof opinionId !== 'undefined');
 
-        newsRepository.findById(opinionId, function(result) {
+        newsRepository.findById(opinionId, function(err, result) {
           assert.equal(typeof result._id !== 'undefined', true);
           assert.equal(result.metadata.url, newsYearMonthDayURL + slug(opinionDataTest.metadata.title, {lower: true}) + '/');
           done();
@@ -225,7 +225,7 @@ describe('Test NEWS operations using REST API:', function() {
         newsId = res.body.id;
         assert(typeof newsId !== 'undefined');
 
-        newsRepository.findById(newsId, function(result) {
+        newsRepository.findById(newsId, function(err, result) {
           assert.equal(typeof result._id !== 'undefined', true);
         });
 
@@ -274,7 +274,7 @@ describe('Test NEWS operations using REST API:', function() {
         newsId = res.body.id;
         assert(typeof newsId !== 'undefined');
 
-        newsRepository.findById(newsId, function (result) {
+        newsRepository.findById(newsId, function (err, result) {
           assert.equal(typeof result._id !== 'undefined', true);
         });
 
@@ -301,7 +301,7 @@ describe('Test NEWS operations using REST API:', function() {
         assert(typeof id !== 'undefined');
         assert.equal(id, newsId);
 
-        newsRepository.findById(newsId, function(result) {
+        newsRepository.findById(newsId, function(err, result) {
           testNewsAttributes(result, newsDataTest);
           done();
         });
@@ -329,7 +329,7 @@ describe('Test NEWS operations using REST API:', function() {
         newsId = res.body.id;
         assert(typeof newsId !== 'undefined');
 
-        newsRepository.findById(newsId, function (result) {
+        newsRepository.findById(newsId, function (err, result) {
           assert.equal(typeof result._id !== 'undefined', true);
         });
 
@@ -349,7 +349,7 @@ describe('Test NEWS operations using REST API:', function() {
 
         assert.equal(JSON.stringify(res.body), JSON.stringify({path : '2016/02/' + slug(newsDataTest.metadata.title) + '/'}));
 
-        newsRepository.findById(newsId, function(result) {
+        newsRepository.findById(newsId, function(err, result) {
           var published_at = result.published_at;
           assert.ok(published_at);
           assert.equal(Date.now(), published_at.getTime());
@@ -394,7 +394,7 @@ describe('Test NEWS operations using REST API:', function() {
         newsId = res.body.id;
         assert(typeof newsId !== 'undefined');
 
-        newsRepository.findById(newsId, function (result) {
+        newsRepository.findById(newsId, function (err, result) {
           assert.equal(typeof result._id !== 'undefined', true);
         });
 
@@ -414,7 +414,7 @@ describe('Test NEWS operations using REST API:', function() {
 
         assert.equal(JSON.stringify(res.body), JSON.stringify({path : '2016/02/' + slug(newsDataTest.metadata.title) + '/'}));
 
-        newsRepository.findById(newsId, function(result) {
+        newsRepository.findById(newsId, function(err, result) {
           var published_at = result.published_at;
           assert.ok(published_at);
           assert.equal(Date.now(), published_at.getTime());
@@ -460,7 +460,7 @@ describe('Test NEWS operations using REST API:', function() {
           done(err);
         }
 
-        newsRepository.findById(newsId, function(result) {
+        newsRepository.findById(newsId, function(err, result) {
           assert.equal(result.published_at, undefined);
           assert.equal(fs.existsSync(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md'), false);
           done();
@@ -493,7 +493,7 @@ describe('Test NEWS operations using REST API:', function() {
         .expect(202)
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
         .end(function(err, _result) {
-          newsRepository.findById(newsIdent.valueOf(), function(result) {
+          newsRepository.findById(newsIdent.valueOf(), function(err, result) {
             assert.equal(past.valueOf(), result.published_at.valueOf());
             done();
           });
