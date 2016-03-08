@@ -91,4 +91,27 @@ describe('news-repository', function(){
       });
     });
   });
+
+  describe('deleteAll', function(){
+    it('deletes all persisted news', function(done){
+      var news1 = newsFactory.build();
+      var news2 = newsFactory.build();
+
+      async.parallel([
+        async.apply(newsRepository.insert, news1),
+        async.apply(newsRepository.insert, news2)
+      ], function(err, _insertedIds){
+        newsRepository.deleteAll(function(err){
+          if(err) throw err;
+
+          newsRepository.getAll(function(err, result){
+            if(err) throw err;
+
+            assert.equal(result.length, 0);
+            done();
+          });
+        });
+      });
+    });
+  });
 });
