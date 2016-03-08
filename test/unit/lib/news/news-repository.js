@@ -67,4 +67,28 @@ describe('news-repository', function(){
     });
 
   });
+
+  describe('updateById', function(){
+    it('updates the fields of the news with the given id', function(done){
+      var news = newsFactory.build();
+
+      newsRepository.insert(news, function(err, id) {
+        if(err) throw err;
+        var updatedFields = _.clone(news);
+        updatedFields.metadata.title = 'brand new title' + Date.now();
+
+        newsRepository.updateById(id, updatedFields, function(err){
+          if(err) throw err;
+
+          newsRepository.findById(id, function(err, item) {
+            if(err) throw err;
+            assert.equal(item.metadata.title, updatedFields.metadata.title);
+            assert.equal(item.metadata.description, news.metadata.description);
+            done();
+          });
+        });
+
+      });
+    });
+  });
 });
