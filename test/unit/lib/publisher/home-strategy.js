@@ -1,10 +1,85 @@
+var async           = require('async');
 var assert          = require('assert');
 var MongoClient     = require('mongodb').MongoClient;
 var moment          = require('moment');
 
+var newsRepository  = require('../../../../lib/news/news-repository');
 var homeStrategy    = require('../../../../lib/publisher/home-strategy');
 
-describe('News for home strategy:', function() {
+var metadataFactory = require('../../../factories/news-attribute').metadata;
+var newsFactory     = require('../../../factories/news-attribute').newsAttribute;
+
+describe('home-strategy', function() {
+
+  describe('buildHome', function(){
+    before(function(done){
+      newsRepository.deleteAll(done);
+    });
+
+    function shouldHaveSession(sessionName) {
+      it('sets ' + sessionName + ' to the most recent published news with display_area equals to "' + sessionName + '"', function(done){
+        var metadata1 = metadataFactory.build({display_area: sessionName, url: '/2015/09/title-01'});
+        var news1 = newsFactory.build({
+          status: 'published',
+          published_at: new Date(2015, 9, 22),
+          metadata: metadata1
+        });
+        var metadata2 = metadataFactory.build({display_area: sessionName, url: '/2016/10/title-02'});
+        var news2 = newsFactory.build({
+          status: 'published',
+          published_at: new Date(2016, 9, 22),
+          metadata: metadata2
+        });
+
+        async.parallel([
+          async.apply(newsRepository.insert, news1),
+          async.apply(newsRepository.insert, news2)
+        ], function(err, _insertedIds){
+          homeStrategy.buildHome(function(newsForHome){
+            var expected = {
+              cover: {
+                url: news2.metadata.cover.link,
+                small: news2.metadata.cover.small,
+                credits: news2.metadata.cover.credits,
+                subtitle: news2.metadata.cover.subtitle
+              },
+              date: news2.published_at,
+              description: news2.metadata.description,
+              title: news2.metadata.title,
+              path: news2.metadata.url,
+              hat: news2.metadata.hat
+            };
+
+            assert.deepEqual(newsForHome[sessionName], expected);
+            done();
+          });
+        });
+      });
+    }
+
+    it('sets layout to "nacional"', function(done){
+      homeStrategy.buildHome(function(newsForHome){
+        assert.equal(newsForHome.layout, 'nacional');
+        done();
+      });
+    });
+
+    shouldHaveSession('featured_01');
+
+    shouldHaveSession('featured_02');
+
+    shouldHaveSession('featured_03');
+
+    shouldHaveSession('featured_04');
+
+    shouldHaveSession('featured_05');
+
+    shouldHaveSession('featured_06');
+
+    shouldHaveSession('featured_07');
+
+    shouldHaveSession('featured_08');
+  });
 
   describe('lastNews',function() {
 
