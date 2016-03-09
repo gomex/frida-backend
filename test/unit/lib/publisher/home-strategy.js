@@ -6,8 +6,10 @@ var moment          = require('moment');
 var newsRepository  = require('../../../../lib/news/news-repository');
 var homeStrategy    = require('../../../../lib/publisher/home-strategy');
 
-var metadataFactory = require('../../../factories/news-attribute').metadata;
-var newsFactory     = require('../../../factories/news-attribute').newsAttribute;
+var metadataFactory         = require('../../../factories/news-attribute').metadata;
+var newsFactory             = require('../../../factories/news-attribute').newsAttribute;
+var columnMetadataFactory   = require('../../../factories/column-attributes').columnMetadata;
+var columnFactory           = require('../../../factories/column-attributes').columnAttributes;
 
 describe('home-strategy', function() {
 
@@ -16,7 +18,7 @@ describe('home-strategy', function() {
       newsRepository.deleteAll(done);
     });
 
-    function shouldHaveSession(sessionName) {
+    function shouldHaveFeatured(sessionName) {
       it('sets ' + sessionName + ' to the most recent published news with display_area equals to "' + sessionName + '"', function(done){
         var metadata1 = metadataFactory.build({display_area: sessionName, url: '/2015/09/title-01'});
         var news1 = newsFactory.build({
@@ -35,6 +37,8 @@ describe('home-strategy', function() {
           async.apply(newsRepository.insert, news1),
           async.apply(newsRepository.insert, news2)
         ], function(err, _insertedIds){
+          if(err) throw err;
+
           homeStrategy.buildHome(function(newsForHome){
             var expected = {
               cover: {
@@ -57,6 +61,48 @@ describe('home-strategy', function() {
       });
     }
 
+    function shouldHaveColumn(sessionName) {
+      it('sets ' + sessionName + ' to the most recent published column with display_area equals to "' + sessionName + '"', function(done){
+        var metadata1 = columnMetadataFactory.build({
+          display_area: sessionName,
+          url: '/2015/09/title-01'
+        });
+        var column1 = columnFactory.build({
+          status: 'published',
+          published_at: new Date(2015, 9, 22),
+          metadata: metadata1
+        });
+        var metadata2 = columnMetadataFactory.build({
+          display_area: sessionName,
+          url: '/2016/10/title-02'
+        });
+        var column2 = columnFactory.build({
+          status: 'published',
+          published_at: new Date(2016, 9, 22),
+          metadata: metadata2
+        });
+
+        async.parallel([
+          async.apply(newsRepository.insert, column1),
+          async.apply(newsRepository.insert, column2)
+        ], function(err, _insertedIds){
+          if(err) throw err;
+
+          homeStrategy.buildHome(function(newsForHome){
+            var expected = {
+              date: column2.published_at,
+              columnist: column2.metadata.columnist,
+              title: column2.metadata.title,
+              path: column2.metadata.url
+            };
+
+            assert.deepEqual(newsForHome[sessionName], expected);
+            done();
+          });
+        });
+      });
+    }
+
     it('sets layout to "nacional"', function(done){
       homeStrategy.buildHome(function(newsForHome){
         assert.equal(newsForHome.layout, 'nacional');
@@ -64,21 +110,27 @@ describe('home-strategy', function() {
       });
     });
 
-    shouldHaveSession('featured_01');
+    shouldHaveFeatured('featured_01');
 
-    shouldHaveSession('featured_02');
+    shouldHaveFeatured('featured_02');
 
-    shouldHaveSession('featured_03');
+    shouldHaveFeatured('featured_03');
 
-    shouldHaveSession('featured_04');
+    shouldHaveFeatured('featured_04');
 
-    shouldHaveSession('featured_05');
+    shouldHaveFeatured('featured_05');
 
-    shouldHaveSession('featured_06');
+    shouldHaveFeatured('featured_06');
 
-    shouldHaveSession('featured_07');
+    shouldHaveFeatured('featured_07');
 
-    shouldHaveSession('featured_08');
+    shouldHaveFeatured('featured_08');
+
+    shouldHaveColumn('column_01');
+
+    shouldHaveColumn('column_02');
+
+    shouldHaveColumn('column_03');
   });
 
   describe('lastNews',function() {
