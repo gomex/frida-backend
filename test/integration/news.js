@@ -377,61 +377,6 @@ describe('Test NEWS operations using REST API:', function() {
 
     });
 
-    it('publish tabloide NEWS already saved - using status: published', function(done){
-      var newsDataTest = newsTestHelper.createNews('minas-gerais');
-      var newsId;
-
-      var callbackPost = function(err, res) {
-        if (err) {
-          done(err);
-        }
-
-        newsId = res.body.id;
-        assert(typeof newsId !== 'undefined');
-
-        newsRepository.findById(newsId, function (err, result) {
-          assert.equal(typeof result._id !== 'undefined', true);
-        });
-
-        clock.tick(100000);
-        api.put(buildPublishURL(newsId))
-          .send(newsDataTest)
-          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-          .expect('Content-Type', /json/)
-          .expect(202)
-          .end(callbackPut);
-      };
-
-      var callbackPut = function(err, res) {
-        if (err) {
-          done(err);
-        }
-
-        assert.equal(JSON.stringify(res.body), JSON.stringify({path : '2016/02/' + slug(newsDataTest.metadata.title) + '/'}));
-
-        newsRepository.findById(newsId, function(err, result) {
-          var published_at = result.published_at;
-          assert.ok(published_at);
-          assert.equal(Date.now(), published_at.getTime());
-          assert.equal(result.status, 'published');
-          assert.equal(result.metadata.url, buildNewsHTTPPath(newsDataTest.metadata.title));
-
-          // test news.md file
-          var newsFileAsFrontMatters = fs.readFileSync(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md', 'utf-8');
-          var newsFileAsObj = matters(newsFileAsFrontMatters);
-          assert.equal(newsFileAsObj.data.edition, 'minas-gerais');
-          assert.equal(newsFileAsObj.data.url, 'minas-gerais/' + newsYearMonthDayURL + slug(newsDataTest.metadata.title, {lower: true}) + '/');
-          done();
-        });
-      };
-
-      api.post(NEWS_RESOURCE)
-        .send(newsDataTest)
-        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-        .expect(201)
-        .end(callbackPost);
-    });
-
     it('does not create yaml front matter file on status update if status is different from published', function(done) {
       var newsDataTest = newsTestHelper.createNews(NATIONAL);
       var newsId;
