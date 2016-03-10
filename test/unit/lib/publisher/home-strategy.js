@@ -1,3 +1,4 @@
+var _               = require('underscore');
 var async           = require('async');
 var assert          = require('assert');
 var MongoClient     = require('mongodb').MongoClient;
@@ -107,6 +108,43 @@ describe('home-strategy', function() {
       homeStrategy.buildHome(function(newsForHome){
         assert.equal(newsForHome.layout, 'nacional');
         done();
+      });
+    });
+
+    it('sets last_news to the last six published news', function(done) {
+      var news = newsFactory.build({ status: 'published', published_at: new Date() });
+      news.metadata.url = '/2016/12/title/';
+
+      async.parallel([
+        async.apply(newsRepository.insert, news),
+        async.apply(newsRepository.insert, news),
+        async.apply(newsRepository.insert, news),
+        async.apply(newsRepository.insert, news),
+        async.apply(newsRepository.insert, news),
+        async.apply(newsRepository.insert, news)
+      ], function(err, _insertedIds){
+        if(err) throw err;
+
+        homeStrategy.buildHome(function(newsForHome){
+          var expected = _.times(6, function(_index){
+            return {
+              cover: {
+                url: news.metadata.cover.link,
+                small: news.metadata.cover.small,
+                credits: news.metadata.cover.credits,
+                subtitle: news.metadata.cover.subtitle
+              },
+              date: news.published_at,
+              description: news.metadata.description,
+              title: news.metadata.title,
+              path: news.metadata.url,
+              hat: news.metadata.hat
+            };
+          });
+
+          assert.deepEqual(newsForHome.last_news, expected);
+          done();
+        });
       });
     });
 
