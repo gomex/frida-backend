@@ -96,7 +96,7 @@ describe('Hexo publisher:', function() {
       var expectedPath = process.env.HEXO_SOURCE_PATH + '/index.md';
       try { fs.unlinkSync(expectedPath); } catch(e) { /* ignore */ }
 
-      hexo.updateHome(nationalEdition, function() {
+      hexo.updateHome(function() {
         assert.ok(fs.existsSync(expectedPath));
 
         done();
