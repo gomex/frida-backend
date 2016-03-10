@@ -38,7 +38,9 @@ describe('home-strategy', function() {
         ], function(err, _insertedIds){
           if(err) throw err;
 
-          homeStrategy.buildHome(function(newsForHome){
+          homeStrategy.buildHome(function(err, newsForHome){
+            if(err) throw err;
+
             var expected = {
               cover: {
                 url: news2.metadata.cover.link,
@@ -87,7 +89,9 @@ describe('home-strategy', function() {
         ], function(err, _insertedIds){
           if(err) throw err;
 
-          homeStrategy.buildHome(function(newsForHome){
+          homeStrategy.buildHome(function(err, newsForHome){
+            if(err) throw err;
+
             var expected = {
               date: column2.published_at,
               columnist: column2.metadata.columnist,
@@ -103,7 +107,9 @@ describe('home-strategy', function() {
     }
 
     it('sets layout to "nacional"', function(done){
-      homeStrategy.buildHome(function(newsForHome){
+      homeStrategy.buildHome(function(err, newsForHome){
+        if(err) throw err;
+
         assert.equal(newsForHome.layout, 'nacional');
         done();
       });
@@ -123,7 +129,9 @@ describe('home-strategy', function() {
       ], function(err, _insertedIds){
         if(err) throw err;
 
-        homeStrategy.buildHome(function(newsForHome){
+        homeStrategy.buildHome(function(err, newsForHome){
+          if(err) throw err;
+
           var expected = _.times(6, function(_index){
             return {
               cover: {
