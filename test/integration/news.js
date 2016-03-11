@@ -16,7 +16,6 @@ var api             = supertest('https://localhost:5000');
 
 describe('Test NEWS operations using REST API:', function() {
   var NEWS_RESOURCE;
-  var NATIONAL;
 
   var testDate;
   var newsYearMonthURL;
@@ -57,7 +56,6 @@ describe('Test NEWS operations using REST API:', function() {
     testColumnistNewsCommonAttributes(calculatedObject, expectedObject);
     assert.equal(calculatedObject.metadata.area, expectedObject.metadata.area);
     assert.equal(calculatedObject.metadata.author, expectedObject.metadata.author);
-    assert.equal(calculatedObject.metadata.edition, expectedObject.metadata.edition);
     assert.equal(calculatedObject.metadata.place, expectedObject.metadata.place);
   };
 
@@ -90,7 +88,6 @@ describe('Test NEWS operations using REST API:', function() {
     server.startServer();
 
     NEWS_RESOURCE = '/news';
-    NATIONAL = '[not-a-link]';
 
     testDate = new Date('Feb 14, 2016 01:15:00');
 
@@ -118,7 +115,7 @@ describe('Test NEWS operations using REST API:', function() {
   describe('insert NEWS and OPINIONS using rest service: /news, method: POST', function() {
 
     it('insert NEWS - url: /news, method: POST', function(done) {
-      var newsDataTest = newsTestHelper.createNews(NATIONAL);
+      var newsDataTest = newsTestHelper.createNews();
 
       var callback = function(err, res) {
         if(err){ done(err); }
@@ -166,7 +163,7 @@ describe('Test NEWS operations using REST API:', function() {
   describe('test backend created attributes for NEWS/OPINIONS', function(){
 
     it('When news is inserted and not published', function(done) {
-      var newsDataTest = newsTestHelper.createNews(NATIONAL);
+      var newsDataTest = newsTestHelper.createNews();
 
       var callback = function(err, res){
         if(err){ done(err); }
@@ -216,7 +213,7 @@ describe('Test NEWS operations using REST API:', function() {
   describe('get NEWS and OPINIONS using rest service /news/:id, method: GET', function(){
 
     it('insert and get NEWS through REST using NEWS id', function(done){
-      var newsDataTest = newsTestHelper.createNews(NATIONAL);
+      var newsDataTest = newsTestHelper.createNews();
       var newsId;
 
       var callbackPost = function(err, res){
@@ -243,7 +240,6 @@ describe('Test NEWS operations using REST API:', function() {
         assert.equal(newsReturnedFromGet.metadata.area, newsDataTest.metadata.area);
         assert.equal(newsReturnedFromGet.metadata.author, newsDataTest.metadata.author);
         assert.equal(newsReturnedFromGet.metadata.description, newsDataTest.metadata.description);
-        assert.equal(newsReturnedFromGet.metadata.edition, newsDataTest.metadata.edition);
         assert.equal(newsReturnedFromGet.metadata.hat, newsDataTest.metadata.hat);
         assert.equal(newsReturnedFromGet.metadata.layout, newsDataTest.metadata.layout);
         assert.equal(newsReturnedFromGet.metadata.place, newsDataTest.metadata.place);
@@ -262,7 +258,7 @@ describe('Test NEWS operations using REST API:', function() {
   describe('update NEWS and OPINIONS using rest service: /news/:id, method: PUT', function(){
 
     it('insert and update NEWS through REST using NEWS id', function(done){
-      var newsDataTest = newsTestHelper.createNews(NATIONAL);
+      var newsDataTest = newsTestHelper.createNews();
       var newsDataTestStringifyed;
       var newsId;
 
@@ -318,7 +314,7 @@ describe('Test NEWS operations using REST API:', function() {
   describe('publish NEWS and OPINIONS using rest service: /news', function(){
 
     it('publish national NEWS already saved - using status: published', function(done){
-      var newsDataTest = newsTestHelper.createNews(NATIONAL);
+      var newsDataTest = newsTestHelper.createNews();
       var newsId;
 
       var callbackPost = function(err, res) {
@@ -362,7 +358,6 @@ describe('Test NEWS operations using REST API:', function() {
           // test news.md file
           var newsFileAsFrontMatters = fs.readFileSync(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md', 'utf-8');
           var newsFileAsObj = matters(newsFileAsFrontMatters);
-          assert.equal(newsFileAsObj.data.edition, NATIONAL);
           assert.equal(newsFileAsObj.data.url, buildNewsHTTPPath(newsDataTest.metadata.title));
 
           done();
@@ -378,7 +373,7 @@ describe('Test NEWS operations using REST API:', function() {
     });
 
     it('does not create yaml front matter file on status update if status is different from published', function(done) {
-      var newsDataTest = newsTestHelper.createNews(NATIONAL);
+      var newsDataTest = newsTestHelper.createNews();
       var newsId;
 
       var callbackPost = function(err, res) {
@@ -420,8 +415,7 @@ describe('Test NEWS operations using REST API:', function() {
       var news =  {
         body: '',
         metadata: {
-          title: 'titulo-sensacionalista' + new Date().getTime(),
-          edition: NATIONAL // [not-a-link]
+          title: 'titulo-sensacionalista' + new Date().getTime()
         },
         published_at: past
       };

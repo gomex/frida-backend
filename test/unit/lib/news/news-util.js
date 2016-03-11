@@ -56,15 +56,5 @@ describe('news-util:', function() {
       assert.equal(urlPath, result.metadata.url);
       done();
     });
-
-    it('replaces [not-a-link] to a empty string', function(done) {
-      var metadata = metadataFactory.build({edition: '[not-a-link]', title: 'CoMo Vai'});
-      var news = newsAttributeFactory.build({metadata: metadata});
-      var urlPath = '2014/08/25/como-vai/';
-      var result = NewsUtil.prepare(news);
-
-      assert.equal(urlPath, result.metadata.url);
-      done();
-    });
   });
 });

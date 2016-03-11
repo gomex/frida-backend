@@ -9,8 +9,6 @@ var hexo = require('../../../../lib/publisher/hexo');
 
 describe('Hexo publisher:', function() {
 
-  var nationalEdition = '[not-a-link]';
-
   describe('publish', function() {
     it('creates the news file in the configured hexo posts folder', function(done) {
       var now = new Date();
@@ -26,8 +24,7 @@ describe('Hexo publisher:', function() {
           description: 'description',
           cover: {
             link: '//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg'
-          },
-          edition: nationalEdition
+          }
         }
       };
 
@@ -59,8 +56,7 @@ describe('Hexo publisher:', function() {
           description: 'description',
           cover: {
             link: '//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg'
-          },
-          edition: nationalEdition
+          }
         }
       };
 

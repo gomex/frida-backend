@@ -28,11 +28,10 @@ function baseNews() {
   return baseNews;
 }
 
-function createNews(edition) {
+function createNews() {
   var news = baseNews();
   news.metadata.area = 'bem_viver';
   news.metadata.author = 'Osvald Grunt';
-  news.metadata.edition = edition;
   news.metadata.layout = 'post';
   news.metadata.place = 'Paulista';
   return news;
@@ -51,10 +50,9 @@ function createOpinion() {
  * Each news or opinions created will be 1 day apart from the previous one created.
  * @param amount number of news to be created
  * @param type post or opinion. Creates news or opinions respectively.
- * @param edition use [not-a-link] for nacional or a tabloide's state
  * @returns {Array} of news or opinions
  */
-function createNewsOfType(amount, type, edition) {
+function createNewsOfType(amount, type) {
   var news = [];
   var startTime = moment();
 
@@ -62,7 +60,7 @@ function createNewsOfType(amount, type, edition) {
 
   for(var i = 0; i < amount; i++) {
     var date = startTime.add(1, 'days').toISOString();
-    news.push(funciontToCall(date, edition));
+    news.push(funciontToCall(date));
   }
 
   return news;
