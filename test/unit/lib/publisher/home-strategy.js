@@ -9,6 +9,7 @@ var metadataFactory         = require('../../../factories/news-attribute').metad
 var newsFactory             = require('../../../factories/news-attribute').newsAttribute;
 var columnMetadataFactory   = require('../../../factories/column-attributes').columnMetadata;
 var columnFactory           = require('../../../factories/column-attributes').columnAttributes;
+var photoCaptionFactory     = require('../../../factories/photo-caption-attributes').photoCaptionAttributes;
 
 describe('home-strategy', function() {
 
@@ -149,6 +150,39 @@ describe('home-strategy', function() {
           });
 
           assert.deepEqual(newsForHome.last_news, expected);
+          done();
+        });
+      });
+    });
+
+    it('sets photo_caption to the last published news of type photo_caption', function(done) {
+      var photoCaption1 = photoCaptionFactory.build({ status: 'published', published_at: new Date(2015, 9, 22) });
+      photoCaption1.metadata.url = '/2015/10/title/';
+      var photoCaption2 = photoCaptionFactory.build({ status: 'published', published_at: new Date(2016, 9, 22) });
+      photoCaption2.metadata.url = '/2016/10/title/';
+
+      async.parallel([
+        async.apply(newsRepository.insert, photoCaption1),
+        async.apply(newsRepository.insert, photoCaption2)
+      ], function(err, _insertedIds){
+        if(err) throw err;
+
+        homeStrategy.buildHome(function(err, newsForHome){
+          if(err) throw err;
+
+          var expected =  {
+            cover: {
+              url: photoCaption2.metadata.cover.link,
+              small: photoCaption2.metadata.cover.small,
+              credits: photoCaption2.metadata.cover.credits,
+              subtitle: photoCaption2.metadata.cover.subtitle
+            },
+            date: photoCaption2.published_at,
+            title: photoCaption2.metadata.title,
+            path: photoCaption2.metadata.url
+          };
+
+          assert.deepEqual(newsForHome.photo_caption, expected);
           done();
         });
       });
