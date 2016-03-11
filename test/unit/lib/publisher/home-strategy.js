@@ -154,6 +154,44 @@ describe('home-strategy', function() {
       });
     });
 
+    it('sets most_read to the five most recent news marked as most_read', function(done) {
+      var news = newsFactory.build({ status: 'published', published_at: new Date(), most_read: true });
+      news.metadata.url = '/2016/12/title/';
+
+      async.parallel([
+        async.apply(newsRepository.insert, news),
+        async.apply(newsRepository.insert, news),
+        async.apply(newsRepository.insert, news),
+        async.apply(newsRepository.insert, news),
+        async.apply(newsRepository.insert, news)
+      ], function(err, _insertedIds){
+        if(err) throw err;
+
+        homeStrategy.buildHome(function(err, newsForHome){
+          if(err) throw err;
+
+          var expected = _.times(5, function(_index){
+            return {
+              cover: {
+                url: news.metadata.cover.link,
+                small: news.metadata.cover.small,
+                credits: news.metadata.cover.credits,
+                subtitle: news.metadata.cover.subtitle
+              },
+              date: news.published_at,
+              description: news.metadata.description,
+              title: news.metadata.title,
+              path: news.metadata.url,
+              hat: news.metadata.hat
+            };
+          });
+
+          assert.deepEqual(newsForHome.most_read, expected);
+          done();
+        });
+      });
+    });
+
     shouldHaveFeatured('featured_01');
 
     shouldHaveFeatured('featured_02');
