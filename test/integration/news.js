@@ -10,7 +10,8 @@ var newsRepository  = require('../../lib/news/news-repository');
 var NewsUtil        = require('../../lib/news/news-util');
 var server          = require('../../lib/http/server');
 
-var newsTestHelper  = require('../helpers/news');
+var newsTestHelper      = require('../helpers/news');
+var photoCaptionFactory = require('../factories/photo-caption-attributes').photoCaptionAttributes;
 
 var api             = supertest('https://localhost:5000');
 
@@ -404,6 +405,40 @@ describe('Test NEWS operations using REST API:', function() {
 
       api.post(NEWS_RESOURCE)
         .send(newsDataTest)
+        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+        .expect(201)
+        .end(callbackPost);
+    });
+
+    it('does not create yaml front matter file on status update if news is of type photo_caption', function(done) {
+      var photoCaption = photoCaptionFactory.build();
+      var newsId;
+
+      var callbackPost = function(err, res) {
+        if(err) throw err;
+
+        newsId = res.body.id;
+
+        api.put(buildPublishURL(newsId))
+          .send(photoCaption)
+          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+          .expect(202)
+          .end(callbackPut);
+      };
+
+      var callbackPut = function(err, _res) {
+        if(err) throw err;
+
+        newsRepository.findById(newsId, function(err, result) {
+          if(err) throw err;
+          assert.equal(result.status, 'published');
+          assert.equal(fs.existsSync(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md'), false);
+          done();
+        });
+      };
+
+      api.post(NEWS_RESOURCE)
+        .send(photoCaption)
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
         .expect(201)
         .end(callbackPost);

@@ -28,7 +28,7 @@ describe('Hexo publisher:', function() {
         }
       };
 
-      hexo.publish(news, function(httpPath) {
+      hexo.publish(news, function(_err, httpPath) {
         var newsPublishedAt = moment(news.published_at);
         var year  = newsPublishedAt.format('YYYY');
         var month = newsPublishedAt.format('MM');
@@ -60,7 +60,7 @@ describe('Hexo publisher:', function() {
         }
       };
 
-      hexo.publish(news, function(_httpPath) {
+      hexo.publish(news, function(_err, _httpPath) {
         var newsPublishedAt = moment(news.published_at);
         var year  = newsPublishedAt.format('YYYY');
         var month = newsPublishedAt.format('MM');
@@ -80,7 +80,7 @@ describe('Hexo publisher:', function() {
       var news =  { };
 
       assert.throws(function() {
-        hexo.publish(news, function(_httpPath) {});
+        hexo.publish(news, function(_err, _httpPath) {});
       }, TypeError);
 
       done();
