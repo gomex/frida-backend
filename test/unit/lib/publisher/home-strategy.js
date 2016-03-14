@@ -189,8 +189,9 @@ describe('home-strategy', function() {
     });
 
     it('sets most_read to the five most recent news marked as most_read', function(done) {
-      var news = newsFactory.build({ status: 'published', published_at: new Date(), most_read: true });
+      var news = newsFactory.build({ status: 'published', published_at: new Date()});
       news.metadata.url = '/2016/12/title/';
+      news.metadata.most_read = true;
 
       async.parallel([
         async.apply(newsRepository.insert, news),
