@@ -107,11 +107,11 @@ describe('home-strategy', function() {
       });
     }
 
-    it('sets layout to "nacional"', function(done){
+    it('sets layout to "national"', function(done){
       homeStrategy.buildHome(function(err, newsForHome){
         if(err) throw err;
 
-        assert.equal(newsForHome.layout, 'nacional');
+        assert.equal(newsForHome.layout, 'national');
         done();
       });
     });
