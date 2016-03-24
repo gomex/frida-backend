@@ -7,7 +7,7 @@ var _ = require('underscore');
 
 var hexo = require('../../../../lib/publisher/hexo');
 
-describe('Hexo publisher:', function() {
+describe('hexo', function() {
 
   describe('publish', function() {
     it('creates the news file in the configured hexo posts folder', function(done) {
