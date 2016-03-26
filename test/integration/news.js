@@ -1,7 +1,7 @@
 var _           = require('underscore');
 var assert      = require('assert');
 var fs          = require('fs');
-var matters     = require('gray-matter');
+var grayMatter  = require('gray-matter');
 var slug        = require('slug');
 var sinon       = require('sinon');
 var supertest   = require('supertest');
@@ -358,7 +358,7 @@ describe('Test NEWS operations using REST API:', function() {
 
           // test news.md file
           var newsFileAsFrontMatters = fs.readFileSync(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md', 'utf-8');
-          var newsFileAsObj = matters(newsFileAsFrontMatters);
+          var newsFileAsObj = grayMatter(newsFileAsFrontMatters);
           assert.equal(newsFileAsObj.data.url, buildNewsHTTPPath(newsDataTest.metadata.title));
 
           done();

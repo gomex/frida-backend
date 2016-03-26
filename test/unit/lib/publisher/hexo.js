@@ -1,6 +1,6 @@
 var assert  = require('assert');
 var fs      = require('fs');
-var matters =  require('gray-matter');
+var grayMatter =  require('gray-matter');
 var moment  = require('moment');
 var slug =   require('slug');
 var _ = require('underscore');
@@ -67,7 +67,7 @@ describe('hexo', function() {
         var expectedPath    = process.env.HEXO_SOURCE_PATH + '/_posts/' + year + '/' + month + '/' + news._id + '.md';
 
         var data = _.extend(news.metadata, {date: news.published_at});
-        var expectedContent = matters.stringify(news.body, data);
+        var expectedContent = grayMatter.stringify(news.body, data);
 
         var actualContent = fs.readFileSync(expectedPath, 'utf8');
         assert.equal(actualContent, expectedContent);
