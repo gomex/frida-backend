@@ -44,26 +44,26 @@ describe('REST API:', function() {
     }
   };
 
-  var testColumnistNewsCommonAttributes = function (calculatedObject, expectedObject) {
-    assert.equal(typeof calculatedObject._id !== 'undefined', true);
-    assert.equal(calculatedObject.body, expectedObject.body);
-    assert.equal(calculatedObject.created_at.getTime(), newsCreatedAt);
-    assert.equal(calculatedObject.metadata.description, expectedObject.metadata.description);
-    assert.equal(calculatedObject.metadata.hat, expectedObject.metadata.hat);
-    assert.equal(calculatedObject.metadata.layout, expectedObject.metadata.layout);
-    assert.equal(calculatedObject.metadata.title, expectedObject.metadata.title);
+  var verifyColumnNewsCommonAttributes = function (actual, expected) {
+    assert.equal(typeof actual._id !== 'undefined', true);
+    assert.equal(actual.body, expected.body);
+    assert.equal(actual.created_at.getTime(), newsCreatedAt);
+    assert.equal(actual.metadata.description, expected.metadata.description);
+    assert.equal(actual.metadata.hat, expected.metadata.hat);
+    assert.equal(actual.metadata.layout, expected.metadata.layout);
+    assert.equal(actual.metadata.title, expected.metadata.title);
   };
 
-  var testNewsAttributes = function(calculatedObject, expectedObject){
-    testColumnistNewsCommonAttributes(calculatedObject, expectedObject);
-    assert.equal(calculatedObject.metadata.area, expectedObject.metadata.area);
-    assert.equal(calculatedObject.metadata.author, expectedObject.metadata.author);
-    assert.equal(calculatedObject.metadata.place, expectedObject.metadata.place);
+  var verifyNewsAttributes = function(actualNews, expectedNews){
+    verifyColumnNewsCommonAttributes(actualNews, expectedNews);
+    assert.equal(actualNews.metadata.area, expectedNews.metadata.area);
+    assert.equal(actualNews.metadata.author, expectedNews.metadata.author);
+    assert.equal(actualNews.metadata.place, expectedNews.metadata.place);
   };
 
-  var testColumnistAttributes = function(calculatedObject, expectedObject) {
-    testColumnistNewsCommonAttributes(calculatedObject, expectedObject);
-    assert.equal(calculatedObject.metadata.columnist, expectedObject.metadata.columnist);
+  var verifyColumnAttributes = function(actualColumn, expectedColumn) {
+    verifyColumnNewsCommonAttributes(actualColumn, expectedColumn);
+    assert.equal(actualColumn.metadata.columnist, expectedColumn.metadata.columnist);
   };
 
   var buildNewsHTTPPath = function(newsTitle) {
@@ -125,7 +125,7 @@ describe('REST API:', function() {
         var newsId = res.body.id;
         assert(typeof newsId !== 'undefined');
         newsRepository.findById(newsId, function(err, result) {
-          testNewsAttributes(result, newsDataTest);
+          verifyNewsAttributes(result, newsDataTest);
           assert.equal(result.status, 'draft');
           done();
         });
@@ -148,7 +148,7 @@ describe('REST API:', function() {
         assert(typeof opinionId !== 'undefined');
 
         newsRepository.findById(opinionId, function(err, result) {
-          testColumnistAttributes(result, opinionTestData);
+          verifyColumnAttributes(result, opinionTestData);
           assert.equal(result.status, 'draft');
           done();
         });
@@ -296,7 +296,7 @@ describe('REST API:', function() {
         assert.equal(id, newsId);
 
         newsRepository.findById(newsId, function(err, result) {
-          testNewsAttributes(result, newsDataTest);
+          verifyNewsAttributes(result, newsDataTest);
           done();
         });
       };
