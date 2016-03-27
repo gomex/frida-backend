@@ -16,7 +16,7 @@ var photoCaptionFactory = require('../factories/photo-caption-attributes').photo
 
 var api             = supertest('https://localhost:5000');
 
-describe('Test NEWS operations using REST API:', function() {
+describe('REST API:', function() {
   var NEWS_RESOURCE;
 
   var testDate;
@@ -114,9 +114,9 @@ describe('Test NEWS operations using REST API:', function() {
     clock.restore();
   });
 
-  describe('insert NEWS and OPINIONS using rest service: /news, method: POST', function() {
+  describe('POST /news', function() {
 
-    it('insert NEWS - url: /news, method: POST', function(done) {
+    it('persists news', function(done) {
       var newsDataTest = newsFactory.build();
 
       var callback = function(err, res) {
@@ -138,7 +138,7 @@ describe('Test NEWS operations using REST API:', function() {
         .end(callback);
     });
 
-    it('insert OPINION - url: /news, method: POST', function(done) {
+    it('persists opinions', function(done) {
       var opinionTestData = columnFactory.build();
 
       var callback = function(err, res) {
@@ -160,11 +160,8 @@ describe('Test NEWS operations using REST API:', function() {
         .expect(201)
         .end(callback);
     });
-  });
 
-  describe('test backend created attributes for NEWS/OPINIONS', function(){
-
-    it('When news is inserted and not published', function(done) {
+    it('assigns an url for news', function(done) {
       var newsDataTest = newsFactory.build();
 
       var callback = function(err, res){
@@ -187,7 +184,7 @@ describe('Test NEWS operations using REST API:', function() {
         .end(callback);
     });
 
-    it('When opinion is inserted and not published', function(done){
+    it('assigns an url for opinions', function(done){
       var opinionDataTest = columnFactory.build();
 
       var callback = function(err, res){
@@ -209,12 +206,11 @@ describe('Test NEWS operations using REST API:', function() {
         .expect(201)
         .end(callback);
     });
-
   });
 
-  describe('get NEWS and OPINIONS using rest service /news/:id, method: GET', function(){
+  describe('GET /news/<id>', function(){
 
-    it('insert and get NEWS through REST using NEWS id', function(done){
+    it('retrieves previously saved news or column', function(done){
       var newsDataTest = newsFactory.build();
       var newsId;
 
@@ -257,9 +253,9 @@ describe('Test NEWS operations using REST API:', function() {
     });
   });
 
-  describe('update NEWS and OPINIONS using rest service: /news/:id, method: PUT', function(){
+  describe('PUT /news/<id>', function(){
 
-    it('insert and update NEWS through REST using NEWS id', function(done){
+    it('updates previously saved news', function(done){
       var newsDataTest = newsFactory.build();
       var newsDataTestStringifyed;
       var newsId;
@@ -313,9 +309,9 @@ describe('Test NEWS operations using REST API:', function() {
     });
   });
 
-  describe('publish NEWS and OPINIONS using rest service: /news', function(){
+  describe('PUT /news/<id>/status/<status>', function(){
 
-    it('publish national NEWS already saved - using status: published', function(done){
+    it('publishes previously saved news when <status> is "published"', function(done){
       var newsDataTest = newsFactory.build();
       var newsId;
 
@@ -374,7 +370,7 @@ describe('Test NEWS operations using REST API:', function() {
 
     });
 
-    it('does not create yaml front matter file on status update if status is different from published', function(done) {
+    it('does not create yaml front matter file if <status> is different from published', function(done) {
       var newsDataTest = newsFactory.build();
       var newsId;
 
