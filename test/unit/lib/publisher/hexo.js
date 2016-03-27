@@ -16,22 +16,7 @@ describe('hexo', function() {
 
   describe('publish', function() {
     it('creates the news file in the configured hexo posts folder', function(done) {
-      var now = new Date();
-      var title = 'title-' + now;
-      var news =  {
-        _id: 'news_ident-' + now.getTime(),
-        body:'<h1>the news content</h1>',
-        status: 'published',
-        published_at: now,
-        metadata: {
-          date: now,
-          title: title,
-          description: 'description',
-          cover: {
-            link: '//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg'
-          }
-        }
-      };
+      var news = newsFactory.build({ published_at: new Date(12345) });
 
       hexo.publish(news, function(_err, httpPath) {
         var newsPublishedAt = moment(news.published_at);
@@ -48,22 +33,7 @@ describe('hexo', function() {
     });
 
     it('news file is an YAML front matter representation of the news object', function(done) {
-      var now = new Date();
-      var title = 'title-' + now;
-      var news =  {
-        _id: 'news_ident-' + now.getTime(),
-        body:'<h1>the news content</h1>',
-        status: 'published',
-        published_at: new Date(12345),
-        metadata: {
-          date: now,
-          title: title,
-          description: 'description',
-          cover: {
-            link: '//farm9.staticflickr.com/8796/17306389125_7f60267c76_b.jpg'
-          }
-        }
-      };
+      var news = newsFactory.build({ published_at: new Date(12345) });
 
       hexo.publish(news, function(_err, _httpPath) {
         var newsPublishedAt = moment(news.published_at);

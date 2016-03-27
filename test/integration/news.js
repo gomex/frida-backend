@@ -11,6 +11,7 @@ var NewsUtil        = require('../../lib/news/news-util');
 var server          = require('../../lib/http/server');
 
 var newsTestHelper      = require('../helpers/news');
+var newsFactory         = require('../factories/news-attribute').newsAttribute;
 var photoCaptionFactory = require('../factories/photo-caption-attributes').photoCaptionAttributes;
 
 var api             = supertest('https://localhost:5000');
@@ -447,13 +448,7 @@ describe('Test NEWS operations using REST API:', function() {
     it('published_at date should not change if it is already set', function(done) {
       var past = new Date(1000);
 
-      var news =  {
-        body: '',
-        metadata: {
-          title: 'titulo-sensacionalista' + new Date().getTime()
-        },
-        published_at: past
-      };
+      var news = newsFactory.build({ published_at: past });
 
       newsRepository.insert(NewsUtil.prepare(news), function(err, newsIdent) {
         if(err) throw err;
