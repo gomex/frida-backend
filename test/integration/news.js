@@ -19,7 +19,6 @@ var api             = supertest('https://localhost:5000');
 describe('REST API:', function() {
   var NEWS_RESOURCE;
 
-  var testDate;
   var newsYearMonthURL;
   var newsYearMonthDayURL;
 
@@ -91,7 +90,7 @@ describe('REST API:', function() {
 
     NEWS_RESOURCE = '/news';
 
-    testDate = new Date('Feb 14, 2016 01:15:00');
+    var testDate = new Date('Feb 14, 2016 01:15:00');
 
     newsYearMonthURL = '/2016/02/';
     newsYearMonthDayURL = '2016/02/14/';
@@ -117,98 +116,90 @@ describe('REST API:', function() {
   describe('POST /news', function() {
 
     it('persists news', function(done) {
-      var newsDataTest = newsFactory.build();
-
-      var callback = function(err, res) {
-        if(err){ done(err); }
-
-        var newsId = res.body.id;
-        assert(typeof newsId !== 'undefined');
-        newsRepository.findById(newsId, function(err, result) {
-          verifyNewsAttributes(result, newsDataTest);
-          assert.equal(result.status, 'draft');
-          done();
-        });
-      };
+      var news = newsFactory.build();
 
       api.post(NEWS_RESOURCE)
-        .send(newsDataTest)
+        .send(news)
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
         .expect(201)
-        .end(callback);
+        .end(function(err, res) {
+          if(err){ done(err); }
+
+          var newsId = res.body.id;
+          assert(typeof newsId !== 'undefined');
+          newsRepository.findById(newsId, function(err, result) {
+            verifyNewsAttributes(result, news);
+            assert.equal(result.status, 'draft');
+            done();
+          });
+        });
     });
 
     it('persists opinions', function(done) {
-      var opinionTestData = columnFactory.build();
-
-      var callback = function(err, res) {
-        if(err){ done(err); }
-
-        var opinionId = res.body.id;
-        assert(typeof opinionId !== 'undefined');
-
-        newsRepository.findById(opinionId, function(err, result) {
-          verifyColumnAttributes(result, opinionTestData);
-          assert.equal(result.status, 'draft');
-          done();
-        });
-      };
+      var opinion = columnFactory.build();
 
       api.post(NEWS_RESOURCE)
-        .send(opinionTestData)
+        .send(opinion)
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
         .expect(201)
-        .end(callback);
+        .end(function(err, res) {
+          if(err){ done(err); }
+
+          var opinionId = res.body.id;
+          assert(typeof opinionId !== 'undefined');
+
+          newsRepository.findById(opinionId, function(err, result) {
+            verifyColumnAttributes(result, opinion);
+            assert.equal(result.status, 'draft');
+            done();
+          });
+        });
     });
 
     it('assigns an url for news', function(done) {
-      var newsDataTest = newsFactory.build();
-
-      var callback = function(err, res){
-        if(err){ done(err); }
-
-        var newsId = res.body.id;
-        assert(typeof newsId !== 'undefined');
-
-        newsRepository.findById(newsId, function(err, result) {
-          assert.equal(typeof result._id !== 'undefined', true);
-          assert.equal(result.metadata.url, buildNewsHTTPPath(newsDataTest.metadata.title));
-          done();
-        });
-      };
+      var news = newsFactory.build();
 
       api.post(NEWS_RESOURCE)
-        .send(newsDataTest)
+        .send(news)
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
         .expect(201)
-        .end(callback);
+        .end(function(err, res) {
+          if(err){ done(err); }
+
+          var newsId = res.body.id;
+          assert(typeof newsId !== 'undefined');
+
+          newsRepository.findById(newsId, function(err, result) {
+            assert.equal(typeof result._id !== 'undefined', true);
+            assert.equal(result.metadata.url, buildNewsHTTPPath(news.metadata.title));
+            done();
+          });
+        });
     });
 
     it('assigns an url for opinions', function(done){
-      var opinionDataTest = columnFactory.build();
-
-      var callback = function(err, res){
-        if(err){ done(err); }
-
-        var opinionId = res.body.id;
-        assert(typeof opinionId !== 'undefined');
-
-        newsRepository.findById(opinionId, function(err, result) {
-          assert.equal(typeof result._id !== 'undefined', true);
-          assert.equal(result.metadata.url, newsYearMonthDayURL + slug(opinionDataTest.metadata.title, {lower: true}) + '/');
-          done();
-        });
-      };
+      var opinion = columnFactory.build();
 
       api.post(NEWS_RESOURCE)
-        .send(opinionDataTest)
+        .send(opinion)
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
         .expect(201)
-        .end(callback);
+        .end(function(err, res) {
+          if(err){ done(err); }
+
+          var opinionId = res.body.id;
+          assert(typeof opinionId !== 'undefined');
+
+          newsRepository.findById(opinionId, function(err, result) {
+            assert.equal(typeof result._id !== 'undefined', true);
+            assert.equal(result.metadata.url, newsYearMonthDayURL + slug(opinion.metadata.title, {lower: true}) + '/');
+            done();
+          });
+        });
     });
   });
 
-  describe('GET /news/<id>', function(){
+  describe('GET /news/<id>', function() {
 
     it('retrieves previously saved news or column', function(done){
       var newsDataTest = newsFactory.build();
