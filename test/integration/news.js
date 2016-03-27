@@ -10,8 +10,8 @@ var newsRepository  = require('../../lib/news/news-repository');
 var NewsUtil        = require('../../lib/news/news-util');
 var server          = require('../../lib/http/server');
 
-var newsTestHelper      = require('../helpers/news');
 var newsFactory         = require('../factories/news-attribute').newsAttribute;
+var columnFactory       = require('../factories/column-attributes').columnAttributes;
 var photoCaptionFactory = require('../factories/photo-caption-attributes').photoCaptionAttributes;
 
 var api             = supertest('https://localhost:5000');
@@ -117,7 +117,7 @@ describe('Test NEWS operations using REST API:', function() {
   describe('insert NEWS and OPINIONS using rest service: /news, method: POST', function() {
 
     it('insert NEWS - url: /news, method: POST', function(done) {
-      var newsDataTest = newsTestHelper.createNews();
+      var newsDataTest = newsFactory.build();
 
       var callback = function(err, res) {
         if(err){ done(err); }
@@ -139,7 +139,7 @@ describe('Test NEWS operations using REST API:', function() {
     });
 
     it('insert OPINION - url: /news, method: POST', function(done) {
-      var opinionTestData = newsTestHelper.createOpinion();
+      var opinionTestData = columnFactory.build();
 
       var callback = function(err, res) {
         if(err){ done(err); }
@@ -165,7 +165,7 @@ describe('Test NEWS operations using REST API:', function() {
   describe('test backend created attributes for NEWS/OPINIONS', function(){
 
     it('When news is inserted and not published', function(done) {
-      var newsDataTest = newsTestHelper.createNews();
+      var newsDataTest = newsFactory.build();
 
       var callback = function(err, res){
         if(err){ done(err); }
@@ -188,7 +188,7 @@ describe('Test NEWS operations using REST API:', function() {
     });
 
     it('When opinion is inserted and not published', function(done){
-      var opinionDataTest = newsTestHelper.createOpinion();
+      var opinionDataTest = columnFactory.build();
 
       var callback = function(err, res){
         if(err){ done(err); }
@@ -215,7 +215,7 @@ describe('Test NEWS operations using REST API:', function() {
   describe('get NEWS and OPINIONS using rest service /news/:id, method: GET', function(){
 
     it('insert and get NEWS through REST using NEWS id', function(done){
-      var newsDataTest = newsTestHelper.createNews();
+      var newsDataTest = newsFactory.build();
       var newsId;
 
       var callbackPost = function(err, res){
@@ -260,7 +260,7 @@ describe('Test NEWS operations using REST API:', function() {
   describe('update NEWS and OPINIONS using rest service: /news/:id, method: PUT', function(){
 
     it('insert and update NEWS through REST using NEWS id', function(done){
-      var newsDataTest = newsTestHelper.createNews();
+      var newsDataTest = newsFactory.build();
       var newsDataTestStringifyed;
       var newsId;
 
@@ -316,7 +316,7 @@ describe('Test NEWS operations using REST API:', function() {
   describe('publish NEWS and OPINIONS using rest service: /news', function(){
 
     it('publish national NEWS already saved - using status: published', function(done){
-      var newsDataTest = newsTestHelper.createNews();
+      var newsDataTest = newsFactory.build();
       var newsId;
 
       var callbackPost = function(err, res) {
@@ -375,7 +375,7 @@ describe('Test NEWS operations using REST API:', function() {
     });
 
     it('does not create yaml front matter file on status update if status is different from published', function(done) {
-      var newsDataTest = newsTestHelper.createNews();
+      var newsDataTest = newsFactory.build();
       var newsId;
 
       var callbackPost = function(err, res) {
