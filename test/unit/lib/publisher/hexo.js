@@ -61,72 +61,71 @@ describe('hexo', function() {
       done();
     });
 
-    describe('creates area data file', function(){
-      var lastNews = [];
+  });
 
-      before(function(done) {
-        var insertNewsOperations = [];
+  describe('updateAreaPage', function() {
+    var lastNews = [];
 
-        var metadata = metadataFactory.build({ url: '2016/03/news-' + Date.now() });
-        var news = newsFactory.build({ metadata: metadata, published_at: new Date(), status: 'published' });
-        for(var i = 0; i < 20; i++) {
-          insertNewsOperations.push(async.apply(newsRepository.insert, news));
-          lastNews.push(news);
-        }
+    before(function(done) {
+      var insertNewsOperations = [];
 
-        async.parallel(insertNewsOperations, function(err) {
-          if(err) throw err;
-          done();
-        });
+      var metadata = metadataFactory.build({ url: '2016/03/news-' + Date.now() });
+      var news = newsFactory.build({ metadata: metadata, published_at: new Date(), status: 'published' });
+      for(var i = 0; i < 20; i++) {
+        insertNewsOperations.push(async.apply(newsRepository.insert, news));
+        lastNews.push(news);
+      }
+
+      async.parallel(insertNewsOperations, function(err) {
+        if(err) throw err;
+        done();
       });
+    });
 
-      it('in its correspondent hexo source folder', function(done) {
-        var news = _.last(lastNews);
-        var expectedPath = process.env.HEXO_SOURCE_PATH + '/' + news.metadata.area  + '/index.md';
+    it('creates area page file in the correspondent hexo source folder', function(done) {
+      var news = _.last(lastNews);
+      var expectedPath = process.env.HEXO_SOURCE_PATH + '/' + news.metadata.area  + '/index.md';
 
-        try { fs.unlinkSync(expectedPath); } catch(e) { /* make sure the file was not there before test execution */ }
+      try { fs.unlinkSync(expectedPath); } catch(e) { /* make sure the file was not there before test execution */ }
 
-        hexo.publish(news, function(err) {
-          assert.equal(null, err);
-          assert.ok(fs.existsSync(expectedPath));
+      hexo.updateAreaPage(news.metadata.area, function(err) {
+        assert.equal(null, err);
+        assert.ok(fs.existsSync(expectedPath));
 
-          done();
-        });
+        done();
       });
+    });
 
-      // se a noticia for do tipo coluna ela deve estar em colunas
+    it('the area page file has layout "news-list" and a simplified version of the last 20 published news for the area', function(done) {
+      var news = _.last(lastNews);
 
-      it('with layout "news-list" and a simplified version of the last 20 published news for the area', function(done) {
-        var news = _.last(lastNews);
+      hexo.updateAreaPage(news.metadata.area, function(err) {
+        if(err) throw err;
 
-        hexo.publish(news, function(err) {
-          if(err) throw err;
-
-          var simplifiedNews = _.map(lastNews, function(item) {
-            return {
-              cover: {
-                url: item.metadata.cover.link,
-                small: item.metadata.cover.small,
-                credits: item.metadata.cover.credits,
-                subtitle: item.metadata.cover.subtitle
-              },
-              hat: item.metadata.hat,
-              title: item.metadata.title,
-              description: item.metadata.description,
-              path: item.metadata.url,
-              date: item.published_at
-            };
-          });
-
-          var areaIndexFilePath = process.env.HEXO_SOURCE_PATH + '/' + news.metadata.area  + '/index.md';
-          var areaIndexFile   = fs.readFileSync(areaIndexFilePath, 'utf-8');
-          var areaIndexObject = grayMatter(areaIndexFile);
-
-          assert.equal(areaIndexObject.data.layout, 'news-list');
-          assert.deepEqual(areaIndexObject.data[news.metadata.area], simplifiedNews);
-
-          done();
+        var simplifiedNews = _.map(lastNews, function(item) {
+          return {
+            cover: {
+              url: item.metadata.cover.link,
+              small: item.metadata.cover.small,
+              credits: item.metadata.cover.credits,
+              subtitle: item.metadata.cover.subtitle
+            },
+            hat: item.metadata.hat,
+            title: item.metadata.title,
+            description: item.metadata.description,
+            path: item.metadata.url,
+            date: item.published_at
+          };
         });
+
+        var areaIndexFilePath = process.env.HEXO_SOURCE_PATH + '/' + news.metadata.area  + '/index.md';
+        var areaIndexFile   = fs.readFileSync(areaIndexFilePath, 'utf-8');
+        var areaIndexObject = grayMatter(areaIndexFile);
+
+        assert.equal(areaIndexObject.data.layout, 'news-list');
+        assert.deepEqual(areaIndexObject.data[news.metadata.area], simplifiedNews);
+
+        done();
       });
     });
   });
