@@ -131,12 +131,12 @@ describe('hexo', function() {
     });
   });
 
-  describe('updateHome', function() {
+  describe('updateHomePage', function() {
     it('creates home metadata file in the configured hexo posts folder', function(done) {
       var expectedPath = process.env.HEXO_SOURCE_PATH + '/index.md';
       try { fs.unlinkSync(expectedPath); } catch(e) { /* ignore */ }
 
-      hexo.updateHome(function() {
+      hexo.updateHomePage(function() {
         assert.ok(fs.existsSync(expectedPath));
 
         done();
