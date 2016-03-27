@@ -1,10 +1,10 @@
-var async   = require('async');
-var assert  = require('assert');
-var fs      = require('fs');
-var grayMatter =  require('gray-matter');
-var moment  = require('moment');
-var slug =   require('slug');
-var _ = require('underscore');
+var _           = require('underscore');
+var async       = require('async');
+var assert      = require('assert');
+var fs          = require('fs');
+var grayMatter  = require('gray-matter');
+var moment      = require('moment');
+var slug        = require('slug');
 
 var metadataFactory = require('../../../factories/news-attribute').metadata;
 var newsFactory     = require('../../../factories/news-attribute').newsAttribute;
