@@ -53,6 +53,7 @@ describe('area-page-strategy', function() {
         });
 
         assert.equal(areaPageData.layout, 'news_list');
+        assert.equal(areaPageData.area, news.metadata.area);
         assert.deepEqual(areaPageData.news, simplifiedNews);
 
         done();
