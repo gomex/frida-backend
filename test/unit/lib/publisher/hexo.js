@@ -96,38 +96,6 @@ describe('hexo', function() {
       });
     });
 
-    it('the area page file has layout "news-list" and a simplified version of the last 20 published news for the area', function(done) {
-      var news = _.last(lastNews);
-
-      hexo.updateAreaPage(news.metadata.area, function(err) {
-        if(err) throw err;
-
-        var simplifiedNews = _.map(lastNews, function(item) {
-          return {
-            cover: {
-              url: item.metadata.cover.link,
-              small: item.metadata.cover.small,
-              credits: item.metadata.cover.credits,
-              subtitle: item.metadata.cover.subtitle
-            },
-            hat: item.metadata.hat,
-            title: item.metadata.title,
-            description: item.metadata.description,
-            path: item.metadata.url,
-            date: item.published_at
-          };
-        });
-
-        var areaIndexFilePath = process.env.HEXO_SOURCE_PATH + '/' + news.metadata.area  + '/index.md';
-        var areaIndexFile   = fs.readFileSync(areaIndexFilePath, 'utf-8');
-        var areaIndexObject = grayMatter(areaIndexFile);
-
-        assert.equal(areaIndexObject.data.layout, 'news-list');
-        assert.deepEqual(areaIndexObject.data[news.metadata.area], simplifiedNews);
-
-        done();
-      });
-    });
   });
 
   describe('updateHomePage', function() {
