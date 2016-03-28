@@ -2,7 +2,7 @@ var Factory = require('rosie').Factory;
 var faker = require('faker');
 
 var columnMetadata = new Factory()
-  .attr('layout', 'opinion')
+  .attr('layout', 'column')
   .attr('columnist', function() { return faker.internet.email(); })
   .attr('hat', 'Opinião')
   .attr('title', function() { return faker.lorem.sentence(); })

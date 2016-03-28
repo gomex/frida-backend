@@ -135,21 +135,21 @@ describe('REST API:', function() {
         });
     });
 
-    it('persists opinions', function(done) {
-      var opinion = columnFactory.build();
+    it('persists columns', function(done) {
+      var column = columnFactory.build();
 
       api.post(NEWS_RESOURCE)
-        .send(opinion)
+        .send(column)
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
         .expect(201)
         .end(function(err, res) {
           if(err){ done(err); }
 
-          var opinionId = res.body.id;
-          assert(typeof opinionId !== 'undefined');
+          var columnId = res.body.id;
+          assert(typeof columnId !== 'undefined');
 
-          newsRepository.findById(opinionId, function(err, result) {
-            verifyColumnAttributes(result, opinion);
+          newsRepository.findById(columnId, function(err, result) {
+            verifyColumnAttributes(result, column);
             assert.equal(result.status, 'draft');
             done();
           });
@@ -177,22 +177,22 @@ describe('REST API:', function() {
         });
     });
 
-    it('assigns an url for opinions', function(done){
-      var opinion = columnFactory.build();
+    it('assigns an url for columns', function(done){
+      var column = columnFactory.build();
 
       api.post(NEWS_RESOURCE)
-        .send(opinion)
+        .send(column)
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
         .expect(201)
         .end(function(err, res) {
           if(err){ done(err); }
 
-          var opinionId = res.body.id;
-          assert(typeof opinionId !== 'undefined');
+          var columnId = res.body.id;
+          assert(typeof columnId !== 'undefined');
 
-          newsRepository.findById(opinionId, function(err, result) {
+          newsRepository.findById(columnId, function(err, result) {
             assert.equal(typeof result._id !== 'undefined', true);
-            assert.equal(result.metadata.url, newsYearMonthDayURL + slug(opinion.metadata.title, {lower: true}) + '/');
+            assert.equal(result.metadata.url, newsYearMonthDayURL + slug(column.metadata.title, {lower: true}) + '/');
             done();
           });
         });
