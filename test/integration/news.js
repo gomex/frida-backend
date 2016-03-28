@@ -201,238 +201,213 @@ describe('REST API:', function() {
 
   describe('GET /news/<id>', function() {
 
-    it('retrieves previously saved news or column', function(done){
-      var newsDataTest = newsFactory.build();
-      var newsId;
+    var news;
+    var newsId;
 
-      var callbackPost = function(err, res){
-        if(err){ done(err); }
-
-        newsId = res.body.id;
-        assert(typeof newsId !== 'undefined');
-
-        newsRepository.findById(newsId, function(err, result) {
-          assert.equal(typeof result._id !== 'undefined', true);
-        });
-
-        api.get(buildGetNewsByIdURL(newsId))
-          .send()
-          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-          .expect(200)
-          .end(callbackGet);
-      };
-
-      var callbackGet = function(err, res){
-        if(err){ done(err); }
-        var newsReturnedFromGet = res.body;
-        assert.equal(newsReturnedFromGet._id, newsId);
-        assert.equal(newsReturnedFromGet.metadata.area, newsDataTest.metadata.area);
-        assert.equal(newsReturnedFromGet.metadata.author, newsDataTest.metadata.author);
-        assert.equal(newsReturnedFromGet.metadata.description, newsDataTest.metadata.description);
-        assert.equal(newsReturnedFromGet.metadata.hat, newsDataTest.metadata.hat);
-        assert.equal(newsReturnedFromGet.metadata.layout, newsDataTest.metadata.layout);
-        assert.equal(newsReturnedFromGet.metadata.place, newsDataTest.metadata.place);
-        assert.equal(newsReturnedFromGet.metadata.title, newsDataTest.metadata.title);
-        done();
-      };
-
+    beforeEach(function(done) {
+      news = newsFactory.build();
       api.post(NEWS_RESOURCE)
-        .send(newsDataTest)
+        .send(news)
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
         .expect(201)
-        .end(callbackPost);
+        .end(function(err, res) {
+          if(err){
+            done(err);
+          } else {
+            newsId = res.body.id;
+            done();
+          }
+        });
+    });
+
+    it('retrieves previously saved news or column', function(done){
+      api.get(buildGetNewsByIdURL(newsId))
+        .send()
+        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+        .expect(200)
+        .end(function(err, res) {
+          if(err){
+            done(err);
+          } else {
+            var newsReturnedFromGet = res.body;
+            assert.equal(newsReturnedFromGet._id, newsId);
+            assert.equal(newsReturnedFromGet.metadata.area, news.metadata.area);
+            assert.equal(newsReturnedFromGet.metadata.author, news.metadata.author);
+            assert.equal(newsReturnedFromGet.metadata.description, news.metadata.description);
+            assert.equal(newsReturnedFromGet.metadata.hat, news.metadata.hat);
+            assert.equal(newsReturnedFromGet.metadata.layout, news.metadata.layout);
+            assert.equal(newsReturnedFromGet.metadata.place, news.metadata.place);
+            assert.equal(newsReturnedFromGet.metadata.title, news.metadata.title);
+            done();
+          }
+        });
     });
   });
 
-  describe('PUT /news/<id>', function(){
+  describe('PUT /news/<id>', function() {
+
+    var news;
+    var newsId;
+
+    beforeEach(function(done) {
+      news = newsFactory.build();
+      api.post(NEWS_RESOURCE)
+        .send(news)
+        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+        .expect(201)
+        .end(function(err, res) {
+          if(err){
+            done(err);
+          } else {
+            newsId = res.body.id;
+            done();
+          }
+        });
+    });
 
     it('updates previously saved news', function(done){
-      var newsDataTest = newsFactory.build();
-      var newsDataTestStringifyed;
-      var newsId;
+      var newsAsString;
 
-      var callbackPost = function(err, res) {
-        if (err) {
-          done(err);
-        }
+      news.metadata.title = 'Outro Título';
+      news.metadata.area = 'direitos_humanos';
+      news.metadata.hat = 'Outro Chapéu';
+      news.metadata.description = 'Outra Descrição';
 
-        newsId = res.body.id;
-        assert(typeof newsId !== 'undefined');
+      newsAsString = _.clone(news);
 
-        newsRepository.findById(newsId, function (err, result) {
-          assert.equal(typeof result._id !== 'undefined', true);
-        });
+      newsAsString.metadata = JSON.stringify(newsAsString.metadata);
 
-        newsDataTest.metadata.title = 'Outro Título';
-        newsDataTest.metadata.area = 'direitos_humanos';
-        newsDataTest.metadata.hat = 'Outro Chapéu';
-        newsDataTest.metadata.description = 'Outra Descrição';
-
-        newsDataTestStringifyed = _.clone(newsDataTest);
-
-        newsDataTestStringifyed.metadata = JSON.stringify(newsDataTestStringifyed.metadata);
-
-        api.put(buildGetNewsByIdURL(newsId))
-          .send(newsDataTestStringifyed)
-          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-          .expect(200)
-          .end(callbackPut);
-      };
-
-      var callbackPut = function(err, res){
-        if(err){ done(err); }
-
-        var id = res.body.id;
-        assert(typeof id !== 'undefined');
-        assert.equal(id, newsId);
-
-        newsRepository.findById(newsId, function(err, result) {
-          verifyNewsAttributes(result, newsDataTest);
-          done();
-        });
-      };
-
-      api.post(NEWS_RESOURCE)
-        .send(newsDataTest)
+      api.put(buildGetNewsByIdURL(newsId))
+        .send(newsAsString)
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-        .expect(201)
-        .end(callbackPost);
+        .expect(200)
+        .end(function(err, res) {
+          if(err){ done(err); }
+
+          var id = res.body.id;
+          assert(typeof id !== 'undefined');
+          assert.equal(id, newsId);
+
+          newsRepository.findById(newsId, function(err, result) {
+            verifyNewsAttributes(result, news);
+            done();
+          });
+        });
     });
   });
 
-  describe('PUT /news/<id>/status/<status>', function(){
+  describe('PUT /news/<id>/status/<status>', function() {
 
-    it('publishes previously saved news when <status> is "published"', function(done){
-      var newsDataTest = newsFactory.build();
+    describe('when entity is of type news or column', function() {
+      var news;
       var newsId;
 
-      var callbackPost = function(err, res) {
-        if (err) {
-          done(err);
-        }
+      beforeEach(function(done) {
+        news = newsFactory.build();
+        api.post(NEWS_RESOURCE)
+          .send(news)
+          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+          .expect(201)
+          .end(function(err, res) {
+            if(err){
+              done(err);
+            } else {
+              newsId = res.body.id;
+              done();
+            }
+          });
+      });
 
-        newsId = res.body.id;
-        assert(typeof newsId !== 'undefined');
-
-        newsRepository.findById(newsId, function (err, result) {
-          assert.equal(typeof result._id !== 'undefined', true);
-        });
+      it('publishes previously saved news when <status> is "published"', function(done){
 
         api.put(buildPublishURL(newsId))
-          .send(newsDataTest)
+          .send(news)
           .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
           .expect('Content-Type', /json/)
           .expect(202)
-          .end(callbackPut);
+          .end(function(err, res) {
+            if (err) {
+              done(err);
+            }
 
-      };
+            assert.equal(JSON.stringify(res.body), JSON.stringify({path : '2016/02/' + slug(news.metadata.title) + '/'}));
 
-      var callbackPut = function(err, res) {
-        if (err) {
-          done(err);
-        }
+            newsRepository.findById(newsId, function(err, result) {
+              var published_at = result.published_at;
+              assert.ok(published_at);
+              assert.equal(Date.now(), published_at.getTime());
+              assert.equal(result.status, 'published');
+              assert.equal(result.metadata.url, buildNewsHTTPPath(news.metadata.title));
 
-        assert.equal(JSON.stringify(res.body), JSON.stringify({path : '2016/02/' + slug(newsDataTest.metadata.title) + '/'}));
+              // test index.md file
+              assert.ok(fs.existsSync(hexoPaths.sourcePath + '/index.md'));
 
-        newsRepository.findById(newsId, function(err, result) {
-          var published_at = result.published_at;
-          assert.ok(published_at);
-          assert.equal(Date.now(), published_at.getTime());
-          assert.equal(result.status, 'published');
-          assert.equal(result.metadata.url, buildNewsHTTPPath(newsDataTest.metadata.title));
+              // test news.md file
+              var newsFileAsFrontMatters = fs.readFileSync(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md', 'utf-8');
+              var newsFileAsObj = grayMatter(newsFileAsFrontMatters);
+              assert.equal(newsFileAsObj.data.url, buildNewsHTTPPath(news.metadata.title));
 
-          // test index.md file
-          assert.ok(fs.existsSync(hexoPaths.sourcePath + '/index.md'));
+              done();
+            });
+          });
+      });
 
-          // test news.md file
-          var newsFileAsFrontMatters = fs.readFileSync(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md', 'utf-8');
-          var newsFileAsObj = grayMatter(newsFileAsFrontMatters);
-          assert.equal(newsFileAsObj.data.url, buildNewsHTTPPath(newsDataTest.metadata.title));
-
-          done();
-        });
-      };
-
-      api.post(NEWS_RESOURCE)
-        .send(newsDataTest)
-        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-        .expect(201)
-        .end(callbackPost);
-
-    });
-
-    it('does not create yaml front matter file if <status> is different from published', function(done) {
-      var newsDataTest = newsFactory.build();
-      var newsId;
-
-      var callbackPost = function(err, res) {
-        if (err) {
-          done(err);
-        }
-
-        newsId = res.body.id;
+      it('does not create yaml front matter file if <status> is different from published', function(done) {
 
         api.put(buildDraftURL(newsId))
-          .send(newsDataTest)
+          .send(news)
           .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
           .expect(200)
-          .end(callbackPut);
-      };
+          .end(function(err, _res) {
+            if (err) {
+              done(err);
+            }
 
-      var callbackPut = function(err, _res) {
-        if (err) {
-          done(err);
-        }
-
-        newsRepository.findById(newsId, function(err, result) {
-          assert.equal(result.published_at, undefined);
-          assert.equal(fs.existsSync(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md'), false);
-          done();
-        });
-      };
-
-      api.post(NEWS_RESOURCE)
-        .send(newsDataTest)
-        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-        .expect(201)
-        .end(callbackPost);
+            newsRepository.findById(newsId, function(err, result) {
+              assert.equal(result.published_at, undefined);
+              assert.equal(fs.existsSync(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md'), false);
+              done();
+            });
+          });
+      });
     });
 
-    it('does not create yaml front matter file on status update if news is of type photo_caption', function(done) {
-      var photoCaption = photoCaptionFactory.build();
-      var newsId;
+    describe('when entity is of type photo caption', function() {
+      var photoCaption;
+      var photoCaptionId;
+      beforeEach(function(done) {
+        photoCaption = photoCaptionFactory.build();
+        api.post(NEWS_RESOURCE)
+          .send(photoCaption)
+          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+          .expect(201)
+          .end(function(err, res) {
+            if(err) throw err;
 
-      var callbackPost = function(err, res) {
-        if(err) throw err;
+            photoCaptionId = res.body.id;
+            done();
+          });
+      });
 
-        newsId = res.body.id;
-
-        api.put(buildPublishURL(newsId))
+      it('does not create yaml front matter file', function(done) {
+        api.put(buildPublishURL(photoCaptionId))
           .send(photoCaption)
           .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
           .expect(202)
-          .end(callbackPut);
-      };
+          .end(function(err, _res) {
+            if(err) throw err;
 
-      var callbackPut = function(err, _res) {
-        if(err) throw err;
-
-        newsRepository.findById(newsId, function(err, result) {
-          if(err) throw err;
-          assert.equal(result.status, 'published');
-          assert.equal(fs.existsSync(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md'), false);
-          done();
-        });
-      };
-
-      api.post(NEWS_RESOURCE)
-        .send(photoCaption)
-        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-        .expect(201)
-        .end(callbackPost);
+            newsRepository.findById(photoCaptionId, function(err, result) {
+              if(err) throw err;
+              assert.equal(result.status, 'published');
+              assert.equal(fs.existsSync(hexoPaths.postsPath + newsYearMonthURL + photoCaptionId + '.md'), false);
+              done();
+            });
+          });
+      });
     });
 
-    it('published_at date should not change if it is already set', function(done) {
+    it('does not change published_at date if it is already set', function(done) {
       var past = new Date(1000);
 
       var news = newsFactory.build({ published_at: past });
