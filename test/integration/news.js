@@ -298,7 +298,7 @@ describe('REST API:', function() {
 
   describe('PUT /news/<id>/status/<status>', function() {
 
-    describe('when entity is of type news or column', function() {
+    describe('when entity is of type news', function() {
       var news;
       var newsId;
 
@@ -318,58 +318,106 @@ describe('REST API:', function() {
           });
       });
 
-      it('publishes previously saved news when <status> is "published"', function(done){
+      describe('and <status> is "published"', function() {
 
-        api.put(buildPublishURL(newsId))
-          .send(news)
-          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-          .expect('Content-Type', /json/)
-          .expect(202)
-          .end(function(err, res) {
-            if (err) {
-              done(err);
-            }
+        it('creates news data file', function(done) {
 
-            assert.equal(JSON.stringify(res.body), JSON.stringify({path : '2016/02/' + slug(news.metadata.title) + '/'}));
+          api.put(buildPublishURL(newsId))
+            .send(news)
+            .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+            .expect('Content-Type', /json/)
+            .expect(202)
+            .end(function(err, res) {
+              if (err) {
+                done(err);
+              }
 
-            newsRepository.findById(newsId, function(err, result) {
-              var published_at = result.published_at;
-              assert.ok(published_at);
-              assert.equal(Date.now(), published_at.getTime());
-              assert.equal(result.status, 'published');
-              assert.equal(result.metadata.url, buildNewsHTTPPath(news.metadata.title));
+              assert.equal(JSON.stringify(res.body), JSON.stringify({path : '2016/02/' + slug(news.metadata.title) + '/'}));
 
-              // test index.md file
-              assert.ok(fs.existsSync(hexoPaths.sourcePath + '/index.md'));
+              newsRepository.findById(newsId, function(err, result) {
+                var published_at = result.published_at;
+                assert.ok(published_at);
+                assert.equal(Date.now(), published_at.getTime());
+                assert.equal(result.status, 'published');
+                assert.equal(result.metadata.url, buildNewsHTTPPath(news.metadata.title));
 
-              // test news.md file
-              var newsFileAsFrontMatters = fs.readFileSync(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md', 'utf-8');
-              var newsFileAsObj = grayMatter(newsFileAsFrontMatters);
-              assert.equal(newsFileAsObj.data.url, buildNewsHTTPPath(news.metadata.title));
+                // test index.md file
+                assert.ok(fs.existsSync(hexoPaths.sourcePath + '/index.md'));
+
+                // test news.md file
+                var newsFileAsFrontMatters = fs.readFileSync(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md', 'utf-8');
+                var newsFileAsObj = grayMatter(newsFileAsFrontMatters);
+                assert.equal(newsFileAsObj.data.url, buildNewsHTTPPath(news.metadata.title));
+
+                done();
+              });
+            });
+        });
+
+        it('creates area data file', function(done) {
+          api.put(buildPublishURL(newsId))
+            .send(news)
+            .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+            .expect('Content-Type', /json/)
+            .expect(202)
+            .end(function(err, _res) {
+              if (err) throw err;
+
+              var areaDataFilePath = hexoPaths.sourcePath + '/' + news.metadata.area + '/index.md';
+
+              assert.ok(fs.existsSync(areaDataFilePath));
+
+              var areaDataFileAsFrontMatters = fs.readFileSync(areaDataFilePath, 'utf-8');
+              var areaPageData = grayMatter(areaDataFileAsFrontMatters);
+              assert.notEqual(areaPageData.data, null);
 
               done();
             });
-          });
-      });
+        });
 
-      it('does not create yaml front matter file if <status> is different from published', function(done) {
 
-        api.put(buildDraftURL(newsId))
-          .send(news)
-          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-          .expect(200)
-          .end(function(err, _res) {
-            if (err) {
-              done(err);
-            }
+        it('does not change published_at date if it is already set', function(done) {
+          var past = new Date(1000);
 
-            newsRepository.findById(newsId, function(err, result) {
-              assert.equal(result.published_at, undefined);
-              assert.equal(fs.existsSync(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md'), false);
-              done();
+          var news = newsFactory.build({ published_at: past });
+
+          newsRepository.insert(NewsUtil.prepare(news), function(err, newsIdent) {
+            if(err) throw err;
+
+            api.put(buildPublishURL(newsIdent.valueOf()))
+            .expect(202)
+            .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+            .end(function(err, _result) {
+              newsRepository.findById(newsIdent.valueOf(), function(err, result) {
+                assert.equal(past.valueOf(), result.published_at.valueOf());
+                done();
+              });
             });
           });
+        });
       });
+
+      describe('and <status> is different from published', function() {
+        it('does not create yaml front matter file', function(done) {
+
+          api.put(buildDraftURL(newsId))
+            .send(news)
+            .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+            .expect(200)
+            .end(function(err, _res) {
+              if (err) {
+                done(err);
+              }
+
+              newsRepository.findById(newsId, function(err, result) {
+                assert.equal(result.published_at, undefined);
+                assert.equal(fs.existsSync(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md'), false);
+                done();
+              });
+            });
+        });
+      });
+
     });
 
     describe('when entity is of type photo caption', function() {
@@ -404,26 +452,6 @@ describe('REST API:', function() {
               done();
             });
           });
-      });
-    });
-
-    it('does not change published_at date if it is already set', function(done) {
-      var past = new Date(1000);
-
-      var news = newsFactory.build({ published_at: past });
-
-      newsRepository.insert(NewsUtil.prepare(news), function(err, newsIdent) {
-        if(err) throw err;
-
-        api.put(buildPublishURL(newsIdent.valueOf()))
-        .expect(202)
-        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-        .end(function(err, _result) {
-          newsRepository.findById(newsIdent.valueOf(), function(err, result) {
-            assert.equal(past.valueOf(), result.published_at.valueOf());
-            done();
-          });
-        });
       });
     });
   });
