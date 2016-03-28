@@ -1,5 +1,4 @@
 var _           = require('underscore');
-var async       = require('async');
 var assert      = require('assert');
 var fs          = require('fs');
 var grayMatter  = require('gray-matter');
@@ -10,7 +9,6 @@ var metadataFactory = require('../../../factories/news-attribute').metadata;
 var newsFactory     = require('../../../factories/news-attribute').newsAttribute;
 
 var hexo            = require('../../../../lib/publisher/hexo');
-var newsRepository  = require('../../../../lib/news/news-repository');
 
 describe('hexo', function() {
 
@@ -64,26 +62,16 @@ describe('hexo', function() {
   });
 
   describe('updateAreaPage', function() {
-    var lastNews = [];
+    var news;
 
     before(function(done) {
-      var insertNewsOperations = [];
-
       var metadata = metadataFactory.build({ url: '2016/03/news-' + Date.now() });
-      var news = newsFactory.build({ metadata: metadata, published_at: new Date(), status: 'published' });
-      for(var i = 0; i < 20; i++) {
-        insertNewsOperations.push(async.apply(newsRepository.insert, news));
-        lastNews.push(news);
-      }
+      news = newsFactory.build({ metadata: metadata, published_at: new Date(), status: 'published' });
 
-      async.parallel(insertNewsOperations, function(err) {
-        if(err) throw err;
-        done();
-      });
+      done();
     });
 
     it('creates area page file in the correspondent hexo source folder', function(done) {
-      var news = _.last(lastNews);
       var expectedPath = process.env.HEXO_SOURCE_PATH + '/' + news.metadata.area  + '/index.md';
 
       try { fs.unlinkSync(expectedPath); } catch(e) { /* make sure the file was not there before test execution */ }
@@ -91,6 +79,20 @@ describe('hexo', function() {
       hexo.updateAreaPage(news.metadata.area, function(err) {
         assert.equal(null, err);
         assert.ok(fs.existsSync(expectedPath));
+
+        done();
+      });
+    });
+
+    it('area page data file is valid front matter', function(done) {
+      hexo.updateAreaPage(news.metadata.area, function(err) {
+        assert.equal(null, err);
+
+        var areaIndexFilePath = process.env.HEXO_SOURCE_PATH + '/' + news.metadata.area  + '/index.md';
+        var areaIndexFile   = fs.readFileSync(areaIndexFilePath, 'utf-8');
+        var areaIndexData = grayMatter(areaIndexFile);
+
+        assert.notEqual(areaIndexData.data, null);
 
         done();
       });
@@ -105,6 +107,20 @@ describe('hexo', function() {
 
       hexo.updateHomePage(function() {
         assert.ok(fs.existsSync(expectedPath));
+
+        done();
+      });
+    });
+
+    it('home page data file is valid front matter', function(done) {
+      hexo.updateHomePage(function(err) {
+        assert.equal(null, err);
+
+        var homePageDataFilePath = process.env.HEXO_SOURCE_PATH + '/index.md';
+        var homePageDataFile   = fs.readFileSync(homePageDataFilePath, 'utf-8');
+        var homePageData = grayMatter(homePageDataFile);
+
+        assert.notEqual(homePageData.data, null);
 
         done();
       });
