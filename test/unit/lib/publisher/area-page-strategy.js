@@ -30,7 +30,7 @@ describe('area-page-strategy', function() {
       });
     });
 
-    it('area page data has layout "news-list" and a simplified version of the last 20 published news for the area', function(done) {
+    it('area page data has layout "news_list" and a simplified version of the last 20 published news for the area', function(done) {
       var news = _.last(lastNews);
 
       areaPageStrategy.buildPageData(news.metadata.area, function(err, areaPageData) {
@@ -52,7 +52,7 @@ describe('area-page-strategy', function() {
           };
         });
 
-        assert.equal(areaPageData.layout, 'news-list');
+        assert.equal(areaPageData.layout, 'news_list');
         assert.deepEqual(areaPageData[news.metadata.area], simplifiedNews);
 
         done();
