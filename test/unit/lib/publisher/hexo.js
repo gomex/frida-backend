@@ -5,7 +5,6 @@ var grayMatter  = require('gray-matter');
 var moment      = require('moment');
 var slug        = require('slug');
 
-var metadataFactory = require('../../../factories/news-attribute').metadata;
 var newsFactory     = require('../../../factories/news-attribute').newsAttribute;
 
 var hexo            = require('../../../../lib/publisher/hexo');
@@ -62,39 +61,66 @@ describe('hexo', function() {
   });
 
   describe('updateAreaPage', function() {
-    var news;
 
-    before(function(done) {
-      var metadata = metadataFactory.build({ url: '2016/03/news-' + Date.now() });
-      news = newsFactory.build({ metadata: metadata, published_at: new Date(), status: 'published' });
+    describe('when area is not column', function() {
+      var area = 'internacional';
 
-      done();
-    });
+      it('creates area page file in the correspondent hexo source folder', function(done) {
+        var expectedPath = process.env.HEXO_SOURCE_PATH + '/' + area  + '/index.md';
 
-    it('creates area page file in the correspondent hexo source folder', function(done) {
-      var expectedPath = process.env.HEXO_SOURCE_PATH + '/' + news.metadata.area  + '/index.md';
+        try { fs.unlinkSync(expectedPath); } catch(e) { /* make sure the file was not there before test execution */ }
 
-      try { fs.unlinkSync(expectedPath); } catch(e) { /* make sure the file was not there before test execution */ }
+        hexo.updateAreaPage(area, function(err) {
+          assert.equal(null, err);
+          assert.ok(fs.existsSync(expectedPath));
 
-      hexo.updateAreaPage(news.metadata.area, function(err) {
-        assert.equal(null, err);
-        assert.ok(fs.existsSync(expectedPath));
+          done();
+        });
+      });
 
-        done();
+      it('area page data file is valid front matter', function(done) {
+        hexo.updateAreaPage(area, function(err) {
+          assert.equal(null, err);
+
+          var areaIndexFilePath = process.env.HEXO_SOURCE_PATH + '/' + area  + '/index.md';
+          var areaIndexFile   = fs.readFileSync(areaIndexFilePath, 'utf-8');
+          var areaIndexData = grayMatter(areaIndexFile);
+
+          assert.notEqual(areaIndexData.data, null);
+
+          done();
+        });
       });
     });
 
-    it('area page data file is valid front matter', function(done) {
-      hexo.updateAreaPage(news.metadata.area, function(err) {
-        assert.equal(null, err);
+    describe('when area is column', function() {
+      var area = 'column';
 
-        var areaIndexFilePath = process.env.HEXO_SOURCE_PATH + '/' + news.metadata.area  + '/index.md';
-        var areaIndexFile   = fs.readFileSync(areaIndexFilePath, 'utf-8');
-        var areaIndexData = grayMatter(areaIndexFile);
+      it('creates column page file in a folder named "colunistas" under hexo source folder', function(done) {
+        var expectedPath = process.env.HEXO_SOURCE_PATH + '/colunistas/index.md';
 
-        assert.notEqual(areaIndexData.data, null);
+        try { fs.unlinkSync(expectedPath); } catch(e) { /* make sure the file was not there before test execution */ }
 
-        done();
+        hexo.updateAreaPage(area, function(err) {
+          assert.equal(null, err);
+          assert.ok(fs.existsSync(expectedPath));
+
+          done();
+        });
+      });
+
+      it('column page data file is valid front matter', function(done) {
+        hexo.updateAreaPage(area, function(err) {
+          assert.equal(null, err);
+
+          var areaIndexFilePath = process.env.HEXO_SOURCE_PATH + '/colunistas/index.md';
+          var areaIndexFile   = fs.readFileSync(areaIndexFilePath, 'utf-8');
+          var areaIndexData = grayMatter(areaIndexFile);
+
+          assert.notEqual(areaIndexData.data, null);
+
+          done();
+        });
       });
     });
 
