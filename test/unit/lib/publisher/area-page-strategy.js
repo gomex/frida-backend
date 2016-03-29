@@ -64,6 +64,16 @@ describe('area-page-strategy', function() {
           done();
         });
       });
+
+      it('replaces word separator from area name with spaces before setting area field', function(done) {
+        areaPageStrategy.buildPageData('direitos_humanos_para_todos_os_humanos', function(err, areaPageData) {
+          if(err) throw err;
+
+          assert.equal(areaPageData.area, 'direitos humanos para todos os humanos');
+
+          done();
+        });
+      });
     });
 
     describe('when area is column', function() {
