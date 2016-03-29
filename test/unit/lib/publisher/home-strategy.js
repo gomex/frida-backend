@@ -13,8 +13,8 @@ var photoCaptionFactory     = require('../../../factories/photo-caption-attribut
 
 describe('home-strategy', function() {
 
-  describe('buildHome', function(){
-    before(function(done){
+  describe('buildHome', function() {
+    beforeEach(function(done){
       newsRepository.deleteAll(done);
     });
 
@@ -248,6 +248,13 @@ describe('home-strategy', function() {
     shouldHaveColumn('column_02');
 
     shouldHaveColumn('column_03');
+
+    it('does not add the field if there is no news for that session', function(done) {
+      homeStrategy.buildHome(function(err, newsForHome){
+        assert.deepEqual(newsForHome, { layout: 'national' });
+        done();
+      });
+    });
   });
 
 });
