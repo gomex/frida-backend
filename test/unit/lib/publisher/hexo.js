@@ -20,7 +20,7 @@ describe('hexo', function() {
         var year  = newsPublishedAt.format('YYYY');
         var month = newsPublishedAt.format('MM');
 
-        var httpExpectedPath = year + '/' + month + '/' + slug(news.metadata.title) + '/';
+        var httpExpectedPath = '/' + year + '/' + month + '/' + slug(news.metadata.title) + '/';
         var expectedPath = process.env.HEXO_SOURCE_PATH + '/_posts/' + year + '/' + month + '/' + news._id + '.md';
         assert.equal(httpPath, httpExpectedPath);
         assert.ok(fs.existsSync(expectedPath));

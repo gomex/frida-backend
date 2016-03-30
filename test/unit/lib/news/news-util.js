@@ -40,7 +40,7 @@ describe('news-util:', function() {
     it('slugifies url using title from metadata and created date', function(done) {
       var metadata = metadataFactory.build({title: '"como" vai'});
       var news = newsAttributeFactory.build({metadata: metadata});
-      var urlPath = '2014/08/25/como-vai/';
+      var urlPath = '/2014/08/25/como-vai/';
       var result = NewsUtil.prepare(news);
 
       assert.equal(urlPath, result.metadata.url);
@@ -50,7 +50,7 @@ describe('news-util:', function() {
     it('is lower case', function(done) {
       var metadata = metadataFactory.build({title: 'CoMo Vai'});
       var news = newsAttributeFactory.build({metadata: metadata});
-      var urlPath = '2014/08/25/como-vai/';
+      var urlPath = '/2014/08/25/como-vai/';
       var result = NewsUtil.prepare(news);
 
       assert.equal(urlPath, result.metadata.url);

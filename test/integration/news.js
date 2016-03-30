@@ -93,7 +93,7 @@ describe('REST API:', function() {
     var testDate = new Date('Feb 14, 2016 01:15:00');
 
     newsYearMonthURL = '/2016/02/';
-    newsYearMonthDayURL = '2016/02/14/';
+    newsYearMonthDayURL = '/2016/02/14/';
 
     clock = sinon.useFakeTimers(testDate.getTime(), 'Date');
     newsCreatedAt = Date.now();
@@ -332,7 +332,7 @@ describe('REST API:', function() {
                 done(err);
               }
 
-              assert.equal(JSON.stringify(res.body), JSON.stringify({path : '2016/02/' + slug(news.metadata.title) + '/'}));
+              assert.deepEqual(res.body, {path : '/2016/02/' + slug(news.metadata.title) + '/'});
 
               newsRepository.findById(newsId, function(err, result) {
                 var published_at = result.published_at;
