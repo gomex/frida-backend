@@ -46,6 +46,7 @@ describe('area-page-strategy', function() {
               cover: {
                 url: item.metadata.cover.link,
                 small: item.metadata.cover.small,
+                medium: item.metadata.cover.medium,
                 credits: item.metadata.cover.credits,
                 subtitle: item.metadata.cover.subtitle
               },
