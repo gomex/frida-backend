@@ -34,6 +34,15 @@ describe('news-util:', function() {
       assert.equal(result.status, 'draft');
       done();
     });
+
+    it('removes cover field if it is not well formed', function(done) {
+      var news = newsAttributeFactory.build();
+      news.metadata.cover = {link: null};
+      var result = NewsUtil.prepare(news);
+
+      assert.equal(result.metadata.cover, undefined);
+      done();
+    });
   });
 
   describe('format url', function() {
