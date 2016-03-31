@@ -66,13 +66,25 @@ describe('area-page-strategy', function() {
         });
       });
 
-      it('replaces word separator from area name with spaces before setting area field', function(done) {
-        areaPageStrategy.buildPageData('direitos_humanos_para_todos_os_humanos', function(err, areaPageData) {
-          if(err) throw err;
+      describe('area field is a readable version of the area identifier', function() {
+        it('direitos_humanos becomes "direitos humanos"', function(done) {
+          areaPageStrategy.buildPageData('direitos_humanos', function(err, areaPageData) {
+            if(err) throw err;
 
-          assert.equal(areaPageData.area, 'direitos humanos para todos os humanos');
+            assert.equal(areaPageData.area, 'direitos humanos');
 
-          done();
+            done();
+          });
+        });
+
+        it('espanol becomes "español"', function(done) {
+          areaPageStrategy.buildPageData('espanol', function(err, areaPageData) {
+            if(err) throw err;
+
+            assert.equal(areaPageData.area, 'español');
+
+            done();
+          });
         });
       });
     });
