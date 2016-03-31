@@ -46,6 +46,7 @@ describe('home-strategy', function() {
               cover: {
                 url: news2.metadata.cover.link,
                 small: news2.metadata.cover.small,
+                medium: news2.metadata.cover.medium,
                 credits: news2.metadata.cover.credits,
                 subtitle: news2.metadata.cover.subtitle
               },
@@ -138,6 +139,7 @@ describe('home-strategy', function() {
               cover: {
                 url: news.metadata.cover.link,
                 small: news.metadata.cover.small,
+                medium: news.metadata.cover.medium,
                 credits: news.metadata.cover.credits,
                 subtitle: news.metadata.cover.subtitle
               },
@@ -210,6 +212,7 @@ describe('home-strategy', function() {
               cover: {
                 url: news.metadata.cover.link,
                 small: news.metadata.cover.small,
+                medium: news.metadata.cover.medium,
                 credits: news.metadata.cover.credits,
                 subtitle: news.metadata.cover.subtitle
               },
