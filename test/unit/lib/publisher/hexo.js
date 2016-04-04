@@ -3,7 +3,6 @@ var assert      = require('assert');
 var fs          = require('fs');
 var grayMatter  = require('gray-matter');
 var moment      = require('moment');
-var slug        = require('slug');
 
 var newsFactory     = require('../../../factories/news-attribute').newsAttribute;
 
@@ -15,14 +14,12 @@ describe('hexo', function() {
     it('creates the news file in the configured hexo posts folder', function(done) {
       var news = newsFactory.build({ published_at: new Date(12345) });
 
-      hexo.publish(news, function(_err, httpPath) {
+      hexo.publish(news, function(_err) {
         var newsPublishedAt = moment(news.published_at);
         var year  = newsPublishedAt.format('YYYY');
         var month = newsPublishedAt.format('MM');
 
-        var httpExpectedPath = '/' + year + '/' + month + '/' + slug(news.metadata.title) + '/';
         var expectedPath = process.env.HEXO_SOURCE_PATH + '/_posts/' + year + '/' + month + '/' + news._id + '.md';
-        assert.equal(httpPath, httpExpectedPath);
         assert.ok(fs.existsSync(expectedPath));
 
         done();
@@ -32,7 +29,7 @@ describe('hexo', function() {
     it('news file is an YAML front matter representation of the news object', function(done) {
       var news = newsFactory.build({ published_at: new Date(12345) });
 
-      hexo.publish(news, function(_err, _httpPath) {
+      hexo.publish(news, function(_err) {
         var newsPublishedAt = moment(news.published_at);
         var year  = newsPublishedAt.format('YYYY');
         var month = newsPublishedAt.format('MM');
@@ -52,7 +49,7 @@ describe('hexo', function() {
       var news =  { };
 
       assert.throws(function() {
-        hexo.publish(news, function(_err, _httpPath) {});
+        hexo.publish(news, function(_err) {});
       }, TypeError);
 
       done();

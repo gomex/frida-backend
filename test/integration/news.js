@@ -291,7 +291,7 @@ describe('REST API:', function() {
                 done(err);
               }
 
-              assert.deepEqual(res.body, {path : '/2016/02/' + slug(news.metadata.title) + '/'});
+              assert.deepEqual(res.body, {path : buildNewsHTTPPath(news.metadata.title)});
 
               newsRepository.findById(newsId, function(err, result) {
                 var published_at = result.published_at;
