@@ -136,6 +136,26 @@ describe('REST API:', function() {
         });
     });
 
+    it('does not set news path', function(done) {
+      var metadata = metadataFactory.build({ url: '/bad-bad-path' });
+      var news = newsFactory.build({ metadata: metadata });
+
+      api.post(NEWS_RESOURCE)
+        .send(news)
+        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+        .expect(201)
+        .end(function(err, res) {
+          if(err){ done(err); }
+
+          var newsId = res.body.id;
+          assert(typeof newsId !== 'undefined');
+          newsRepository.findById(newsId, function(err, result) {
+            assert.equal(result.metadata.url, undefined);
+            done();
+          });
+        });
+    });
+
     it('persists columns', function(done) {
       var column = columnFactory.build();
 
