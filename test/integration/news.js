@@ -156,47 +156,6 @@ describe('REST API:', function() {
         });
     });
 
-    it('assigns an url for news', function(done) {
-      var news = newsFactory.build();
-
-      api.post(NEWS_RESOURCE)
-        .send(news)
-        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-        .expect(201)
-        .end(function(err, res) {
-          if(err){ done(err); }
-
-          var newsId = res.body.id;
-          assert(typeof newsId !== 'undefined');
-
-          newsRepository.findById(newsId, function(err, result) {
-            assert.equal(typeof result._id !== 'undefined', true);
-            assert.equal(result.metadata.url, buildNewsHTTPPath(news.metadata.title));
-            done();
-          });
-        });
-    });
-
-    it('assigns an url for columns', function(done){
-      var column = columnFactory.build();
-
-      api.post(NEWS_RESOURCE)
-        .send(column)
-        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-        .expect(201)
-        .end(function(err, res) {
-          if(err){ done(err); }
-
-          var columnId = res.body.id;
-          assert(typeof columnId !== 'undefined');
-
-          newsRepository.findById(columnId, function(err, result) {
-            assert.equal(typeof result._id !== 'undefined', true);
-            assert.equal(result.metadata.url, newsYearMonthDayURL + slug(column.metadata.title, {lower: true}) + '/');
-            done();
-          });
-        });
-    });
   });
 
   describe('GET /news/<id>', function() {
