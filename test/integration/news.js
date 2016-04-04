@@ -7,7 +7,6 @@ var sinon       = require('sinon');
 var supertest   = require('supertest');
 
 var newsRepository  = require('../../lib/news/news-repository');
-var NewsUtil        = require('../../lib/news/news-util');
 var server          = require('../../lib/http/server');
 
 var metadataFactory     = require('../factories/news-attribute').metadata;
@@ -131,6 +130,7 @@ describe('REST API:', function() {
           newsRepository.findById(newsId, function(err, result) {
             verifyNewsAttributes(result, news);
             assert.equal(result.status, 'draft');
+            assert.ok(result.created_at);
             done();
           });
         });
@@ -389,7 +389,7 @@ describe('REST API:', function() {
 
           var news = newsFactory.build({ published_at: past });
 
-          newsRepository.insert(NewsUtil.prepare(news), function(err, newsIdent) {
+          newsRepository.insert(news, function(err, newsIdent) {
             if(err) throw err;
 
             api.put(buildPublishURL(newsIdent.valueOf()))
@@ -410,7 +410,7 @@ describe('REST API:', function() {
           var metadata = metadataFactory.build({url: '/crazy-path'});
           var news = newsFactory.build({ published_at: past, metadata: metadata });
 
-          newsRepository.insert(NewsUtil.prepare(news), function(err, newsIdent) {
+          newsRepository.insert(news, function(err, newsIdent) {
             if(err) throw err;
 
             api.put(buildPublishURL(newsIdent.valueOf()))
