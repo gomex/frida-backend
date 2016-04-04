@@ -254,6 +254,34 @@ describe('REST API:', function() {
           });
         });
     });
+
+    it('does not set news path', function(done){
+      var newsAsString;
+
+      news.metadata.url = '/bad-bad-path';
+
+      newsAsString = _.clone(news);
+
+      newsAsString.metadata = JSON.stringify(newsAsString.metadata);
+
+      api.put(buildGetNewsByIdURL(newsId))
+        .send(newsAsString)
+        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+        .expect(200)
+        .end(function(err, res) {
+          if(err){ done(err); }
+
+          var id = res.body.id;
+          assert(typeof id !== 'undefined');
+          assert.equal(id, newsId);
+
+          newsRepository.findById(newsId, function(err, result) {
+            assert.equal(result.metadata.url, undefined);
+            done();
+          });
+        });
+    });
+
   });
 
   describe('PUT /news/<id>/status/<status>', function() {
