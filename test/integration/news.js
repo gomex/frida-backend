@@ -10,6 +10,7 @@ var newsRepository  = require('../../lib/news/news-repository');
 var NewsUtil        = require('../../lib/news/news-util');
 var server          = require('../../lib/http/server');
 
+var metadataFactory     = require('../factories/news-attribute').metadata;
 var newsFactory         = require('../factories/news-attribute').newsAttribute;
 var columnFactory       = require('../factories/column-attributes').columnAttributes;
 var photoCaptionFactory = require('../factories/photo-caption-attributes').photoCaptionAttributes;
@@ -349,6 +350,27 @@ describe('REST API:', function() {
             .end(function(err, _result) {
               newsRepository.findById(newsIdent.valueOf(), function(err, result) {
                 assert.equal(past.valueOf(), result.published_at.valueOf());
+                done();
+              });
+            });
+          });
+        });
+
+        it('does not change news path if it is already set', function(done) {
+          var past = new Date(1000);
+
+          var metadata = metadataFactory.build({url: '/crazy-path'});
+          var news = newsFactory.build({ published_at: past, metadata: metadata });
+
+          newsRepository.insert(NewsUtil.prepare(news), function(err, newsIdent) {
+            if(err) throw err;
+
+            api.put(buildPublishURL(newsIdent.valueOf()))
+            .expect(202)
+            .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+            .end(function(err, _result) {
+              newsRepository.findById(newsIdent.valueOf(), function(err, result) {
+                assert.equal(result.metadata.url, '/crazy-path');
                 done();
               });
             });
