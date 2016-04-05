@@ -13,6 +13,7 @@ var metadataFactory     = require('../factories/news-attribute').metadata;
 var newsFactory         = require('../factories/news-attribute').newsAttribute;
 var columnFactory       = require('../factories/column-attributes').columnAttributes;
 var photoCaptionFactory = require('../factories/photo-caption-attributes').photoCaptionAttributes;
+var tabloidFactory      = require('../factories/tabloid-attributes').tabloidAttributes;
 
 var api             = supertest('https://localhost:5000');
 
@@ -479,6 +480,54 @@ describe('REST API:', function() {
               if(err) throw err;
               assert.equal(result.status, 'published');
               assert.equal(fs.existsSync(hexoPaths.postsPath + newsYearMonthURL + photoCaptionId + '.md'), false);
+              done();
+            });
+          });
+      });
+    });
+
+    describe('when entity is of type tabloid', function() {
+      var tabloid;
+      var tabloidId;
+      beforeEach(function(done) {
+        tabloid = tabloidFactory.build();
+        api.post(NEWS_RESOURCE)
+          .send(tabloid)
+          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+          .expect(201)
+          .end(function(err, res) {
+            if(err) throw err;
+
+            tabloidId = res.body.id;
+            done();
+          });
+      });
+
+      it('creates tabloid data file', function(done) {
+
+        api.put(buildPublishURL(tabloidId))
+          .send(tabloid)
+          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+          .expect('Content-Type', /json/)
+          .expect(202)
+          .end(function(err, res) {
+            if (err) done(err);
+
+            assert.deepEqual(res.body, {path : buildNewsHTTPPath(tabloid.metadata.title)});
+
+            newsRepository.findById(tabloidId, function(err, result) {
+              var published_at = result.published_at;
+              assert.ok(published_at);
+              assert.equal(Date.now(), published_at.getTime());
+              assert.equal(result.status, 'published');
+              assert.equal(result.metadata.url, buildNewsHTTPPath(tabloid.metadata.title));
+
+              assert.ok(fs.existsSync(hexoPaths.sourcePath + '/index.md'));
+
+              var tabloidFileAsFrontMatters = fs.readFileSync(hexoPaths.postsPath + newsYearMonthURL + tabloidId + '.md', 'utf-8');
+              var tabloidFileAsObj = grayMatter(tabloidFileAsFrontMatters);
+              assert.equal(tabloidFileAsObj.data.url, buildNewsHTTPPath(tabloid.metadata.title));
+
               done();
             });
           });
