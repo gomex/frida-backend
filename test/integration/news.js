@@ -73,10 +73,6 @@ describe('REST API:', function() {
     return NEWS_RESOURCE + '/' + newsId + '/status/published';
   };
 
-  var buildDraftURL = function(newsId) {
-    return NEWS_RESOURCE + '/' + newsId + '/status/draft';
-  };
-
   var buildGetNewsByIdURL = function(newsId) {
     return NEWS_RESOURCE + '/' + newsId;
   };
@@ -333,7 +329,7 @@ describe('REST API:', function() {
 
   });
 
-  describe('PUT /news/<id>/status/<status>', function() {
+  describe('PUT /news/<id>/status/published', function() {
 
     describe('when entity is of type news', function() {
       var news;
@@ -355,127 +351,103 @@ describe('REST API:', function() {
           });
       });
 
-      describe('and <status> is "published"', function() {
 
-        it('creates news data file', function(done) {
+      it('creates news data file', function(done) {
 
-          api.put(buildPublishURL(newsId))
-            .send(news)
-            .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-            .expect('Content-Type', /json/)
-            .expect(202)
-            .end(function(err, res) {
-              if (err) {
-                done(err);
-              }
+        api.put(buildPublishURL(newsId))
+          .send(news)
+          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+          .expect('Content-Type', /json/)
+          .expect(202)
+          .end(function(err, res) {
+            if (err) {
+              done(err);
+            }
 
-              assert.deepEqual(res.body, {path : buildNewsHTTPPath(news.metadata.title)});
+            assert.deepEqual(res.body, {path : buildNewsHTTPPath(news.metadata.title)});
 
-              newsRepository.findById(newsId, function(err, result) {
-                var published_at = result.published_at;
-                assert.ok(published_at);
-                assert.equal(Date.now(), published_at.getTime());
-                assert.equal(result.status, 'published');
-                assert.equal(result.metadata.url, buildNewsHTTPPath(news.metadata.title));
+            newsRepository.findById(newsId, function(err, result) {
+              var published_at = result.published_at;
+              assert.ok(published_at);
+              assert.equal(Date.now(), published_at.getTime());
+              assert.equal(result.status, 'published');
+              assert.equal(result.metadata.url, buildNewsHTTPPath(news.metadata.title));
 
-                // test index.md file
-                assert.ok(fs.existsSync(hexoPaths.sourcePath + '/index.md'));
+              // test index.md file
+              assert.ok(fs.existsSync(hexoPaths.sourcePath + '/index.md'));
 
-                // test news.md file
-                var newsFileAsFrontMatters = fs.readFileSync(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md', 'utf-8');
-                var newsFileAsObj = grayMatter(newsFileAsFrontMatters);
-                assert.equal(newsFileAsObj.data.url, buildNewsHTTPPath(news.metadata.title));
-
-                done();
-              });
-            });
-        });
-
-        it('creates area data file', function(done) {
-          api.put(buildPublishURL(newsId))
-            .send(news)
-            .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-            .expect('Content-Type', /json/)
-            .expect(202)
-            .end(function(err, _res) {
-              if (err) throw err;
-
-              var areaDataFilePath = hexoPaths.sourcePath + '/' + news.metadata.area + '/index.md';
-
-              assert.ok(fs.existsSync(areaDataFilePath));
-
-              var areaDataFileAsFrontMatters = fs.readFileSync(areaDataFilePath, 'utf-8');
-              var areaPageData = grayMatter(areaDataFileAsFrontMatters);
-              assert.notEqual(areaPageData.data, null);
+              // test news.md file
+              var newsFileAsFrontMatters = fs.readFileSync(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md', 'utf-8');
+              var newsFileAsObj = grayMatter(newsFileAsFrontMatters);
+              assert.equal(newsFileAsObj.data.url, buildNewsHTTPPath(news.metadata.title));
 
               done();
             });
-        });
-
-
-        it('does not change published_at date if it is already set', function(done) {
-          var past = new Date(1000);
-
-          var news = newsFactory.build({ published_at: past });
-
-          newsRepository.insert(news, function(err, newsIdent) {
-            if(err) throw err;
-
-            api.put(buildPublishURL(newsIdent.valueOf()))
-            .expect(202)
-            .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-            .end(function(err, _result) {
-              newsRepository.findById(newsIdent.valueOf(), function(err, result) {
-                assert.equal(past.valueOf(), result.published_at.valueOf());
-                done();
-              });
-            });
           });
-        });
+      });
 
-        it('does not change news path if it is already set', function(done) {
-          var past = new Date(1000);
+      it('creates area data file', function(done) {
+        api.put(buildPublishURL(newsId))
+          .send(news)
+          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+          .expect('Content-Type', /json/)
+          .expect(202)
+          .end(function(err, _res) {
+            if (err) throw err;
 
-          var metadata = metadataFactory.build({url: '/crazy-path'});
-          var news = newsFactory.build({ published_at: past, metadata: metadata });
+            var areaDataFilePath = hexoPaths.sourcePath + '/' + news.metadata.area + '/index.md';
 
-          newsRepository.insert(news, function(err, newsIdent) {
-            if(err) throw err;
+            assert.ok(fs.existsSync(areaDataFilePath));
 
-            api.put(buildPublishURL(newsIdent.valueOf()))
-            .expect(202)
-            .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-            .end(function(err, _result) {
-              newsRepository.findById(newsIdent.valueOf(), function(err, result) {
-                assert.equal(result.metadata.url, '/crazy-path');
-                done();
-              });
+            var areaDataFileAsFrontMatters = fs.readFileSync(areaDataFilePath, 'utf-8');
+            var areaPageData = grayMatter(areaDataFileAsFrontMatters);
+            assert.notEqual(areaPageData.data, null);
+
+            done();
+          });
+      });
+
+
+      it('does not change published_at date if it is already set', function(done) {
+        var past = new Date(1000);
+
+        var news = newsFactory.build({ published_at: past });
+
+        newsRepository.insert(news, function(err, newsIdent) {
+          if(err) throw err;
+
+          api.put(buildPublishURL(newsIdent.valueOf()))
+          .expect(202)
+          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+          .end(function(err, _result) {
+            newsRepository.findById(newsIdent.valueOf(), function(err, result) {
+              assert.equal(past.valueOf(), result.published_at.valueOf());
+              done();
             });
           });
         });
       });
 
-      describe('and <status> is different from published', function() {
-        it('does not create yaml front matter file', function(done) {
+      it('does not change news path if it is already set', function(done) {
+        var past = new Date(1000);
 
-          api.put(buildDraftURL(newsId))
-            .send(news)
-            .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-            .expect(200)
-            .end(function(err, _res) {
-              if (err) {
-                done(err);
-              }
+        var metadata = metadataFactory.build({url: '/crazy-path'});
+        var news = newsFactory.build({ published_at: past, metadata: metadata });
 
-              newsRepository.findById(newsId, function(err, result) {
-                assert.equal(result.published_at, undefined);
-                assert.equal(fs.existsSync(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md'), false);
-                done();
-              });
+        newsRepository.insert(news, function(err, newsIdent) {
+          if(err) throw err;
+
+          api.put(buildPublishURL(newsIdent.valueOf()))
+          .expect(202)
+          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+          .end(function(err, _result) {
+            newsRepository.findById(newsIdent.valueOf(), function(err, result) {
+              assert.equal(result.metadata.url, '/crazy-path');
+              done();
             });
+          });
         });
       });
-
     });
 
     describe('when entity is of type photo caption', function() {
