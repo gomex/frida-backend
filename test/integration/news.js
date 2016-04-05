@@ -302,6 +302,35 @@ describe('REST API:', function() {
         });
     });
 
+    it('does not reset news path for published news', function(done) {
+      var now = new Date();
+      var past = new Date(1000);
+
+      var metadata = metadataFactory.build({ url: '/this-path-should-not-disappear' });
+      var news = newsFactory.build({ status: 'published', published_at: now, created_at: past, metadata: metadata});
+
+      newsRepository.insert(news, function(err, newsIdent) {
+        if(err) throw err;
+
+        news.metadata.url = '';
+        var newsAsString = _.clone(news);
+        newsAsString.metadata = JSON.stringify(newsAsString.metadata);
+
+        api.put(buildGetNewsByIdURL(newsIdent))
+        .send(newsAsString)
+        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+        .expect(200)
+        .end(function(err, _result) {
+
+          newsRepository.findById(newsIdent.valueOf(), function(err, result) {
+            assert.equal(result.metadata.url, '/this-path-should-not-disappear');
+            done();
+          });
+
+        });
+      });
+    });
+
   });
 
   describe('PUT /news/<id>/status/<status>', function() {
