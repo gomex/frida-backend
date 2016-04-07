@@ -10,6 +10,8 @@ var newsFactory             = require('../../../factories/news-attribute').newsA
 var columnMetadataFactory   = require('../../../factories/column-attributes').columnMetadata;
 var columnFactory           = require('../../../factories/column-attributes').columnAttributes;
 var photoCaptionFactory     = require('../../../factories/photo-caption-attributes').photoCaptionAttributes;
+var tabloidMetadataFactory  = require('../../../factories/tabloid-attributes').tabloidMetadata;
+var tabloidFactory          = require('../../../factories/tabloid-attributes').tabloidAttributes;
 
 describe('home-strategy', function() {
 
@@ -58,6 +60,50 @@ describe('home-strategy', function() {
             };
 
             assert.deepEqual(newsForHome[sessionName], expected);
+            done();
+          });
+        });
+      });
+    }
+
+    function shouldHaveTabloid(tabloidName, displayArea) {
+      it('sets "' + tabloidName + '" to the most recent published tabloid for this region', function(done){
+        var metadata1 = tabloidMetadataFactory.build({display_area: displayArea, url: '/2015/09/title-01'});
+        var tabloid1 = tabloidFactory.build({
+          status: 'published',
+          published_at: new Date(2015, 9, 22),
+          metadata: metadata1
+        });
+        var metadata2 = tabloidMetadataFactory.build({display_area: displayArea, url: '/2016/10/title-02'});
+        var tabloid2 = tabloidFactory.build({
+          status: 'published',
+          published_at: new Date(2016, 9, 22),
+          metadata: metadata2
+        });
+
+        async.parallel([
+          async.apply(newsRepository.insert, tabloid1),
+          async.apply(newsRepository.insert, tabloid2)
+        ], function(err, _insertedIds){
+          if(err) throw err;
+
+          homeStrategy.buildHome(function(err, newsForHome){
+            if(err) throw err;
+
+            var expected = {
+              cover: {
+                url: tabloid2.metadata.cover.link,
+                small: tabloid2.metadata.cover.small,
+                medium: tabloid2.metadata.cover.medium,
+                credits: tabloid2.metadata.cover.credits,
+                subtitle: tabloid2.metadata.cover.subtitle
+              },
+              date: tabloid2.published_at,
+              title: tabloid2.metadata.title,
+              path: tabloid2.metadata.url
+            };
+
+            assert.deepEqual(newsForHome[tabloidName], expected);
             done();
           });
         });
@@ -251,6 +297,12 @@ describe('home-strategy', function() {
     shouldHaveColumn('column_02');
 
     shouldHaveColumn('column_03');
+
+    shouldHaveTabloid('rio_de_janeiro', 'tabloid_rj');
+
+    shouldHaveTabloid('minas_gerais', 'tabloid_mg');
+
+    shouldHaveTabloid('parana', 'tabloid_pr');
 
     it('does not add the field if there is no news for that session', function(done) {
       homeStrategy.buildHome(function(err, newsForHome){
