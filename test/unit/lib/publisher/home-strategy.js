@@ -222,6 +222,7 @@ describe('home-strategy', function() {
             cover: {
               url: photoCaption2.metadata.cover.link,
               small: photoCaption2.metadata.cover.small,
+              medium: photoCaption2.metadata.cover.medium,
               credits: photoCaption2.metadata.cover.credits,
               subtitle: photoCaption2.metadata.cover.subtitle
             },
