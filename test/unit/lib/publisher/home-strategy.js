@@ -163,7 +163,7 @@ describe('home-strategy', function() {
       });
     });
 
-    it('sets last_news to the last six published news', function(done) {
+    it('sets last_news to the last five published news', function(done) {
       var news = newsFactory.build({ status: 'published', published_at: new Date() });
       news.metadata.url = '/2016/12/title/';
 
@@ -180,7 +180,7 @@ describe('home-strategy', function() {
         homeStrategy.buildHome(function(err, newsForHome){
           if(err) throw err;
 
-          var expected = _.times(6, function(_index){
+          var expected = _.times(5, function(_index){
             return {
               cover: {
                 url: news.metadata.cover.link,
