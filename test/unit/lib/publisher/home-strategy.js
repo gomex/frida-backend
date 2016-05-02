@@ -299,11 +299,15 @@ describe('home-strategy', function() {
 
     shouldHaveColumn('column_03');
 
-    shouldHaveTabloid('rio_de_janeiro', 'tabloid_rj');
+    shouldHaveTabloid('ceara', 'tabloid_ce');
 
     shouldHaveTabloid('minas_gerais', 'tabloid_mg');
 
     shouldHaveTabloid('parana', 'tabloid_pr');
+
+    shouldHaveTabloid('pernambuco', 'tabloid_pe');
+
+    shouldHaveTabloid('rio_de_janeiro', 'tabloid_rj');
 
     it('does not add the field if there is no news for that session', function(done) {
       homeStrategy.buildHome(function(err, newsForHome){
