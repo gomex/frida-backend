@@ -7,6 +7,7 @@ var sinon       = require('sinon');
 var supertest   = require('supertest');
 
 var newsRepository  = require('../../lib/news/news-repository');
+var publisher = require('../../lib/news/publisher');
 var server          = require('../../lib/http/server');
 
 var metadataFactory     = require('../factories/news-attribute').metadata;
@@ -328,6 +329,51 @@ describe('REST API:', function() {
       });
     });
 
+  });
+
+  describe('POST /news/<id>/unpublish', function() {
+    var news;
+    var newsId;
+
+    var subject = function() {
+      return api.put(NEWS_RESOURCE + '/' + newsId + '/unpublish')
+        .send(news)
+        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+    };
+
+    beforeEach(function(done) {
+      news = newsFactory.build();
+      newsRepository.insert(news, function(err, res) {
+        newsId = res;
+
+        if (err) {
+          done(err);
+          return;
+        }
+
+        publisher.publish(news, done);
+      });
+    });
+
+    xit('succeeds', function(done) {
+      subject().expect(200).end(done);
+    });
+
+    xit('has content type json', function(done) {
+      subject().expect('Content-Type', /json/).end(done);
+    });
+
+    xit('sets status to draft', function(done) {
+      subject().end(function(err, res) {
+        if (err) {
+          done(err);
+          return;
+        }
+
+        assert.equal(res.body.status, 'draft');
+        done();
+      });
+    });
   });
 
   describe('PUT /news/<id>/status/published', function() {
