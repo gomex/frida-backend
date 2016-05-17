@@ -4,11 +4,52 @@ var fs          = require('fs');
 var grayMatter  = require('gray-matter');
 var moment      = require('moment');
 
-var newsFactory     = require('../../../factories/news-attribute').newsAttribute;
+var chai = require('chai');
+var expect = require('chai').expect;
+var sinon = require('sinon');
+var sinonChai = require('sinon-chai');
+var path = require('path');
 
+var newsFactory     = require('../../../factories/news-attribute').newsAttribute;
 var hexo            = require('../../../../lib/publisher/hexo');
 
+chai.use(sinonChai);
+
 describe('hexo', function() {
+
+  describe('unpublish', function() {
+    var subject = function(callback) { return hexo.unpublish(news, callback); };
+
+    var news = {
+      _id: '123',
+      published_at: new Date()
+    };
+
+    var newsPath = function() {
+      var dir = moment(news.published_at).format('YYYY/MM');
+      return path.join(process.env.HEXO_SOURCE_PATH, dir, news._id + '.md');
+    }();
+
+    beforeEach(function() {
+      sinon.stub(fs, 'unlink').yields(null);
+    });
+
+    afterEach(function() {
+      fs.unlink.restore();
+    });
+
+    it('exists', function() {
+      expect(hexo.unpublish).to.exist;
+    });
+
+    it('removes md file', function(done) {
+      subject(function(err) {
+        expect(fs.unlink).to.have.been.calledWith(newsPath);
+
+        done(err);
+      });
+    });
+  });
 
   describe('publish', function() {
     it('creates the news file in the configured hexo posts folder', function(done) {

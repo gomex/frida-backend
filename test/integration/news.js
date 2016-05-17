@@ -3,8 +3,12 @@ var assert      = require('assert');
 var fs          = require('fs');
 var grayMatter  = require('gray-matter');
 var slug        = require('slug');
-var sinon       = require('sinon');
 var supertest   = require('supertest');
+
+var chai = require('chai');
+var expect = require('chai').expect;
+var sinon = require('sinon');
+var sinonChai = require('sinon-chai');
 
 var newsRepository  = require('../../lib/news/news-repository');
 var publisher = require('../../lib/news/publisher');
@@ -17,6 +21,8 @@ var photoCaptionFactory = require('../factories/photo-caption-attributes').photo
 var tabloidFactory      = require('../factories/tabloid-attributes').tabloidAttributes;
 
 var api             = supertest('https://localhost:5000');
+
+chai.use(sinonChai);
 
 describe('REST API:', function() {
   var NEWS_RESOURCE;
@@ -344,34 +350,29 @@ describe('REST API:', function() {
     beforeEach(function(done) {
       news = newsFactory.build();
       newsRepository.insert(news, function(err, res) {
-        newsId = res;
-
         if (err) {
           done(err);
           return;
         }
 
+        newsId = res;
         publisher.publish(news, done);
       });
     });
 
-    xit('succeeds', function(done) {
+    it('succeeds', function(done) {
       subject().expect(200).end(done);
     });
 
-    xit('has content type json', function(done) {
+    it('has content type json', function(done) {
       subject().expect('Content-Type', /json/).end(done);
     });
 
-    xit('sets status to draft', function(done) {
+    it('sets status to draft', function(done) {
       subject().end(function(err, res) {
-        if (err) {
-          done(err);
-          return;
-        }
+        expect(res.body.status).to.equal('draft');
 
-        assert.equal(res.body.status, 'draft');
-        done();
+        done(err);
       });
     });
   });
