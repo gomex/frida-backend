@@ -339,7 +339,7 @@ describe('REST API:', function() {
     var newsId;
 
     var subject = function() {
-      return api.put(NEWS_RESOURCE + '/' + newsId + '/unpublish')
+      return api.post(NEWS_RESOURCE + '/' + newsId + '/unpublish')
         .send(news)
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
     };
