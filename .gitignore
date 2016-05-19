@@ -1,5 +1,6 @@
 node_modules/
 *swp
+*swo
 npm-debug*
 .tests-localy
 coverage/
