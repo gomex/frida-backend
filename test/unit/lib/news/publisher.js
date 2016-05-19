@@ -1,5 +1,6 @@
 'use strict';
 
+var _    = require('underscore');
 var chai = require('chai');
 var expect = require('chai').expect;
 var sinon = require('sinon');
@@ -83,7 +84,8 @@ describe('publisher', function() {
 
     var news = newsFactory.build({ status: 'published' });
 
-    var updatedNews = Object.assign(news, { status: 'draft' });
+    var updatedNews = _.clone(news);
+    updatedNews.status = 'draft';
 
     beforeEach(function() {
       sinon.stub(repository, 'updateById').yields(null, updatedNews);
