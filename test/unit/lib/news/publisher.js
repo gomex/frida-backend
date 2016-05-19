@@ -81,20 +81,9 @@ describe('publisher', function() {
   describe('.unpublish', function() {
     var subject = function(callback) { publisher.unpublish(news, callback); };
 
-    var news = {
-      _id: '123',
-      status: 'published',
-      metadata: {
-        layout: 'post',
-        area: 'area'
-      }
-    };
+    var news = newsFactory.build({ status: 'published' });
 
-    var updatedNews = {
-      _id: news._id,
-      status: 'draft',
-      metadata: news.metadata
-    };
+    var updatedNews = Object.assign(news, { status: 'draft' });
 
     beforeEach(function() {
       sinon.stub(repository, 'updateById').yields(null, updatedNews);
