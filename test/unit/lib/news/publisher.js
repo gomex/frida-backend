@@ -19,6 +19,64 @@ describe('publisher', function() {
   describe('.publish', function() {
     var subject = function(news, callback) { publisher.publish(news, callback); };
 
+    describe('when news is not published', function() {
+      var metadata = metadataFactory.build();
+      var news = newsFactory.build(
+        {
+          metadata: metadata,
+          published_at: new Date(),
+          updated_at: new Date(),
+          status: 'draft'
+        });
+
+      beforeEach(function() {
+        sinon.stub(repository, 'updateById').yields(null, news);
+        sinon.stub(hexo, 'publish').yields(null);
+        sinon.stub(hexo, 'updateAreaPage').yields(null);
+        sinon.stub(hexo, 'updateHomePage').yields(null);
+      });
+
+      afterEach(function() {
+        repository.updateById.restore();
+        hexo.publish.restore();
+        hexo.updateAreaPage.restore();
+        hexo.updateHomePage.restore();
+      });
+
+
+      it('updates status on database', function(done){
+        subject(news, function(err) {
+          expect(repository.updateById).to.have.been.called;
+
+          done(err);
+        });
+      });
+
+      it('creates news data file', function(done){
+        subject(news, function(err) {
+          expect(hexo.publish).to.have.been.called;
+
+          done(err);
+        });
+      });
+
+      it('updates area data file', function(done){
+        subject(news, function(err) {
+          expect(hexo.updateAreaPage).to.have.been.called;
+
+          done(err);
+        });
+      });
+
+      it('updates home data file', function(done){
+        subject(news, function(err) {
+          expect(hexo.updateHomePage).to.have.been.called;
+
+          done(err);
+        });
+      });
+    });
+
     describe('when news is already published', function() {
       beforeEach(function() {
         sinon.stub(repository, 'updateById').yields(null, null);
