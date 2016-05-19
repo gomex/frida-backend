@@ -76,14 +76,6 @@ describe('REST API:', function() {
     return newsYearMonthDayURL + slug(newsTitle, {lower: true}) + '/';
   };
 
-  var buildPublishURL = function(newsId) {
-    return NEWS_RESOURCE + '/' + newsId + '/status/published';
-  };
-
-  var buildGetNewsByIdURL = function(newsId) {
-    return NEWS_RESOURCE + '/' + newsId;
-  };
-
   var clock;
 
   var newsCreatedAt;
@@ -203,10 +195,14 @@ describe('REST API:', function() {
         });
     });
 
+    var subject = function() {
+      return api.get(NEWS_RESOURCE + '/' + newsId)
+               .send()
+               .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+    };
+
     it('retrieves previously saved news or column', function(done){
-      api.get(buildGetNewsByIdURL(newsId))
-        .send()
-        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+      subject()
         .expect(200)
         .end(function(err, res) {
           if(err){
@@ -400,12 +396,16 @@ describe('REST API:', function() {
           });
       });
 
+      var subject = function() {
+        return api.put(NEWS_RESOURCE + '/' + newsId + '/status/published')
+                .send(news)
+                .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+      };
+
 
       it('creates news data file', function(done) {
 
-        api.put(buildPublishURL(newsId))
-          .send(news)
-          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+        subject()
           .expect('Content-Type', /json/)
           .expect(202)
           .end(function(err, res) {
@@ -436,9 +436,7 @@ describe('REST API:', function() {
       });
 
       it('creates area data file', function(done) {
-        api.put(buildPublishURL(newsId))
-          .send(news)
-          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+        subject()
           .expect('Content-Type', /json/)
           .expect(202)
           .end(function(err, _res) {
@@ -465,15 +463,14 @@ describe('REST API:', function() {
         newsRepository.insert(news, function(err, newsIdent) {
           if(err) throw err;
 
-          api.put(buildPublishURL(newsIdent.valueOf()))
-          .expect(202)
-          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
-          .end(function(err, _result) {
-            newsRepository.findById(newsIdent.valueOf(), function(err, result) {
-              assert.equal(past.valueOf(), result.published_at.valueOf());
-              done();
+          subject()
+            .expect(202)
+            .end(function(err, _result) {
+              newsRepository.findById(newsIdent.valueOf(), function(err, result) {
+                assert.equal(past.valueOf(), result.published_at.valueOf());
+                done();
+              });
             });
-          });
         });
       });
 
@@ -486,9 +483,8 @@ describe('REST API:', function() {
         newsRepository.insert(news, function(err, newsIdent) {
           if(err) throw err;
 
-          api.put(buildPublishURL(newsIdent.valueOf()))
+          subject()
           .expect(202)
-          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
           .end(function(err, _result) {
             newsRepository.findById(newsIdent.valueOf(), function(err, result) {
               assert.equal(result.metadata.url, '/crazy-path');
@@ -516,10 +512,14 @@ describe('REST API:', function() {
           });
       });
 
-      it('does not create yaml front matter file', function(done) {
-        api.put(buildPublishURL(photoCaptionId))
+      var subject = function() {
+        return api.put(NEWS_RESOURCE + '/' + photoCaptionId + '/status/published')
           .send(photoCaption)
-          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+      };
+
+      it('does not create yaml front matter file', function(done) {
+        subject()
           .expect(202)
           .end(function(err, _res) {
             if(err) throw err;
@@ -551,11 +551,15 @@ describe('REST API:', function() {
           });
       });
 
+      var subject = function() {
+        return api.put(NEWS_RESOURCE + '/' + tabloidId + '/status/published')
+                .send(tabloid)
+                .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+      };
+
       it('creates tabloid data file', function(done) {
 
-        api.put(buildPublishURL(tabloidId))
-          .send(tabloid)
-          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+        subject()
           .expect('Content-Type', /json/)
           .expect(202)
           .end(function(err, res) {
