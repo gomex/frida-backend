@@ -1,4 +1,3 @@
-var _           = require('underscore');
 var assert      = require('assert');
 var fs          = require('fs');
 var grayMatter  = require('gray-matter');
@@ -233,6 +232,12 @@ describe('REST API:', function() {
     var news;
     var newsId;
 
+    var subject = function() {
+      return api.put(NEWS_RESOURCE + '/' + newsId)
+        .send(news)
+        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+    };
+
     beforeEach(function(done) {
       news = newsFactory.build();
       api.post(NEWS_RESOURCE)
@@ -250,20 +255,12 @@ describe('REST API:', function() {
     });
 
     it('updates previously saved news', function(done){
-      var newsAsString;
-
       news.metadata.title = 'Outro Título';
       news.metadata.area = 'direitos_humanos';
       news.metadata.hat = 'Outro Chapéu';
       news.metadata.description = 'Outra Descrição';
 
-      newsAsString = _.clone(news);
-
-      newsAsString.metadata = JSON.stringify(newsAsString.metadata);
-
-      api.put(buildGetNewsByIdURL(newsId))
-        .send(newsAsString)
-        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+      subject()
         .expect(200)
         .end(function(err, res) {
           if(err){ done(err); }
@@ -280,17 +277,9 @@ describe('REST API:', function() {
     });
 
     it('updates updated_at date', function(done){
-      var newsAsString;
-
-      newsAsString = _.clone(news);
-
-      newsAsString.metadata = JSON.stringify(newsAsString.metadata);
-
       var clock = sinon.useFakeTimers(Date.now(), 'Date');
 
-      api.put(buildGetNewsByIdURL(newsId))
-        .send(newsAsString)
-        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+      subject()
         .expect(200)
         .end(function(err, _res) {
           if(err){ done(err); }
@@ -304,17 +293,9 @@ describe('REST API:', function() {
     });
 
     it('does not set news path', function(done){
-      var newsAsString;
-
       news.metadata.url = '/bad-bad-path';
 
-      newsAsString = _.clone(news);
-
-      newsAsString.metadata = JSON.stringify(newsAsString.metadata);
-
-      api.put(buildGetNewsByIdURL(newsId))
-        .send(newsAsString)
-        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+      subject()
         .expect(200)
         .end(function(err, res) {
           if(err){ done(err); }
@@ -341,12 +322,8 @@ describe('REST API:', function() {
         if(err) throw err;
 
         news.metadata.url = '';
-        var newsAsString = _.clone(news);
-        newsAsString.metadata = JSON.stringify(newsAsString.metadata);
 
-        api.put(buildGetNewsByIdURL(newsIdent))
-        .send(newsAsString)
-        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+        subject()
         .expect(200)
         .end(function(err, _result) {
 
