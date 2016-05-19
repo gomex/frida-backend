@@ -402,18 +402,51 @@ describe('REST API:', function() {
                 .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
       };
 
+      it('succeeds', function(done) {
+        subject()
+          .expect(202)
+          .end(done);
+      });
+
+      it('returns json', function(done) {
+        subject()
+          .expect('Content-Type', /json/)
+          .end(done);
+      });
+
+      it('sets published_at date', function(done) {
+        subject()
+          .end(function(err, res) {
+            expect(new Date(res.body.published_at).getTime()).to.be.equal(Date.now());
+            done();
+          });
+      });
+
+      it('sets status as published', function(done) {
+        subject()
+          .end(function(err, res) {
+            expect(res.body.status).to.be.equal('published');
+            done();
+          });
+      });
+
+      it('sets the path in which the news is available', function(done) {
+        subject()
+          .end(function(err, res) {
+            expect(res.body.metadata.url).to.be.equal(buildNewsHTTPPath(news.metadata.title));
+            done();
+          });
+      });
 
       it('creates news data file', function(done) {
 
         subject()
           .expect('Content-Type', /json/)
           .expect(202)
-          .end(function(err, res) {
+          .end(function(err, _res) {
             if (err) {
               done(err);
             }
-
-            assert.deepEqual(res.body, {path : buildNewsHTTPPath(news.metadata.title)});
 
             newsRepository.findById(newsId, function(err, result) {
               var published_at = result.published_at;
@@ -562,10 +595,8 @@ describe('REST API:', function() {
         subject()
           .expect('Content-Type', /json/)
           .expect(202)
-          .end(function(err, res) {
+          .end(function(err, _res) {
             if (err) done(err);
-
-            assert.deepEqual(res.body, {path : buildNewsHTTPPath(tabloid.metadata.title)});
 
             newsRepository.findById(tabloidId, function(err, result) {
               var published_at = result.published_at;
