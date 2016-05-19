@@ -27,7 +27,7 @@ describe('hexo', function() {
 
     var newsPath = function() {
       var dir = moment(news.published_at).format('YYYY/MM');
-      return path.join(process.env.HEXO_SOURCE_PATH, dir, news._id + '.md');
+      return path.join(process.env.HEXO_SOURCE_PATH, '_posts', dir, news._id + '.md');
     }();
 
     beforeEach(function() {
@@ -47,6 +47,22 @@ describe('hexo', function() {
         expect(fs.unlink).to.have.been.calledWith(newsPath);
 
         done(err);
+      });
+    });
+
+    describe('when the md file does not exist', function() {
+
+      beforeEach(function() {
+        fs.unlink.restore();
+        sinon.stub(fs, 'unlink').yields({ code: 'ENOENT' });
+      });
+
+      it('succeeds', function(done) {
+        subject(function(err) {
+          expect(err).to.not.exist;
+
+          done(err);
+        });
       });
     });
   });
