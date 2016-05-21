@@ -438,56 +438,6 @@ describe('REST API:', function() {
           });
       });
 
-      it('creates news data file', function(done) {
-
-        subject()
-          .expect('Content-Type', /json/)
-          .expect(202)
-          .end(function(err, _res) {
-            if (err) {
-              done(err);
-            }
-
-            newsRepository.findById(newsId, function(err, result) {
-              var published_at = result.published_at;
-              assert.ok(published_at);
-              assert.equal(Date.now(), published_at.getTime());
-              assert.equal(result.status, 'published');
-              assert.equal(result.metadata.url, buildNewsHTTPPath(news.metadata.title));
-
-              // test index.md file
-              assert.ok(fs.existsSync(hexoPaths.sourcePath + '/index.md'));
-
-              // test news.md file
-              var newsFileAsFrontMatters = fs.readFileSync(hexoPaths.postsPath + newsYearMonthURL + newsId + '.md', 'utf-8');
-              var newsFileAsObj = grayMatter(newsFileAsFrontMatters);
-              assert.equal(newsFileAsObj.data.url, buildNewsHTTPPath(news.metadata.title));
-
-              done();
-            });
-          });
-      });
-
-      it('creates area data file', function(done) {
-        subject()
-          .expect('Content-Type', /json/)
-          .expect(202)
-          .end(function(err, _res) {
-            if (err) throw err;
-
-            var areaDataFilePath = hexoPaths.sourcePath + '/' + news.metadata.area + '/index.md';
-
-            assert.ok(fs.existsSync(areaDataFilePath));
-
-            var areaDataFileAsFrontMatters = fs.readFileSync(areaDataFilePath, 'utf-8');
-            var areaPageData = grayMatter(areaDataFileAsFrontMatters);
-            assert.notEqual(areaPageData.data, null);
-
-            done();
-          });
-      });
-
-
       it('does not change published_at date if it is already set', function(done) {
         var past = new Date(1000);
 
