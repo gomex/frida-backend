@@ -437,45 +437,6 @@ describe('REST API:', function() {
             done();
           });
       });
-
-      it('does not change published_at date if it is already set', function(done) {
-        var past = new Date(1000);
-
-        var news = newsFactory.build({ published_at: past });
-
-        newsRepository.insert(news, function(err, newsIdent) {
-          if(err) throw err;
-
-          subject()
-            .expect(202)
-            .end(function(err, _result) {
-              newsRepository.findById(newsIdent.valueOf(), function(err, result) {
-                assert.equal(past.valueOf(), result.published_at.valueOf());
-                done();
-              });
-            });
-        });
-      });
-
-      it('does not change news path if it is already set', function(done) {
-        var past = new Date(1000);
-
-        var metadata = metadataFactory.build({url: '/crazy-path'});
-        var news = newsFactory.build({ published_at: past, metadata: metadata });
-
-        newsRepository.insert(news, function(err, newsIdent) {
-          if(err) throw err;
-
-          subject()
-          .expect(202)
-          .end(function(err, _result) {
-            newsRepository.findById(newsIdent.valueOf(), function(err, result) {
-              assert.equal(result.metadata.url, '/crazy-path');
-              done();
-            });
-          });
-        });
-      });
     });
 
     describe('when entity is of type photo caption', function() {

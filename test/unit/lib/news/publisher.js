@@ -1,6 +1,6 @@
 'use strict';
 
-var _    = require('underscore');
+var _    = require('lodash');
 var chai = require('chai');
 var expect = require('chai').expect;
 var sinon = require('sinon');
@@ -75,6 +75,14 @@ describe('publisher', function() {
           done(err);
         });
       });
+
+      it('sets url', function(done) {
+        subject(news, function(err, publishedNews) {
+          expect(publishedNews.metadata.url).to.exist;
+
+          done(err);
+        });
+      });
     });
 
     describe('when news is already published', function() {
@@ -90,6 +98,36 @@ describe('publisher', function() {
         hexo.publish.restore();
         hexo.updateAreaPage.restore();
         hexo.updateHomePage.restore();
+      });
+
+      describe('and was modified', function() {
+        var metadata = metadataFactory.build({ url: '/2016/05/21/what' });
+        var news = newsFactory.build(
+          {
+            metadata: metadata,
+            published_at: new Date(1000),
+            updated_at: new Date(),
+            status: 'published'
+          });
+
+        it('does not change original published_at date', function(done) {
+          subject(_.clone(news), function(err, publishedNews) {
+            expect(publishedNews.published_at).to.be.equal(news.published_at);
+
+            done(err);
+          });
+        });
+
+        it('does not change original url if title changes', function(done) {
+          var toPublish = _.cloneDeep(news);
+          toPublish.metadata.title = 'different title';
+
+          subject(toPublish, function(err, publishedNews) {
+            expect(publishedNews.metadata.url).to.be.equal(news.metadata.url);
+
+            done(err);
+          });
+        });
       });
 
       describe('and was not modified', function() {
