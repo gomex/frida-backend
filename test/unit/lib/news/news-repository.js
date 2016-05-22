@@ -56,7 +56,7 @@ describe('news-repository', function(){
         async.apply(newsRepository.insert, news1),
         async.apply(newsRepository.insert, news2)
       ], function(err, insertedIds){
-        newsRepository.getAll(function(err, result){
+        newsRepository.getAll({}, function(err, result){
           assert.equal(err, null);
           assert.equal(result.length, 2);
           var retrievedIds = _.map(result, function(item) { return item._id.toString(); });
@@ -104,7 +104,7 @@ describe('news-repository', function(){
         newsRepository.deleteAll(function(err){
           if(err) throw err;
 
-          newsRepository.getAll(function(err, result){
+          newsRepository.getAll({}, function(err, result){
             if(err) throw err;
 
             assert.equal(result.length, 0);
