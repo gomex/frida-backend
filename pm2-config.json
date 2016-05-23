@@ -4,6 +4,7 @@
     "script"     : "./index.js",
     "instances"  : 1,
     "merge_logs" : true,
-    "node_args"  : "--harmony"
+    "node_args"  : "--harmony",
+    "log_date_format" : "YYYY-MM-DD HH:mm Z"
   }
 ]
