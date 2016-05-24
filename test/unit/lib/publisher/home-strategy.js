@@ -1,6 +1,10 @@
 var _               = require('underscore');
 var async           = require('async');
 var assert          = require('assert');
+var chai = require('chai');
+var expect = require('chai').expect;
+var sinon = require('sinon');
+var sinonChai = require('sinon-chai');
 
 var newsRepository  = require('../../../../lib/news/news-repository');
 var homeStrategy    = require('../../../../lib/publisher/home-strategy');
@@ -13,11 +17,42 @@ var photoCaptionFactory     = require('../../../factories/photo-caption-attribut
 var tabloidMetadataFactory  = require('../../../factories/tabloid-attributes').tabloidMetadata;
 var tabloidFactory          = require('../../../factories/tabloid-attributes').tabloidAttributes;
 
+chai.use(sinonChai);
+
 describe('home-strategy', function() {
 
   describe('buildHome', function() {
-    beforeEach(function(done){
+    beforeEach(function(done) {
       newsRepository.deleteAll(done);
+    });
+
+    describe('when build home', function() {
+      var subject = function(callback) { homeStrategy.buildHome(callback) };
+
+      var publishedCriteria = {
+        'status': 'published',
+        'metadata.display_area': 'featured_01',
+        $or: [
+          {'metadata.layout': 'post'},
+          {'metadata.layout': 'tabloid_news'}
+        ]
+      };
+
+      beforeEach(function() {
+        sinon.stub(newsRepository, 'find').yields(null, []);
+      });
+
+      afterEach(function() {
+        newsRepository.find.restore();
+      });
+
+      it('finds published news', function(done) {
+        subject(function(err) {
+          expect(newsRepository.find).to.have.been.calledWith(publishedCriteria);
+
+          done(err);
+        });
+      });
     });
 
     function shouldHaveFeatured(sessionName) {
