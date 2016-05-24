@@ -32,6 +32,8 @@ module.exports = {
         "no-console": 0
     },
   "globals": {
-    "mongoose": true
+    "mongoose": true,
+    "sinon": true,
+    "assert": true
   }
 };

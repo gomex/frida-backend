@@ -1,7 +1,6 @@
 'use strict';
 
 var _               = require('underscore');
-var assert          = require('assert');
 var async           = require('async');
 
 var newsRepository  = require('../../../../lib/news/news-repository');

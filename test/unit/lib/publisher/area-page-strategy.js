@@ -2,7 +2,6 @@
 
 var _           = require('underscore');
 var async       = require('async');
-var assert      = require('assert');
 
 var metadataFactory         = require('../../../factories/news-attribute').metadata;
 var newsFactory             = require('../../../factories/news-attribute').newsAttribute;

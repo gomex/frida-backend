@@ -1,18 +1,11 @@
 'use strict';
 
-var _    = require('lodash');
-var chai = require('chai');
-var expect = require('chai').expect;
-var sinon = require('sinon');
-var sinonChai = require('sinon-chai');
-
+var _ = require('lodash');
 var publisher = require('../../../../lib/news/publisher');
 var repository = require('../../../../lib/news/news-repository');
 var hexo = require('../../../../lib/publisher/hexo');
 var newsFactory = require('../../../factories/news-attribute').newsAttribute;
 var metadataFactory = require('../../../factories/news-attribute').metadata;
-
-chai.use(sinonChai);
 
 describe('publisher', function() {
 

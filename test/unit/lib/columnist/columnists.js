@@ -1,4 +1,3 @@
-var assert  = require('assert');
 var fs      = require('fs');
 
 var columnists = require('../../../../lib/columnist/columnists');

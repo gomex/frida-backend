@@ -1,13 +1,7 @@
-var assert      = require('assert');
 var fs          = require('fs');
 var grayMatter  = require('gray-matter');
 var slug        = require('slug');
 var supertest   = require('supertest');
-
-var chai = require('chai');
-var expect = require('chai').expect;
-var sinon = require('sinon');
-var sinonChai = require('sinon-chai');
 
 var newsRepository  = require('../../lib/news/news-repository');
 var publisher = require('../../lib/news/publisher');
@@ -20,8 +14,6 @@ var photoCaptionFactory = require('../factories/photo-caption-attributes').photo
 var tabloidFactory      = require('../factories/tabloid-attributes').tabloidAttributes;
 
 var api             = supertest('https://localhost:5000');
-
-chai.use(sinonChai);
 
 describe('REST API:', function() {
   var NEWS_RESOURCE;

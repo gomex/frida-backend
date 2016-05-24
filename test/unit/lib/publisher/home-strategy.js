@@ -1,10 +1,5 @@
 var _               = require('underscore');
 var async           = require('async');
-var assert          = require('assert');
-var chai = require('chai');
-var expect = require('chai').expect;
-var sinon = require('sinon');
-var sinonChai = require('sinon-chai');
 
 var newsRepository  = require('../../../../lib/news/news-repository');
 var homeStrategy    = require('../../../../lib/publisher/home-strategy');
@@ -17,8 +12,6 @@ var photoCaptionFactory     = require('../../../factories/photo-caption-attribut
 var tabloidMetadataFactory  = require('../../../factories/tabloid-attributes').tabloidMetadata;
 var tabloidFactory          = require('../../../factories/tabloid-attributes').tabloidAttributes;
 
-chai.use(sinonChai);
-
 describe('home-strategy', function() {
 
   describe('buildHome', function() {
@@ -27,7 +20,7 @@ describe('home-strategy', function() {
     });
 
     describe('when build home', function() {
-      var subject = function(callback) { homeStrategy.buildHome(callback) };
+      var subject = function(callback) { homeStrategy.buildHome(callback); };
 
       var publishedCriteria = {
         'status': 'published',

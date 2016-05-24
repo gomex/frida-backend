@@ -1,19 +1,11 @@
 var _           = require('underscore');
-var assert      = require('assert');
 var fs          = require('fs');
 var grayMatter  = require('gray-matter');
 var moment      = require('moment');
 
-var chai = require('chai');
-var expect = require('chai').expect;
-var sinon = require('sinon');
-var sinonChai = require('sinon-chai');
-var path = require('path');
-
 var newsFactory     = require('../../../factories/news-attribute').newsAttribute;
 var hexo            = require('../../../../lib/publisher/hexo');
-
-chai.use(sinonChai);
+var path = require('path');
 
 describe('hexo', function() {
 
