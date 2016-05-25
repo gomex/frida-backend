@@ -102,12 +102,16 @@ describe('REST API:', function() {
 
   describe('POST /news', function() {
 
+    var subject = function(news) {
+      return api.post(NEWS_RESOURCE)
+        .send(news)
+        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+    };
+
     it('persists news', function(done) {
       var news = newsFactory.build();
 
-      api.post(NEWS_RESOURCE)
-        .send(news)
-        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+      subject(news)
         .expect(201)
         .end(function(err, res) {
           if(err){ done(err); }
@@ -127,9 +131,7 @@ describe('REST API:', function() {
       var metadata = metadataFactory.build({ url: '/bad-bad-path' });
       var news = newsFactory.build({ metadata: metadata });
 
-      api.post(NEWS_RESOURCE)
-        .send(news)
-        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+      subject(news)
         .expect(201)
         .end(function(err, res) {
           if(err){ done(err); }
@@ -146,9 +148,7 @@ describe('REST API:', function() {
     it('persists columns', function(done) {
       var column = columnFactory.build();
 
-      api.post(NEWS_RESOURCE)
-        .send(column)
-        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
+      subject(column)
         .expect(201)
         .end(function(err, res) {
           if(err){ done(err); }
