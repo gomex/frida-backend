@@ -102,11 +102,22 @@ describe('REST API:', function() {
 
   describe('POST /news', function() {
 
-    var subject = function(news) {
-      return api.post(NEWS_RESOURCE)
-        .send(news)
-        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+    var subject = function(news, skipAuthentication) {
+      var subject = api.post(NEWS_RESOURCE).send(news);
+
+      if(!skipAuthentication)
+        subject = subject.auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+
+      return subject;
     };
+
+    it('fails if not authenticated', function(done){
+      var news = newsFactory.build();
+
+      subject(news, true)
+        .expect(401)
+        .end(done);
+    });
 
     it('persists news', function(done) {
       var news = newsFactory.build();
@@ -187,11 +198,20 @@ describe('REST API:', function() {
         });
     });
 
-    var subject = function() {
-      return api.get(NEWS_RESOURCE + '/' + newsId)
-               .send()
-               .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+    var subject = function(skipAuthentication) {
+      var subject = api.get(NEWS_RESOURCE + '/' + newsId).send();
+
+      if(!skipAuthentication)
+        subject = subject.auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+
+      return subject;
     };
+
+    it('fails if not authenticated', function(done){
+      subject(true)
+        .expect(401)
+        .end(done);
+    });
 
     it('retrieves previously saved news or column', function(done){
       subject()
@@ -220,10 +240,13 @@ describe('REST API:', function() {
     var news;
     var newsId;
 
-    var subject = function() {
-      return api.put(NEWS_RESOURCE + '/' + newsId)
-        .send(news)
-        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+    var subject = function(skipAuthentication) {
+      var subject = api.put(NEWS_RESOURCE + '/' + newsId).send(news);
+
+      if(!skipAuthentication)
+        subject = subject.auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+
+      return subject;
     };
 
     beforeEach(function(done) {
@@ -240,6 +263,12 @@ describe('REST API:', function() {
             done();
           }
         });
+    });
+
+    it('fails if not authenticated', function(done){
+      subject(true)
+        .expect(401)
+        .end(done);
     });
 
     it('updates previously saved news', function(done){
@@ -330,10 +359,13 @@ describe('REST API:', function() {
     var news;
     var newsId;
 
-    var subject = function() {
-      return api.post(NEWS_RESOURCE + '/' + newsId + '/unpublish')
-        .send(news)
-        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+    var subject = function(skipAuthentication) {
+      var subject = api.post(NEWS_RESOURCE + '/' + newsId + '/unpublish').send(news);
+
+      if(!skipAuthentication)
+        subject = subject.auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+
+      return subject;
     };
 
     beforeEach(function(done) {
@@ -347,6 +379,12 @@ describe('REST API:', function() {
         newsId = res;
         publisher.publish(news, done);
       });
+    });
+
+    it('fails if not authenticated', function(done){
+      subject(true)
+        .expect(401)
+        .end(done);
     });
 
     it('succeeds', function(done) {
@@ -388,11 +426,20 @@ describe('REST API:', function() {
           });
       });
 
-      var subject = function() {
-        return api.put(NEWS_RESOURCE + '/' + newsId + '/status/published')
-                .send(news)
-                .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+      var subject = function(skipAuthentication) {
+        var subject = api.put(NEWS_RESOURCE + '/' + newsId + '/status/published').send(news);
+
+        if(!skipAuthentication)
+          subject = subject.auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+
+        return subject;
       };
+
+      it('fails if not authenticated', function(done){
+        subject(true)
+          .expect(401)
+          .end(done);
+      });
 
       it('succeeds', function(done) {
         subject()
@@ -448,11 +495,20 @@ describe('REST API:', function() {
           });
       });
 
-      var subject = function() {
-        return api.put(NEWS_RESOURCE + '/' + photoCaptionId + '/status/published')
-          .send(photoCaption)
-          .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+      var subject = function(skipAuthentication) {
+        var subject = api.put(NEWS_RESOURCE + '/' + photoCaptionId + '/status/published').send(photoCaption);
+
+        if(!skipAuthentication)
+          subject = subject.auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+
+        return subject;
       };
+
+      it('fails if not authenticated', function(done){
+        subject(true)
+          .expect(401)
+          .end(done);
+      });
 
       it('does not create yaml front matter file', function(done) {
         subject()
@@ -487,11 +543,20 @@ describe('REST API:', function() {
           });
       });
 
-      var subject = function() {
-        return api.put(NEWS_RESOURCE + '/' + tabloidId + '/status/published')
-                .send(tabloid)
-                .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+      var subject = function(skipAuthentication) {
+        var subject = api.put(NEWS_RESOURCE + '/' + tabloidId + '/status/published').send(tabloid);
+
+        if(!skipAuthentication)
+          subject = subject.auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+
+        return subject;
       };
+
+      it('fails if not authenticated', function(done){
+        subject(true)
+          .expect(401)
+          .end(done);
+      });
 
       it('creates tabloid data file', function(done) {
 
