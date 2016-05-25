@@ -32,11 +32,7 @@ describe('home-strategy', function() {
       };
 
       beforeEach(function() {
-        sinon.stub(newsRepository, 'find').yields(null, []);
-      });
-
-      afterEach(function() {
-        newsRepository.find.restore();
+        sandbox.stub(newsRepository, 'find').yields(null, []);
       });
 
       it('finds published news', function(done) {

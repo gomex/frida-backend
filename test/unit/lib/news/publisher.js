@@ -23,19 +23,11 @@ describe('publisher', function() {
         });
 
       beforeEach(function() {
-        sinon.stub(repository, 'updateById').yields(null, news);
-        sinon.stub(hexo, 'publish').yields(null);
-        sinon.stub(hexo, 'updateAreaPage').yields(null);
-        sinon.stub(hexo, 'updateHomePage').yields(null);
+        sandbox.stub(repository, 'updateById').yields(null, news);
+        sandbox.stub(hexo, 'publish').yields(null);
+        sandbox.stub(hexo, 'updateAreaPage').yields(null);
+        sandbox.stub(hexo, 'updateHomePage').yields(null);
       });
-
-      afterEach(function() {
-        repository.updateById.restore();
-        hexo.publish.restore();
-        hexo.updateAreaPage.restore();
-        hexo.updateHomePage.restore();
-      });
-
 
       it('updates status on database', function(done){
         subject(news, function(err) {
@@ -80,17 +72,10 @@ describe('publisher', function() {
 
     describe('when news is already published', function() {
       beforeEach(function() {
-        sinon.stub(repository, 'updateById').yields(null, null);
-        sinon.stub(hexo, 'publish').yields(null);
-        sinon.stub(hexo, 'updateAreaPage').yields(null);
-        sinon.stub(hexo, 'updateHomePage').yields(null);
-      });
-
-      afterEach(function() {
-        repository.updateById.restore();
-        hexo.publish.restore();
-        hexo.updateAreaPage.restore();
-        hexo.updateHomePage.restore();
+        sandbox.stub(repository, 'updateById').yields(null, null);
+        sandbox.stub(hexo, 'publish').yields(null);
+        sandbox.stub(hexo, 'updateAreaPage').yields(null);
+        sandbox.stub(hexo, 'updateHomePage').yields(null);
       });
 
       describe('and was modified', function() {
@@ -177,17 +162,10 @@ describe('publisher', function() {
     updatedNews.status = 'draft';
 
     beforeEach(function() {
-      sinon.stub(repository, 'updateById').yields(null, updatedNews);
-      sinon.stub(hexo, 'unpublish').yields(null);
-      sinon.stub(hexo, 'updateAreaPage').yields(null);
-      sinon.stub(hexo, 'updateHomePage').yields(null);
-    });
-
-    afterEach(function() {
-      repository.updateById.restore();
-      hexo.unpublish.restore();
-      hexo.updateAreaPage.restore();
-      hexo.updateHomePage.restore();
+      sandbox.stub(repository, 'updateById').yields(null, updatedNews);
+      sandbox.stub(hexo, 'unpublish').yields(null);
+      sandbox.stub(hexo, 'updateAreaPage').yields(null);
+      sandbox.stub(hexo, 'updateHomePage').yields(null);
     });
 
     it('exists', function() {

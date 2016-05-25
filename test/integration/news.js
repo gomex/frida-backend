@@ -68,8 +68,6 @@ describe('REST API:', function() {
     return newsYearMonthDayURL + slug(newsTitle, {lower: true}) + '/';
   };
 
-  var clock;
-
   var newsCreatedAt;
 
   before(function(done){
@@ -82,7 +80,7 @@ describe('REST API:', function() {
     newsYearMonthURL = '/2016/02/';
     newsYearMonthDayURL = '/2016/02/14/';
 
-    clock = sinon.useFakeTimers(testDate.getTime(), 'Date');
+    sinon.useFakeTimers(testDate.getTime(), 'Date');
     newsCreatedAt = Date.now();
 
     newsRepository.deleteAll(function(){
@@ -96,8 +94,6 @@ describe('REST API:', function() {
       deleteDirSync(hexoPaths.sourcePath);
       done();
     });
-
-    clock.restore();
   });
 
   describe('POST /news', function() {
@@ -294,7 +290,7 @@ describe('REST API:', function() {
     });
 
     it('updates updated_at date', function(done){
-      var clock = sinon.useFakeTimers(Date.now(), 'Date');
+      sinon.useFakeTimers(Date.now(), 'Date');
 
       subject()
         .expect(200)
@@ -303,7 +299,6 @@ describe('REST API:', function() {
 
           newsRepository.findById(newsId, function(err, result) {
             assert.equal(result.updated_at.getTime(), Date.now());
-            clock.restore();
             done();
           });
         });

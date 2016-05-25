@@ -11,11 +11,7 @@ describe('tabloid', () => {
   var expectedNews = [];
 
   beforeEach(() => {
-    sinon.stub(repository, 'find').yields(null, expectedNews);
-  });
-
-  afterEach(() => {
-    repository.find.restore();
+    sandbox.stub(repository, 'find').yields(null, expectedNews);
   });
 
   it('searches news', (done) => {

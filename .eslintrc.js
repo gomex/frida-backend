@@ -35,6 +35,7 @@ module.exports = {
   "globals": {
     "mongoose": true,
     "sinon": true,
-    "assert": true
+    "assert": true,
+    "sandbox": true
   }
 };

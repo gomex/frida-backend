@@ -23,11 +23,7 @@ describe('hexo', function() {
     }();
 
     beforeEach(function() {
-      sinon.stub(fs, 'unlink').yields(null);
-    });
-
-    afterEach(function() {
-      fs.unlink.restore();
+      sandbox.stub(fs, 'unlink').yields(null);
     });
 
     it('exists', function() {
@@ -46,7 +42,7 @@ describe('hexo', function() {
 
       beforeEach(function() {
         fs.unlink.restore();
-        sinon.stub(fs, 'unlink').yields({ code: 'ENOENT' });
+        sandbox.stub(fs, 'unlink').yields({ code: 'ENOENT' });
       });
 
       it('succeeds', function(done) {
