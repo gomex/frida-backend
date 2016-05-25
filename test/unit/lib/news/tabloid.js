@@ -1,12 +1,13 @@
 var tabloid = require('../../../../lib/news/tabloid');
 var repository = require('../../../../lib/news/news-repository');
+var factory = require('../../../factories/tabloid-attributes').tabloidAttributes;
 
 describe('tabloid', () => {
   var subject = (callback) => tabloid.findNews(aTabloid, callback);
 
-  var aTabloid = { _id: '123' };
+  var aTabloid = factory.build();
   var criteria = {
-    '_id': aTabloid._id
+    'edition': aTabloid.edition
   };
   var expectedNews = [];
 

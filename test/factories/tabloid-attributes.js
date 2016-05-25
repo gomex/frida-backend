@@ -21,6 +21,7 @@ var tabloidMetadata = new Factory()
 var tabloidAttributes = new Factory()
   .attr('body', function() { return faker.lorem.paragraphs(); })
   .attr('issuu', function() { return faker.internet.url(); })
+  .attr('edition', function() { return faker.lorem.words(); })
   .attr('metadata', function() { return tabloidMetadata.build(); });
 
 module.exports.tabloidMetadata = tabloidMetadata;
