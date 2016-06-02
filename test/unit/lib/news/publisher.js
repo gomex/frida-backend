@@ -3,12 +3,13 @@
 var _ = require('lodash');
 var publisher = require('../../../../lib/news/publisher');
 var repository = require('../../../../lib/news/news-repository');
+var tabloids = require('../../../../lib/news/tabloid');
 var hexo = require('../../../../lib/publisher/hexo');
 var newsFactory = require('../../../factories/news-attribute').newsAttribute;
 var metadataFactory = require('../../../factories/news-attribute').metadata;
+var tabloidFactory = require('../../../factories/tabloid-attributes').tabloidAttributes;
 
 describe('publisher', function() {
-
   describe('.publish', function() {
     var subject = function(news, callback) { publisher.publish(news, callback); };
 
@@ -78,7 +79,7 @@ describe('publisher', function() {
         sandbox.stub(hexo, 'updateHomePage').yields(null);
       });
 
-      describe('and was modified', function() {
+      describe('and is modified', function() {
         var metadata = metadataFactory.build({ url: '/2016/05/21/what' });
         var news = newsFactory.build(
           {
@@ -108,7 +109,7 @@ describe('publisher', function() {
         });
       });
 
-      describe('and was not modified', function() {
+      describe('and is not modified', function() {
         var metadata = metadataFactory.build();
         var news = newsFactory.build(
           {
@@ -151,6 +152,39 @@ describe('publisher', function() {
       });
     });
 
+    describe('when is a tabloid', () => {
+      var aTabloid = tabloidFactory.build();
+      var newsList = newsFactory.buildList(2);
+
+      beforeEach(() => {
+        sandbox.stub(tabloids, 'findNews').yields(null, newsList);
+        sandbox.stub(hexo, 'publish').yields(null);
+      });
+
+      it('searches news', (done) => {
+        subject(aTabloid, (err) => {
+          expect(tabloids.findNews).to.have.been.calledWith(aTabloid);
+
+          done(err);
+        });
+      });
+
+      it('publishes tabloid', (done) => {
+        subject(aTabloid, (err) => {
+          expect(hexo.publish).to.have.been.called;
+
+          done(err);
+        });
+      });
+
+      it('enriches tabloid with news', (done) => {
+        subject(aTabloid, (err) => {
+          expect(aTabloid.news).to.equal(newsList);
+
+          done(err);
+        });
+      });
+    });
   });
 
   describe('.unpublish', function() {

@@ -17,9 +17,7 @@ describe('tabloid', () => {
 
   it('searches news', (done) => {
     subject((err) => {
-      expect(repository.find).to.have.been.calledWith(
-        criteria
-      );
+      expect(repository.find).to.have.been.calledWith(criteria);
 
       done(err);
     });
