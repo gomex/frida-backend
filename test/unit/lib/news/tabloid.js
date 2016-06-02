@@ -1,4 +1,4 @@
-var tabloid = require('../../../../lib/news/tabloid');
+var tabloid = require('../../../../lib/news/tabloids');
 var repository = require('../../../../lib/news/news-repository');
 var factory = require('../../../factories/tabloid-attributes').tabloidAttributes;
 
