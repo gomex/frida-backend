@@ -1,4 +1,3 @@
-var _           = require('underscore');
 var fs          = require('fs');
 var grayMatter  = require('gray-matter');
 var moment      = require('moment');
@@ -80,7 +79,7 @@ describe('hexo', function() {
         var month = newsPublishedAt.format('MM');
         var expectedPath    = process.env.HEXO_SOURCE_PATH + '/_posts/' + year + '/' + month + '/' + news._id + '.md';
 
-        var data = _.extend(news.metadata, {date: news.published_at});
+        var data = Object.assign({date: news.published_at}, news.metadata);
         var expectedContent = grayMatter.stringify(news.body, data);
 
         var actualContent = fs.readFileSync(expectedPath, 'utf8');
@@ -89,17 +88,6 @@ describe('hexo', function() {
         done();
       });
     });
-
-    it('fails if the news object is not well formed', function(done) {
-      var news =  { };
-
-      assert.throws(function() {
-        hexo.publish(news, function(_err) {});
-      }, TypeError);
-
-      done();
-    });
-
   });
 
   describe('updateAreaPage', function() {
