@@ -1,8 +1,12 @@
+/*eslint no-undef: "off"*/
+
 var fs          = require('fs');
 var grayMatter  = require('gray-matter');
 var moment      = require('moment');
 
 var newsFactory     = require('../../../factories/news-attributes').news;
+var newsMetadataFactory = require('../../../factories/news-attributes').metadata;
+var newsPublisher = require('../../../../lib/publisher/news');
 var hexo            = require('../../../../lib/publisher/hexo');
 var path = require('path');
 
@@ -55,37 +59,37 @@ describe('hexo', function() {
   });
 
   describe('publish', function() {
-    it('creates the news file in the configured hexo posts folder', function(done) {
-      var news = newsFactory.build({ published_at: new Date(12345) });
+    var subject = function(callback) { return hexo.publish(news, callback); };
 
-      hexo.publish(news, function(_err) {
+    given('metadata', () => newsMetadataFactory.build({url: 'url'}));
+    given('news', () => newsFactory.build({published_at: new Date(), metadata: metadata}));
+
+    describe('', () => {
+      var subject = function(callback) { return hexo.publish(news, callback); };
+
+      beforeEach(function() {
+        sandbox.spy(newsPublisher, 'getData');
+      });
+
+      it('gets news data', function(done) {
+        subject(function(err) {
+          expect(newsPublisher.getData).to.have.been.called;
+
+          done(err);
+        });
+      });
+    });
+
+    it('creates the news file in the configured hexo posts folder', function(done) {
+      subject(function(err) {
         var newsPublishedAt = moment(news.published_at);
         var year  = newsPublishedAt.format('YYYY');
         var month = newsPublishedAt.format('MM');
 
         var expectedPath = process.env.HEXO_SOURCE_PATH + '/_posts/' + year + '/' + month + '/' + news._id + '.md';
-        assert.ok(fs.existsSync(expectedPath));
+        expect(fs.statSync(expectedPath).isFile()).to.be.true;
 
-        done();
-      });
-    });
-
-    it('news file is an YAML front matter representation of the news object', function(done) {
-      var news = newsFactory.build({ published_at: new Date(12345) });
-
-      hexo.publish(news, function(_err) {
-        var newsPublishedAt = moment(news.published_at);
-        var year  = newsPublishedAt.format('YYYY');
-        var month = newsPublishedAt.format('MM');
-        var expectedPath    = process.env.HEXO_SOURCE_PATH + '/_posts/' + year + '/' + month + '/' + news._id + '.md';
-
-        var data = Object.assign({date: news.published_at}, news.metadata);
-        var expectedContent = grayMatter.stringify(news.body, data);
-
-        var actualContent = fs.readFileSync(expectedPath, 'utf8');
-        assert.equal(actualContent, expectedContent);
-
-        done();
+        done(err);
       });
     });
   });

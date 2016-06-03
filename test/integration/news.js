@@ -510,7 +510,6 @@ describe('REST API:', function() {
       };
 
       it('creates tabloid data file', function(done) {
-
         subject()
           .expect('Content-Type', /json/)
           .expect(202)
