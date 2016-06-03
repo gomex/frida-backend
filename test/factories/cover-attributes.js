@@ -1,7 +1,7 @@
 var Factory = require('rosie').Factory;
 var faker = require('faker');
 
-var coverAttributes = new Factory()
+var cover = new Factory()
   .attr('link', function() { return faker.image.imageUrl(); })
   .attr('thumbnail', function() { return faker.image.imageUrl(); })
   .attr('medium', function() { return faker.image.imageUrl(); })
@@ -11,4 +11,4 @@ var coverAttributes = new Factory()
   .attr('credits', 'Photographer')
   .attr('subtitle', 'A beautiful picture');
 
-module.exports.coverAttributes = coverAttributes;
+module.exports.cover = cover;

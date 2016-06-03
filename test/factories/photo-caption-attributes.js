@@ -1,6 +1,6 @@
 var Factory = require('rosie').Factory;
 var faker = require('faker');
-var coverAttributes = require('./cover-attributes').coverAttributes;
+var coverAttributes = require('./cover-attributes').cover;
 
 var photoCaptionMetadata = new Factory()
   .attr('layout', 'photo_caption')

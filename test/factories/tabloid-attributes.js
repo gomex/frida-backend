@@ -1,6 +1,6 @@
 var Factory = require('rosie').Factory;
 var faker = require('faker');
-var coverAttributes = require('./cover-attributes').coverAttributes;
+var coverAttributes = require('./cover-attributes').cover;
 
 var tabloidMetadata = new Factory()
   .attr('title', function() { return faker.lorem.sentence(); })
