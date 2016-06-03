@@ -8,9 +8,9 @@ var publisher = require('../../lib/news/publisher');
 var server          = require('../../lib/http/server');
 
 var metadataFactory     = require('../factories/news-attribute').metadata;
-var newsFactory         = require('../factories/news-attribute').newsAttribute;
+var newsFactory         = require('../factories/news-attribute').news;
 var columnFactory       = require('../factories/column-attributes').column;
-var photoCaptionFactory = require('../factories/photo-caption-attributes').photoCaptionAttributes;
+var photoCaptionFactory = require('../factories/photo-caption-attributes').photoCaption;
 var tabloidFactory      = require('../factories/tabloid-attributes').tabloidAttributes;
 
 var api             = supertest('https://localhost:5000');

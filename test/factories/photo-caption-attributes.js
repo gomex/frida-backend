@@ -11,4 +11,4 @@ var photoCaptionMetadata = new Factory()
 var photoCaptionAttributes = new Factory()
   .attr('metadata', function() { return photoCaptionMetadata.build(); });
 
-module.exports.photoCaptionAttributes = photoCaptionAttributes;
+module.exports.photoCaption = photoCaptionAttributes;

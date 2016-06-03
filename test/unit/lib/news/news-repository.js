@@ -6,7 +6,7 @@ var async           = require('async');
 var newsRepository  = require('../../../../lib/news/news-repository');
 
 var metadataFactory = require('../../../factories/news-attribute').metadata;
-var newsFactory     = require('../../../factories/news-attribute').newsAttribute;
+var newsFactory     = require('../../../factories/news-attribute').news;
 
 describe('news-repository', function(){
 

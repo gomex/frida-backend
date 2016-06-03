@@ -5,7 +5,7 @@ var publisher = require('../../../../lib/news/publisher');
 var repository = require('../../../../lib/news/news-repository');
 var tabloids = require('../../../../lib/news/tabloids');
 var hexo = require('../../../../lib/publisher/hexo');
-var newsFactory = require('../../../factories/news-attribute').newsAttribute;
+var newsFactory = require('../../../factories/news-attribute').news;
 var metadataFactory = require('../../../factories/news-attribute').metadata;
 var tabloidFactory = require('../../../factories/tabloid-attributes').tabloidAttributes;
 

@@ -4,7 +4,7 @@ var _           = require('underscore');
 var async       = require('async');
 
 var metadataFactory         = require('../../../factories/news-attribute').metadata;
-var newsFactory             = require('../../../factories/news-attribute').newsAttribute;
+var newsFactory             = require('../../../factories/news-attribute').news;
 var columnMetadataFactory   = require('../../../factories/column-attributes').metadata;
 var columnFactory           = require('../../../factories/column-attributes').column;
 
