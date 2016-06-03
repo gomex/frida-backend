@@ -1,8 +1,8 @@
 /*eslint no-undef: "off"*/
 
 var publisherTabloid = require('../../../../lib/publisher/tabloid');
-var factory = require('../../../factories/tabloid-attributes').tabloidAttributes;
-var tabloidNewsFactory = require('../../../factories/tabloid-news-attributes').attributes;
+var factory = require('../../../factories/tabloid-attributes').tabloid;
+var tabloidNewsFactory = require('../../../factories/tabloid-news-attributes').tabloid;
 
 describe('tabloid', () => {
   describe('.getDataFile', () => {

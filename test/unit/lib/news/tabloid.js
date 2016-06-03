@@ -1,6 +1,6 @@
 var tabloid = require('../../../../lib/news/tabloids');
 var repository = require('../../../../lib/news/news-repository');
-var factory = require('../../../factories/tabloid-attributes').tabloidAttributes;
+var factory = require('../../../factories/tabloid-attributes').tabloid;
 
 describe('tabloid', () => {
   var subject = (callback) => tabloid.findNews(aTabloid, callback);

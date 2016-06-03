@@ -11,7 +11,7 @@ var metadataFactory     = require('../factories/news-attribute').metadata;
 var newsFactory         = require('../factories/news-attribute').news;
 var columnFactory       = require('../factories/column-attributes').column;
 var photoCaptionFactory = require('../factories/photo-caption-attributes').photoCaption;
-var tabloidFactory      = require('../factories/tabloid-attributes').tabloidAttributes;
+var tabloidFactory      = require('../factories/tabloid-attributes').tabloid;
 
 var api             = supertest('https://localhost:5000');
 

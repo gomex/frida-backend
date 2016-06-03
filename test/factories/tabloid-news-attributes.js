@@ -14,10 +14,10 @@ var metadata = new Factory()
   .attr('cover', function() { return coverAttributes.build(); })
   .attr('files', function() { return coverAttributes.buildList(1); });
 
-var attributes = new Factory()
+var tabloid = new Factory()
   .attr('body', function() { return faker.lorem.paragraphs(); })
   .attr('metadata', function() { return metadata.build(); })
   .attr('regional_area', function() { return faker.lorem.word(); });
 
 module.exports.metadata = metadata;
-module.exports.attributes = attributes;
+module.exports.tabloid = tabloid;

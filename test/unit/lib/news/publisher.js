@@ -7,7 +7,7 @@ var tabloids = require('../../../../lib/news/tabloids');
 var hexo = require('../../../../lib/publisher/hexo');
 var newsFactory = require('../../../factories/news-attribute').news;
 var metadataFactory = require('../../../factories/news-attribute').metadata;
-var tabloidFactory = require('../../../factories/tabloid-attributes').tabloidAttributes;
+var tabloidFactory = require('../../../factories/tabloid-attributes').tabloid;
 
 describe('publisher', function() {
   describe('.publish', function() {
