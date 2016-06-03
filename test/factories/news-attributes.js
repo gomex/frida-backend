@@ -11,8 +11,7 @@ var metadata = new Factory()
   .attr('description', function() { return faker.lorem.sentences(); })
   .attr('author', function() { return faker.name.findName(); })
   .attr('place', function() { return faker.address.state(); })
-  .attr('cover', function() { return coverAttributes.build(); })
-  .attr('files', function() { return coverAttributes.buildList(1); });
+  .attr('cover', function() { return coverAttributes.build(); });
 
 var news = new Factory()
   .attr('body', function() { return faker.lorem.paragraphs(); })

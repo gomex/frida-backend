@@ -7,7 +7,6 @@ var cover = new Factory()
   .attr('medium', function() { return faker.image.imageUrl(); })
   .attr('small', function() { return faker.image.imageUrl(); })
   .attr('title', 'The picture\'s title')
-  .attr('cover', true)
   .attr('credits', 'Photographer')
   .attr('subtitle', 'A beautiful picture');
 

@@ -6,8 +6,7 @@ var metadata = new Factory()
   .attr('title', function() { return faker.lorem.sentence(); })
   .attr('layout', 'tabloid')
   .attr('display_area', 'tabloid_pr')
-  .attr('cover', function() { return coverAttributes.build(); })
-  .attr('files', function() { return coverAttributes.buildList(1); });
+  .attr('cover', function() { return coverAttributes.build(); });
 
 var tabloid = new Factory()
   .attr('body', function() { return faker.lorem.paragraphs(); })
