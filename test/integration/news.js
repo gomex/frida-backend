@@ -9,7 +9,7 @@ var server          = require('../../lib/http/server');
 
 var metadataFactory     = require('../factories/news-attribute').metadata;
 var newsFactory         = require('../factories/news-attribute').newsAttribute;
-var columnFactory       = require('../factories/column-attributes').columnAttributes;
+var columnFactory       = require('../factories/column-attributes').column;
 var photoCaptionFactory = require('../factories/photo-caption-attributes').photoCaptionAttributes;
 var tabloidFactory      = require('../factories/tabloid-attributes').tabloidAttributes;
 

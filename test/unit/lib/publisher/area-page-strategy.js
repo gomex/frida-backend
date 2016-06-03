@@ -5,8 +5,8 @@ var async       = require('async');
 
 var metadataFactory         = require('../../../factories/news-attribute').metadata;
 var newsFactory             = require('../../../factories/news-attribute').newsAttribute;
-var columnMetadataFactory   = require('../../../factories/column-attributes').columnMetadata;
-var columnFactory           = require('../../../factories/column-attributes').columnAttributes;
+var columnMetadataFactory   = require('../../../factories/column-attributes').metadata;
+var columnFactory           = require('../../../factories/column-attributes').column;
 
 var areaPageStrategy    = require('../../../../lib/publisher/area-page-strategy');
 var newsRepository      = require('../../../../lib/news/news-repository');

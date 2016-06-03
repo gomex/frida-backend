@@ -6,8 +6,8 @@ var homeStrategy    = require('../../../../lib/publisher/home-strategy');
 
 var metadataFactory         = require('../../../factories/news-attribute').metadata;
 var newsFactory             = require('../../../factories/news-attribute').newsAttribute;
-var columnMetadataFactory   = require('../../../factories/column-attributes').columnMetadata;
-var columnFactory           = require('../../../factories/column-attributes').columnAttributes;
+var columnMetadataFactory   = require('../../../factories/column-attributes').metadata;
+var columnFactory           = require('../../../factories/column-attributes').column;
 var photoCaptionFactory     = require('../../../factories/photo-caption-attributes').photoCaptionAttributes;
 var tabloidMetadataFactory  = require('../../../factories/tabloid-attributes').tabloidMetadata;
 var tabloidFactory          = require('../../../factories/tabloid-attributes').tabloidAttributes;
