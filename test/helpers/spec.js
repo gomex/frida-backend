@@ -16,3 +16,25 @@ beforeEach(function() {
 afterEach(function() {
   global.sandbox.restore();
 });
+
+
+global.given = function(name, block) {
+  var cache = null;
+
+  beforeEach(function() {
+    var property = {
+      configurable: true,
+      get: function() {
+        return cache != null ? cache : cache = block.call(global);
+      }
+    };
+    Object.defineProperty(global, name, property);
+  });
+
+  afterEach(function() {
+    delete global[name];
+    cache = null;
+  });
+};
+
+global.subj = global.given;
