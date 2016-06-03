@@ -2,7 +2,7 @@ var fs          = require('fs');
 var grayMatter  = require('gray-matter');
 var moment      = require('moment');
 
-var newsFactory     = require('../../../factories/news-attribute').news;
+var newsFactory     = require('../../../factories/news-attributes').news;
 var hexo            = require('../../../../lib/publisher/hexo');
 var path = require('path');
 

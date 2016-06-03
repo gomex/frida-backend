@@ -7,8 +7,8 @@ var newsRepository  = require('../../lib/news/news-repository');
 var publisher = require('../../lib/news/publisher');
 var server          = require('../../lib/http/server');
 
-var metadataFactory     = require('../factories/news-attribute').metadata;
-var newsFactory         = require('../factories/news-attribute').news;
+var metadataFactory     = require('../factories/news-attributes').metadata;
+var newsFactory         = require('../factories/news-attributes').news;
 var columnFactory       = require('../factories/column-attributes').column;
 var photoCaptionFactory = require('../factories/photo-caption-attributes').photoCaption;
 var tabloidFactory      = require('../factories/tabloid-attributes').tabloid;
