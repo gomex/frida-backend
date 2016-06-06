@@ -8,7 +8,7 @@ describe('news', () => {
   describe('getData', () => {
     subj('getData', () => publisherNews.getData(news));
 
-    given('metadata', () => metadataFactory.build({url: 'url'}));
+    given('metadata', () => metadataFactory.build());
     given('news', () => factory.build({published_at: new Date(), metadata: metadata}));
 
     given('expectedData', () => ({
@@ -20,8 +20,8 @@ describe('news', () => {
       description: news.metadata.description,
       author: news.metadata.author,
       place: news.metadata.place,
-      url: news.metadata.url,
       date: news.published_at,
+      published_at: news.published_at,
       cover: {
         link: news.metadata.cover.link,
         thumbnail: news.metadata.cover.thumbnail,
