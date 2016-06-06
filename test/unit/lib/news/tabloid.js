@@ -7,8 +7,10 @@ describe('tabloid', () => {
 
   var aTabloid = factory.build();
   var criteria = {
-    'layout': 'tabloid_news',
-    'edition': aTabloid.edition
+    'metadata.layout': 'tabloid_news',
+    status: 'published',
+    region: aTabloid.metadata.display_area,
+    edition: aTabloid.edition
   };
   var expectedNews = [];
 

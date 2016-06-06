@@ -1,13 +1,16 @@
 /*eslint no-undef: "off"*/
 
-var fs          = require('fs');
-var grayMatter  = require('gray-matter');
-var moment      = require('moment');
+var fs = require('fs');
+var grayMatter = require('gray-matter');
+var moment = require('moment');
 
-var newsFactory     = require('../../../factories/news-attributes').news;
+var newsFactory = require('../../../factories/news-attributes').news;
+var tabloidFactory = require('../../../factories/tabloid-attributes').tabloid;
+var tabloidMetadataFactory = require('../../../factories/tabloid-attributes').metadata;
 var newsMetadataFactory = require('../../../factories/news-attributes').metadata;
 var newsPublisher = require('../../../../lib/publisher/news');
-var hexo            = require('../../../../lib/publisher/hexo');
+var tabloidPublisher = require('../../../../lib/publisher/tabloid');
+var hexo = require('../../../../lib/publisher/hexo');
 var path = require('path');
 
 describe('hexo', function() {
@@ -65,8 +68,6 @@ describe('hexo', function() {
     given('news', () => newsFactory.build({published_at: new Date(), metadata: metadata}));
 
     describe('', () => {
-      var subject = function(callback) { return hexo.publish(news, callback); };
-
       beforeEach(function() {
         sandbox.spy(newsPublisher, 'getData');
       });
@@ -90,6 +91,23 @@ describe('hexo', function() {
         expect(fs.statSync(expectedPath).isFile()).to.be.true;
 
         done(err);
+      });
+    });
+
+    describe('when is a tabloid', function() {
+      given('news', () => tabloidFactory.build({published_at: new Date(), metadata: metadata}));
+      given('metadata', () => tabloidMetadataFactory.build({url: 'url'}));
+
+      beforeEach(function() {
+        sandbox.spy(tabloidPublisher, 'getData');
+      });
+
+      it('gets news data', function(done) {
+        subject(function(err) {
+          expect(tabloidPublisher.getData).to.have.been.called;
+
+          done(err);
+        });
       });
     });
   });

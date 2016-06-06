@@ -6,8 +6,8 @@ var factory = require('../../../factories/tabloid-attributes').tabloid;
 var tabloidNewsFactory = require('../../../factories/tabloid-news-attributes').tabloid;
 
 describe('tabloid', () => {
-  describe('.getDataFile', () => {
-    subj('getDataFile', () => publisherTabloid.getDataFile(tabloid));
+  describe('.getData', () => {
+    subj('getData', () => publisherTabloid.getData(tabloid));
 
     given('tabloid', () => factory.build());
     given('expectedData', () => ({areas: [], foo: 'bar'}));
@@ -17,11 +17,19 @@ describe('tabloid', () => {
     });
 
     it('exists', () => {
-      expect(publisherTabloid.getDataFile).to.exist;
+      expect(publisherTabloid.getData).to.exist;
     });
 
     it('returns data', () => {
-      expect(getDataFile).to.eql(expectedData);
+      expect(getData).to.eql(expectedData);
+    });
+
+    describe('with news', () => {
+      given('expectedData', () => ({areas: [], news: []}));
+
+      it('removes', () => {
+        expect(getData.news).to.not.exist;
+      });
     });
 
     describe('with news', () => {
@@ -50,13 +58,13 @@ describe('tabloid', () => {
       });
 
       it('generates areas', () => {
-        expect(getDataFile.areas[0].name).to.eql('foo');
-        expect(getDataFile.areas[1].name).to.eql('bar');
+        expect(getData.areas[0].name).to.eql('foo');
+        expect(getData.areas[1].name).to.eql('bar');
       });
 
       it('generates news', () => {
-        expect(getDataFile.areas[0].news).to.eql([newsData1, newsData3]);
-        expect(getDataFile.areas[1].news).to.eql([newsData2]);
+        expect(getData.areas[0].news).to.eql([newsData3, newsData1]);
+        expect(getData.areas[1].news).to.eql([newsData2]);
       });
 
       it('delegates data news', () => {
