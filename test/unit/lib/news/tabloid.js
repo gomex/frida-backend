@@ -7,17 +7,18 @@ describe('tabloid', () => {
 
   var aTabloid = factory.build();
   var criteria = {
+    'layout': 'tabloid_news',
     'edition': aTabloid.edition
   };
   var expectedNews = [];
 
   beforeEach(() => {
-    sandbox.stub(repository, 'find').yields(null, expectedNews);
+    sandbox.stub(repository, 'getAll').yields(null, expectedNews);
   });
 
   it('searches news', (done) => {
     subject((err) => {
-      expect(repository.find).to.have.been.calledWith(criteria);
+      expect(repository.getAll).to.have.been.calledWith(criteria);
 
       done(err);
     });
