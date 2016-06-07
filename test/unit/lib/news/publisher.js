@@ -1,3 +1,4 @@
+/*eslint no-undef: "off"*/
 'use strict';
 
 var _ = require('lodash');
@@ -8,6 +9,7 @@ var hexo = require('../../../../lib/publisher/hexo');
 var newsFactory = require('../../../factories/news-attributes').news;
 var metadataFactory = require('../../../factories/news-attributes').metadata;
 var tabloidFactory = require('../../../factories/tabloid-attributes').tabloid;
+var tabloidNewsFactory = require('../../../factories/tabloid-news-attributes').tabloid;
 
 describe('publisher', function() {
   describe('.publish', function() {
@@ -171,7 +173,7 @@ describe('publisher', function() {
 
       it('publishes tabloid', (done) => {
         subject(aTabloid, (err) => {
-          expect(hexo.publish).to.have.been.called;
+          expect(hexo.publish).to.have.been.calledWith(aTabloid);
 
           done(err);
         });
@@ -180,6 +182,40 @@ describe('publisher', function() {
       it('enriches tabloid with news', (done) => {
         subject(aTabloid, (err) => {
           expect(aTabloid.news).to.equal(newsList);
+
+          done(err);
+        });
+      });
+    });
+
+    describe('when is a tabloid news', () => {
+      given('tabloidNews', () => tabloidNewsFactory.build());
+      given('aTabloid', () => tabloidFactory.build());
+
+      beforeEach(() => {
+        sandbox.stub(tabloids, 'findTabloid').yields(null, aTabloid);
+        sandbox.stub(hexo, 'publish').yields(null);
+      });
+
+      it('publishes news', (done) => {
+        subject(tabloidNews, (err) => {
+          expect(hexo.publish).to.have.been.calledWith(tabloidNews);
+
+          done(err);
+        });
+      });
+
+      it('searches tabloid', (done) => {
+        subject(tabloidNews, (err) => {
+          expect(tabloids.findTabloid).to.have.been.calledWith(tabloidNews);
+
+          done(err);
+        });
+      });
+
+      it('publishes tabloid', (done) => {
+        subject(tabloidNews, (err) => {
+          expect(hexo.publish).to.have.been.calledWith(aTabloid);
 
           done(err);
         });
