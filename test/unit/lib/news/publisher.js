@@ -3,7 +3,7 @@
 
 var _ = require('lodash');
 var publisher = require('../../../../lib/news/publisher');
-var repository = require('../../../../lib/news/news-repository');
+var News = require('../../../../lib/news/news-repository').news;
 var tabloids = require('../../../../lib/news/tabloids');
 var hexo = require('../../../../lib/publisher/hexo');
 var newsFactory = require('../../../factories/news-attributes').news;
@@ -26,7 +26,7 @@ describe('publisher', function() {
         });
 
       beforeEach(function() {
-        sandbox.stub(repository, 'updateById').yields(null, news);
+        sandbox.stub(News, 'findOneAndUpdate').yields(null, news);
         sandbox.stub(hexo, 'publish').yields(null);
         sandbox.stub(hexo, 'updateAreaPage').yields(null);
         sandbox.stub(hexo, 'updateHomePage').yields(null);
@@ -34,7 +34,7 @@ describe('publisher', function() {
 
       it('updates status on database', function(done){
         subject(news, function(err) {
-          expect(repository.updateById).to.have.been.called;
+          expect(News.findOneAndUpdate).to.have.been.called;
 
           done(err);
         });
@@ -75,7 +75,7 @@ describe('publisher', function() {
 
     describe('when news is already published', function() {
       beforeEach(function() {
-        sandbox.stub(repository, 'updateById').yields(null, null);
+        sandbox.stub(News, 'findOneAndUpdate').yields(null, null);
         sandbox.stub(hexo, 'publish').yields(null);
         sandbox.stub(hexo, 'updateAreaPage').yields(null);
         sandbox.stub(hexo, 'updateHomePage').yields(null);
@@ -122,7 +122,7 @@ describe('publisher', function() {
 
         it('does not update status on database', function(done){
           subject(news, function(err) {
-            expect(repository.updateById).to.not.have.been.called;
+            expect(News.findOneAndUpdate).to.not.have.been.called;
 
             done(err);
           });
@@ -249,7 +249,7 @@ describe('publisher', function() {
     updatedNews.status = 'draft';
 
     beforeEach(function() {
-      sandbox.stub(repository, 'updateById').yields(null, updatedNews);
+      sandbox.stub(News, 'findOneAndUpdate').yields(null, updatedNews);
       sandbox.stub(hexo, 'unpublish').yields(null);
       sandbox.stub(hexo, 'updateAreaPage').yields(null);
       sandbox.stub(hexo, 'updateHomePage').yields(null);
@@ -268,8 +268,8 @@ describe('publisher', function() {
     });
 
     it('saves changes', function(done) {
-      subject(news, function(err, news) {
-        expect(repository.updateById).to.have.been.calledWith(news._id, news);
+      subject(news, function(err) {
+        expect(News.findOneAndUpdate).to.have.been.called;
 
         done(err);
       });
