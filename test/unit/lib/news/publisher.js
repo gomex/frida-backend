@@ -220,11 +220,28 @@ describe('publisher', function() {
           done(err);
         });
       });
+
+      describe('when there is no tabloid', function() {
+        given('aTabloid', () => undefined);
+
+        beforeEach(() => {
+          tabloids.findTabloid.restore();
+          sandbox.stub(tabloids, 'findTabloid').yields(null, aTabloid);
+        });
+
+        it('does not publishes tabloid', (done) => {
+          subject(tabloidNews, (err) => {
+            expect(hexo.publish).to.not.have.been.calledWith(aTabloid);
+
+            done(err);
+          });
+        });
+      });
     });
   });
 
   describe('.unpublish', function() {
-    var subject = function(callback) { publisher.unpublish(news, callback); };
+    var subject = function(news, callback) { publisher.unpublish(news, callback); };
 
     var news = newsFactory.build({ status: 'published' });
 
@@ -243,7 +260,7 @@ describe('publisher', function() {
     });
 
     it('returns updated news', function(done) {
-      subject(function(err, news) {
+      subject(news, function(err, news) {
         expect(news.status).to.equal('draft');
 
         done(err);
@@ -251,7 +268,7 @@ describe('publisher', function() {
     });
 
     it('saves changes', function(done) {
-      subject(function(err, news) {
+      subject(news, function(err, news) {
         expect(repository.updateById).to.have.been.calledWith(news._id, news);
 
         done(err);
@@ -259,7 +276,7 @@ describe('publisher', function() {
     });
 
     it('delegates to hexo', function(done) {
-      subject(function(err, news) {
+      subject(news, function(err, news) {
         expect(hexo.unpublish).to.have.been.calledWith(news);
 
         done(err);
@@ -267,7 +284,7 @@ describe('publisher', function() {
     });
 
     it('updates area', function(done) {
-      subject(function(err, news) {
+      subject(news, function(err, news) {
         expect(hexo.updateAreaPage).to.have.been.calledWith(news.metadata.area);
 
         done(err);
@@ -275,10 +292,53 @@ describe('publisher', function() {
     });
 
     it('updates home page', function(done) {
-      subject(function(err, _news) {
+      subject(news, function(err, _news) {
         expect(hexo.updateHomePage).to.have.been.called;
 
         done(err);
+      });
+    });
+
+    describe('when is a tabloid news', () => {
+      given('tabloidNews', () => tabloidNewsFactory.build());
+      given('aTabloid', () => tabloidFactory.build());
+
+      beforeEach(() => {
+        sandbox.stub(tabloids, 'findTabloid').yields(null, aTabloid);
+        sandbox.stub(hexo, 'publish').yields(null);
+      });
+
+      it('searches tabloid', (done) => {
+        subject(tabloidNews, (err) => {
+          expect(tabloids.findTabloid).to.have.been.calledWith(tabloidNews);
+
+          done(err);
+        });
+      });
+
+      it('publishes tabloid', (done) => {
+        subject(tabloidNews, (err) => {
+          expect(hexo.publish).to.have.been.calledWith(aTabloid);
+
+          done(err);
+        });
+      });
+
+      describe('when there is no tabloid', function() {
+        given('aTabloid', () => undefined);
+
+        beforeEach(() => {
+          tabloids.findTabloid.restore();
+          sandbox.stub(tabloids, 'findTabloid').yields(null, aTabloid);
+        });
+
+        it('does not publishes tabloid', (done) => {
+          subject(tabloidNews, (err) => {
+            expect(hexo.publish).to.not.have.been.calledWith(aTabloid);
+
+            done(err);
+          });
+        });
       });
     });
   });
