@@ -2,8 +2,9 @@ var fs          = require('fs');
 var grayMatter  = require('gray-matter');
 var slug        = require('slug');
 var supertest   = require('supertest');
+var ObjectId    = require('mongodb').ObjectId;
 
-var newsRepository  = require('../../lib/news/news-repository');
+var News = require('../../lib/news/news-repository').news;
 var publisher = require('../../lib/news/publisher');
 var server          = require('../../lib/http/server');
 
@@ -81,14 +82,14 @@ describe('REST API:', function() {
     sinon.useFakeTimers(testDate.getTime(), 'Date');
     newsCreatedAt = Date.now();
 
-    newsRepository.deleteAll(function(){
+    News.remove({}, function(){
       deleteDirSync(hexoPaths.sourcePath);
       done();
     });
   });
 
   after(function(done) {
-    newsRepository.deleteAll(function() {
+    News.remove({}, function() {
       deleteDirSync(hexoPaths.sourcePath);
       done();
     });
@@ -132,7 +133,7 @@ describe('REST API:', function() {
 
           var newsId = res.body.id;
           assert(typeof newsId !== 'undefined');
-          newsRepository.findById(newsId, function(err, result) {
+          News.findById(ObjectId(newsId), function(err, result) {
             verifyNewsAttributes(result, news);
             assert.equal(result.status, 'draft');
             assert.ok(result.created_at);
@@ -152,7 +153,7 @@ describe('REST API:', function() {
 
           var newsId = res.body.id;
           assert(typeof newsId !== 'undefined');
-          newsRepository.findById(newsId, function(err, result) {
+          News.findById(ObjectId(newsId), function(err, result) {
             assert.equal(result.metadata.url, undefined);
             done();
           });
@@ -170,7 +171,7 @@ describe('REST API:', function() {
           var columnId = res.body.id;
           assert(typeof columnId !== 'undefined');
 
-          newsRepository.findById(columnId, function(err, result) {
+          News.findById(ObjectId(columnId), function(err, result) {
             verifyColumnAttributes(result, column);
             assert.equal(result.status, 'draft');
             done();
@@ -274,7 +275,7 @@ describe('REST API:', function() {
           assert(typeof id !== 'undefined');
           assert.equal(id, newsId);
 
-          newsRepository.findById(newsId, function(err, result) {
+          News.findById(ObjectId(newsId), function(err, result) {
             verifyNewsAttributes(result, news);
             done();
           });
@@ -289,7 +290,7 @@ describe('REST API:', function() {
         .end(function(err, _res) {
           if(err){ done(err); }
 
-          newsRepository.findById(newsId, function(err, result) {
+          News.findById(ObjectId(newsId), function(err, result) {
             assert.equal(result.updated_at.getTime(), Date.now());
             done();
           });
@@ -308,7 +309,7 @@ describe('REST API:', function() {
           assert(typeof id !== 'undefined');
           assert.equal(id, newsId);
 
-          newsRepository.findById(newsId, function(err, result) {
+          News.findById(ObjectId(newsId), function(err, result) {
             assert.equal(result.metadata.url, undefined);
             done();
           });
@@ -322,7 +323,8 @@ describe('REST API:', function() {
       var metadata = metadataFactory.build({ url: '/this-path-should-not-disappear' });
       var news = newsFactory.build({ status: 'published', published_at: now, created_at: past, metadata: metadata});
 
-      newsRepository.insert(news, function(err, newsIdent) {
+      news = new News(news);
+      news.save(function(err, newsIdent) {
         if(err) throw err;
 
         news.metadata.url = '';
@@ -331,7 +333,7 @@ describe('REST API:', function() {
         .expect(200)
         .end(function(err, _result) {
 
-          newsRepository.findById(newsIdent.valueOf(), function(err, result) {
+          News.findById(newsIdent, function(err, result) {
             assert.equal(result.metadata.url, '/this-path-should-not-disappear');
             done();
           });
@@ -351,15 +353,15 @@ describe('REST API:', function() {
     };
 
     beforeEach(function(done) {
-      news = newsFactory.build();
-      newsRepository.insert(news, function(err, res) {
+      news = new News(newsFactory.build());
+      news.save(function(err) {
         if (err) {
           done(err);
           return;
         }
 
-        newsId = res;
-        publisher.publish(news, done);
+        newsId = news._id.valueOf();
+        publisher.publish(news.toObject(), done);
       });
     });
 
@@ -478,7 +480,7 @@ describe('REST API:', function() {
           .end(function(err, _res) {
             if(err) throw err;
 
-            newsRepository.findById(photoCaptionId, function(err, result) {
+            News.findById(ObjectId(photoCaptionId), function(err, result) {
               if(err) throw err;
               assert.equal(result.status, 'published');
               assert.equal(fs.existsSync(hexoPaths.postsPath + newsYearMonthURL + photoCaptionId + '.md'), false);
@@ -516,7 +518,7 @@ describe('REST API:', function() {
           .end(function(err, _res) {
             if (err) done(err);
 
-            newsRepository.findById(tabloidId, function(err, result) {
+            News.findById(ObjectId(tabloidId), function(err, result) {
               var published_at = result.published_at;
               assert.ok(published_at);
               assert.equal(Date.now(), published_at.getTime());
