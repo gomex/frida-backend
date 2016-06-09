@@ -2,6 +2,7 @@ var _               = require('underscore');
 var async           = require('async');
 
 var newsRepository  = require('../../../../lib/news/news-repository');
+var News  = require('../../../../lib/news/news-repository').news;
 var homeStrategy    = require('../../../../lib/publisher/home-strategy');
 
 var metadataFactory         = require('../../../factories/news-attributes').metadata;
@@ -32,12 +33,12 @@ describe('home-strategy', function() {
       };
 
       beforeEach(function() {
-        sandbox.stub(newsRepository, 'find').yields(null, []);
+        sandbox.stub(News, 'findNews').yields(null, []);
       });
 
       it('finds published news', function(done) {
         subject(function(err) {
-          expect(newsRepository.find).to.have.been.calledWith(publishedCriteria);
+          expect(News.findNews).to.have.been.calledWith(publishedCriteria);
 
           done(err);
         });
