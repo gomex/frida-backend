@@ -1,5 +1,5 @@
 var tabloid = require('../../../../lib/news/tabloids');
-var repository = require('../../../../lib/news/news-repository');
+var News = require('../../../../lib/news/news-repository').news;
 var factory = require('../../../factories/tabloid-attributes').tabloid;
 var tabloidNewsFactory = require('../../../factories/tabloid-news-attributes').tabloid;
 
@@ -18,12 +18,12 @@ describe('tabloid', () => {
     var expectedNews = [];
 
     beforeEach(() => {
-      sandbox.stub(repository, 'getAll').yields(null, expectedNews);
+      sandbox.stub(News, 'find').yields(null, expectedNews);
     });
 
     it('searches news', (done) => {
       subject((err) => {
-        expect(repository.getAll).to.have.been.calledWith(criteria);
+        expect(News.find).to.have.been.calledWith(criteria);
 
         done(err);
       });
@@ -52,12 +52,12 @@ describe('tabloid', () => {
     var expectedTabloid = {};
 
     beforeEach(() => {
-      sandbox.stub(repository, 'find').yields(null, [expectedTabloid]);
+      sandbox.stub(News, 'find').yields(null, [expectedTabloid]);
     });
 
     it('searches news', (done) => {
       subject((err) => {
-        expect(repository.find).to.have.been.calledWith(criteria, null, 1);
+        expect(News.find).to.have.been.calledWith(criteria, null, {limit: 1});
 
         done(err);
       });
