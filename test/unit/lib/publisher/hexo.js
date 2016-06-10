@@ -28,10 +28,6 @@ describe('hexo', function() {
       return path.join(process.env.HEXO_SOURCE_PATH, '_posts', dir, news._id + '.md');
     });
 
-    given('htmlPath', () => {
-      return path.join(process.env.HEXO_DEST_PATH, news.metadata.url, 'index.html');
-    });
-
     beforeEach(function() {
       sandbox.stub(fs, 'unlink').yields(null);
     });
@@ -43,14 +39,6 @@ describe('hexo', function() {
     it('removes md file', function(done) {
       subject(function(err) {
         expect(fs.unlink).to.have.been.calledWith(newsPath);
-
-        done(err);
-      });
-    });
-
-    it('removes html file', function(done) {
-      subject(function(err) {
-        expect(fs.unlink).to.have.been.calledWith(htmlPath);
 
         done(err);
       });
