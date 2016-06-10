@@ -17,16 +17,16 @@ describe('publisher', function() {
 
     describe('when news is not published', function() {
       var metadata = metadataFactory.build();
-      var news = newsFactory.build(
+      var news = new News(newsFactory.build(
         {
           metadata: metadata,
           published_at: new Date(),
           updated_at: new Date(),
           status: 'draft'
-        });
+        }));
 
       beforeEach(function() {
-        sandbox.stub(News, 'findOneAndUpdate').yields(null, news);
+        sandbox.stub(news, 'save').yields(null);
         sandbox.stub(hexo, 'publish').yields(null);
         sandbox.stub(hexo, 'updateAreaPage').yields(null);
         sandbox.stub(hexo, 'updateHomePage').yields(null);
@@ -34,7 +34,7 @@ describe('publisher', function() {
 
       it('updates status on database', function(done){
         subject(news, function(err) {
-          expect(News.findOneAndUpdate).to.have.been.called;
+          expect(news.save).to.have.been.called;
 
           done(err);
         });
@@ -75,7 +75,6 @@ describe('publisher', function() {
 
     describe('when news is already published', function() {
       beforeEach(function() {
-        sandbox.stub(News, 'findOneAndUpdate').yields(null, null);
         sandbox.stub(hexo, 'publish').yields(null);
         sandbox.stub(hexo, 'updateAreaPage').yields(null);
         sandbox.stub(hexo, 'updateHomePage').yields(null);
@@ -83,13 +82,16 @@ describe('publisher', function() {
 
       describe('and is modified', function() {
         var metadata = metadataFactory.build({ url: '/2016/05/21/what' });
-        var news = newsFactory.build(
-          {
-            metadata: metadata,
-            published_at: new Date(1000),
-            updated_at: new Date(),
-            status: 'published'
-          });
+        var news = new News(newsFactory.build({
+          metadata: metadata,
+          published_at: new Date(1000),
+          updated_at: new Date(),
+          status: 'published'
+        }));
+
+        beforeEach(function() {
+          sandbox.stub(news, 'save').yields(null);
+        });
 
         it('does not change original published_at date', function(done) {
           subject(_.clone(news), function(err, publishedNews) {
@@ -99,12 +101,12 @@ describe('publisher', function() {
           });
         });
 
-        it('does not change original url if title changes', function(done) {
-          var toPublish = _.cloneDeep(news);
-          toPublish.metadata.title = 'different title';
+        it('does not change url if title changes', function(done) {
+          var oldUrl = news.metadata.url;
+          news.metadata.title = 'different title';
 
-          subject(toPublish, function(err, publishedNews) {
-            expect(publishedNews.metadata.url).to.be.equal(news.metadata.url);
+          subject(news, function(err, publishedNews) {
+            expect(publishedNews.metadata.url).to.be.equal(oldUrl);
 
             done(err);
           });
@@ -113,16 +115,19 @@ describe('publisher', function() {
 
       describe('and is not modified', function() {
         var metadata = metadataFactory.build();
-        var news = newsFactory.build(
-          {
-            metadata: metadata,
-            published_at: new Date(),
-            updated_at: new Date(1000)
-          });
+        var news = new News(newsFactory.build({
+          metadata: metadata,
+          published_at: new Date(),
+          updated_at: new Date(1000)
+        }));
+
+        beforeEach(function() {
+          sandbox.stub(news, 'save').yields(null);
+        });
 
         it('does not update status on database', function(done){
           subject(news, function(err) {
-            expect(News.findOneAndUpdate).to.not.have.been.called;
+            expect(news.save).to.not.have.been.called;
 
             done(err);
           });
@@ -155,7 +160,7 @@ describe('publisher', function() {
     });
 
     describe('when is a tabloid', () => {
-      var aTabloid = tabloidFactory.build();
+      var aTabloid = new News(tabloidFactory.build());
       var newsList = newsFactory.buildList(2);
 
       beforeEach(() => {
@@ -189,8 +194,8 @@ describe('publisher', function() {
     });
 
     describe('when is a tabloid news', () => {
-      given('tabloidNews', () => tabloidNewsFactory.build());
-      given('aTabloid', () => tabloidFactory.build());
+      given('tabloidNews', () => new News(tabloidNewsFactory.build()));
+      given('aTabloid', () => new News(tabloidFactory.build()));
 
       beforeEach(() => {
         sandbox.stub(tabloids, 'findTabloid').yields(null, aTabloid);
@@ -215,7 +220,9 @@ describe('publisher', function() {
 
       it('publishes tabloid', (done) => {
         subject(tabloidNews, (err) => {
-          expect(hexo.publish).to.have.been.calledWith(aTabloid);
+          expect(hexo.publish).to.have.been.calledWith(
+            sandbox.match({edition: aTabloid.edition})
+          );
 
           done(err);
         });
@@ -301,7 +308,7 @@ describe('publisher', function() {
 
     describe('when is a tabloid news', () => {
       given('tabloidNews', () => tabloidNewsFactory.build());
-      given('aTabloid', () => tabloidFactory.build());
+      given('aTabloid', () => new News(tabloidFactory.build()));
 
       beforeEach(() => {
         sandbox.stub(tabloids, 'findTabloid').yields(null, aTabloid);

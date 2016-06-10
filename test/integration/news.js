@@ -361,7 +361,7 @@ describe('REST API:', function() {
         }
 
         newsId = news._id.valueOf();
-        publisher.publish(news.toObject(), done);
+        publisher.publish(news, done);
       });
     });
 
