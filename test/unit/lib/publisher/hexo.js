@@ -18,15 +18,19 @@ describe('hexo', function() {
   describe('unpublish', function() {
     var subject = function(callback) { return hexo.unpublish(news, callback); };
 
-    var news = {
-      _id: '123',
-      published_at: new Date()
-    };
+    given('news', () => newsFactory.build({
+      published_at: new Date(),
+      metadata: newsMetadataFactory.build({url: 'url'})
+    }));
 
-    var newsPath = function() {
+    given('newsPath', () => {
       var dir = moment(news.published_at).format('YYYY/MM');
       return path.join(process.env.HEXO_SOURCE_PATH, '_posts', dir, news._id + '.md');
-    }();
+    });
+
+    given('htmlPath', () => {
+      return path.join(process.env.HEXO_DEST_PATH, news.metadata.url, 'index.html');
+    });
 
     beforeEach(function() {
       sandbox.stub(fs, 'unlink').yields(null);
@@ -44,8 +48,15 @@ describe('hexo', function() {
       });
     });
 
-    describe('when the md file does not exist', function() {
+    it('removes html file', function(done) {
+      subject(function(err) {
+        expect(fs.unlink).to.have.been.calledWith(htmlPath);
 
+        done(err);
+      });
+    });
+
+    describe('when the files does not exist', function() {
       beforeEach(function() {
         fs.unlink.restore();
         sandbox.stub(fs, 'unlink').yields({ code: 'ENOENT' });
