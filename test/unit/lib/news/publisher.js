@@ -250,13 +250,13 @@ describe('publisher', function() {
   describe('.unpublish', function() {
     var subject = function(news, callback) { publisher.unpublish(news, callback); };
 
-    var news = newsFactory.build({ status: 'published' });
+    var news = new News(newsFactory.build({ status: 'published' }));
 
     var updatedNews = _.clone(news);
     updatedNews.status = 'draft';
 
     beforeEach(function() {
-      sandbox.stub(News, 'findOneAndUpdate').yields(null, updatedNews);
+      sandbox.stub(news, 'save').yields(null, updatedNews);
       sandbox.stub(hexo, 'unpublish').yields(null);
       sandbox.stub(hexo, 'updateAreaPage').yields(null);
       sandbox.stub(hexo, 'updateHomePage').yields(null);
@@ -276,7 +276,7 @@ describe('publisher', function() {
 
     it('saves changes', function(done) {
       subject(news, function(err) {
-        expect(News.findOneAndUpdate).to.have.been.called;
+        expect(news.save).to.have.been.called;
 
         done(err);
       });
@@ -307,7 +307,7 @@ describe('publisher', function() {
     });
 
     describe('when is a tabloid news', () => {
-      given('tabloidNews', () => tabloidNewsFactory.build());
+      given('tabloidNews', () => new News(tabloidNewsFactory.build()));
       given('aTabloid', () => new News(tabloidFactory.build()));
 
       beforeEach(() => {
