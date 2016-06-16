@@ -1,7 +1,5 @@
-var _               = require('underscore');
-var async           = require('async');
+var _ = require('underscore');
 
-var newsRepository  = require('../../../../lib/news/news-repository');
 var News  = require('../../../../lib/news/news-repository').news;
 var homeStrategy    = require('../../../../lib/publisher/home-strategy');
 
@@ -17,7 +15,7 @@ describe('home-strategy', function() {
 
   describe('buildHome', function() {
     beforeEach(function(done) {
-      newsRepository.deleteAll(done);
+      News.remove({}, done);
     });
 
     describe('when build home', function() {
@@ -60,10 +58,7 @@ describe('home-strategy', function() {
           metadata: metadata2
         });
 
-        async.parallel([
-          async.apply(newsRepository.insert, news1),
-          async.apply(newsRepository.insert, news2)
-        ], function(err, _insertedIds){
+        News.create(news1, news2, function(err, _insertedIds){
           if(err) throw err;
 
           homeStrategy.buildHome(function(err, newsForHome){
@@ -106,10 +101,7 @@ describe('home-strategy', function() {
           metadata: metadata2
         });
 
-        async.parallel([
-          async.apply(newsRepository.insert, tabloid1),
-          async.apply(newsRepository.insert, tabloid2)
-        ], function(err, _insertedIds){
+        News.create(tabloid1, tabloid2, function(err, _insertedIds){
           if(err) throw err;
 
           homeStrategy.buildHome(function(err, newsForHome){
@@ -156,10 +148,7 @@ describe('home-strategy', function() {
           metadata: metadata2
         });
 
-        async.parallel([
-          async.apply(newsRepository.insert, column1),
-          async.apply(newsRepository.insert, column2)
-        ], function(err, _insertedIds){
+        News.create(column1, column2, function(err, _insertedIds){
           if(err) throw err;
 
           homeStrategy.buildHome(function(err, newsForHome){
@@ -192,14 +181,14 @@ describe('home-strategy', function() {
       var news = newsFactory.build({ status: 'published', published_at: new Date() });
       news.metadata.url = '/2016/12/title/';
 
-      async.parallel([
-        async.apply(newsRepository.insert, news),
-        async.apply(newsRepository.insert, news),
-        async.apply(newsRepository.insert, news),
-        async.apply(newsRepository.insert, news),
-        async.apply(newsRepository.insert, news),
-        async.apply(newsRepository.insert, news)
-      ], function(err, _insertedIds){
+      News.create(
+      news,
+      news,
+      news,
+      news,
+      news,
+      news,
+      function(err, _insertedIds){
         if(err) throw err;
 
         homeStrategy.buildHome(function(err, newsForHome){
@@ -234,10 +223,7 @@ describe('home-strategy', function() {
       var photoCaption2 = photoCaptionFactory.build({ status: 'published', published_at: new Date(2016, 9, 22) });
       photoCaption2.metadata.url = '/2016/10/title/';
 
-      async.parallel([
-        async.apply(newsRepository.insert, photoCaption1),
-        async.apply(newsRepository.insert, photoCaption2)
-      ], function(err, _insertedIds){
+      News.create(photoCaption1, photoCaption2, function(err, _insertedIds) {
         if(err) throw err;
 
         homeStrategy.buildHome(function(err, newsForHome){
@@ -267,13 +253,13 @@ describe('home-strategy', function() {
       news.metadata.url = '/2016/12/title/';
       news.metadata.most_read = true;
 
-      async.parallel([
-        async.apply(newsRepository.insert, news),
-        async.apply(newsRepository.insert, news),
-        async.apply(newsRepository.insert, news),
-        async.apply(newsRepository.insert, news),
-        async.apply(newsRepository.insert, news)
-      ], function(err, _insertedIds){
+      News.create(
+      news,
+      news,
+      news,
+      news,
+      news,
+      function(err, _insertedIds) {
         if(err) throw err;
 
         homeStrategy.buildHome(function(err, newsForHome){
