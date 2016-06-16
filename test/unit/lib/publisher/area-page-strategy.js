@@ -1,7 +1,6 @@
 'use strict';
 
 var _           = require('underscore');
-var async       = require('async');
 
 var metadataFactory         = require('../../../factories/news-attributes').metadata;
 var newsFactory             = require('../../../factories/news-attributes').news;
@@ -9,7 +8,7 @@ var columnMetadataFactory   = require('../../../factories/column-attributes').me
 var columnFactory           = require('../../../factories/column-attributes').column;
 
 var areaPageStrategy    = require('../../../../lib/publisher/area-page-strategy');
-var newsRepository      = require('../../../../lib/news/news-repository');
+var News      = require('../../../../lib/news/news-repository').news;
 
 describe('area-page-strategy', function() {
 
@@ -19,19 +18,13 @@ describe('area-page-strategy', function() {
       var lastNews = [];
 
       before(function(done) {
-        var insertNewsOperations = [];
-
         var metadata = metadataFactory.build({ url: '2016/03/news-' + Date.now() });
         var news = newsFactory.build({ metadata: metadata, published_at: new Date(), status: 'published' });
         for(var i = 0; i < 20; i++) {
-          insertNewsOperations.push(async.apply(newsRepository.insert, news));
           lastNews.push(news);
         }
 
-        async.parallel(insertNewsOperations, function(err) {
-          if(err) throw err;
-          done();
-        });
+        News.create(lastNews, done);
       });
 
       it('area page data has layout "news_list" and a simplified version of the last 20 published news for the area', function(done) {
@@ -92,19 +85,14 @@ describe('area-page-strategy', function() {
       var lastColumns = [];
 
       before(function(done) {
-        var insertColumnsOperations = [];
 
         var columnMetadata = columnMetadataFactory.build({ url: '2016/03/column-' + Date.now() });
         var column = columnFactory.build({ metadata: columnMetadata, published_at: new Date(), status: 'published' });
         for(var i = 0; i < 20; i++) {
-          insertColumnsOperations.push(async.apply(newsRepository.insert, column));
           lastColumns.push(column);
         }
 
-        async.parallel(insertColumnsOperations, function(err) {
-          if(err) throw err;
-          done();
-        });
+        News.create(lastColumns, done);
       });
 
       it('page data has layout "columnists" and a simplified version of the last 20 published columns', function(done) {
