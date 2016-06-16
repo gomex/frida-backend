@@ -1,6 +1,6 @@
 var _ = require('underscore');
 
-var News  = require('../../../../lib/news/news-repository').news;
+var News  = require('../../../../lib/news/news').news;
 var homeStrategy    = require('../../../../lib/publisher/home-strategy');
 
 var metadataFactory         = require('../../../factories/news-attributes').metadata;
