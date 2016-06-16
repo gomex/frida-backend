@@ -2,9 +2,9 @@
 'use strict';
 
 var _ = require('lodash');
-var publisher = require('../../../../lib/news/publisher');
-var News = require('../../../../lib/news/news');
-var tabloids = require('../../../../lib/news/tabloids');
+var publisher = require('../../../../lib/models/publisher');
+var News = require('../../../../lib/models/news');
+var tabloids = require('../../../../lib/models/tabloids');
 var hexo = require('../../../../lib/publisher/hexo');
 var newsFactory = require('../../../factories/news-attributes').news;
 var metadataFactory = require('../../../factories/news-attributes').metadata;

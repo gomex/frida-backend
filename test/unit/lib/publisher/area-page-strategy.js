@@ -8,7 +8,7 @@ var columnMetadataFactory   = require('../../../factories/column-attributes').me
 var columnFactory           = require('../../../factories/column-attributes').column;
 
 var areaPageStrategy    = require('../../../../lib/publisher/area-page-strategy');
-var News      = require('../../../../lib/news/news');
+var News      = require('../../../../lib/models/news');
 
 describe('area-page-strategy', function() {
 

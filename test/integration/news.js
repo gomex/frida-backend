@@ -3,8 +3,8 @@ var grayMatter  = require('gray-matter');
 var slug        = require('slug');
 var supertest   = require('supertest');
 
-var News = require('../../lib/news/news');
-var publisher = require('../../lib/news/publisher');
+var News = require('../../lib/models/news');
+var publisher = require('../../lib/models/publisher');
 var server          = require('../../lib/http/server');
 
 var metadataFactory     = require('../factories/news-attributes').metadata;
