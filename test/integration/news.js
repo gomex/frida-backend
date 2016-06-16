@@ -3,7 +3,7 @@ var grayMatter  = require('gray-matter');
 var slug        = require('slug');
 var supertest   = require('supertest');
 
-var News = require('../../lib/news/news').news;
+var News = require('../../lib/news/news');
 var publisher = require('../../lib/news/publisher');
 var server          = require('../../lib/http/server');
 

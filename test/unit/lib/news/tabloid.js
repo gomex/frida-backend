@@ -1,5 +1,5 @@
 var tabloid = require('../../../../lib/news/tabloids');
-var News = require('../../../../lib/news/news').news;
+var News = require('../../../../lib/news/news');
 var factory = require('../../../factories/tabloid-attributes').tabloid;
 var tabloidNewsFactory = require('../../../factories/tabloid-news-attributes').tabloid;
 
