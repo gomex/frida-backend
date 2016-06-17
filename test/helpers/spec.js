@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('../../lib/db/initializer');
 
 global.chai = require('chai');
 global.expect = require('chai').expect;
