@@ -72,6 +72,7 @@ describe('home-strategy', function() {
             expect(home.advertising_01, 'advertising_01').to.exist;
             expect(home.advertising_02, 'advertising_02').to.exist;
             expect(home.advertising_03, 'advertising_03').to.exist;
+            expect(home.advertising_04, 'advertising_04').to.exist;
 
             done(err);
           });
