@@ -1,18 +1,19 @@
+/*eslint no-undef: "off"*/
+
 var _ = require('underscore');
 
 var News  = require('../../../../lib/models/news');
 var homeStrategy    = require('../../../../lib/publisher/home-strategy');
 
-var metadataFactory         = require('../../../factories/news-attributes').metadata;
-var newsFactory             = require('../../../factories/news-attributes').news;
-var columnMetadataFactory   = require('../../../factories/column-attributes').metadata;
-var columnFactory           = require('../../../factories/column-attributes').column;
-var photoCaptionFactory     = require('../../../factories/photo-caption-attributes').photoCaption;
-var tabloidMetadataFactory  = require('../../../factories/tabloid-attributes').metadata;
-var tabloidFactory          = require('../../../factories/tabloid-attributes').tabloid;
+var metadataFactory = require('../../../factories/news-attributes').metadata;
+var newsFactory = require('../../../factories/news-attributes').news;
+var columnMetadataFactory = require('../../../factories/column-attributes').metadata;
+var columnFactory = require('../../../factories/column-attributes').column;
+var photoCaptionFactory = require('../../../factories/photo-caption-attributes').photoCaption;
+var tabloidMetadataFactory = require('../../../factories/tabloid-attributes').metadata;
+var tabloidFactory = require('../../../factories/tabloid-attributes').tabloid;
 
 describe('home-strategy', function() {
-
   describe('buildHome', function() {
     beforeEach(function(done) {
       News.remove({}, done);
@@ -21,24 +22,59 @@ describe('home-strategy', function() {
     describe('when build home', function() {
       var subject = function(callback) { homeStrategy.buildHome(callback); };
 
-      var publishedCriteria = {
+      given('criteria', () => ({
         'status': 'published',
         'metadata.display_area': 'featured_01',
         $or: [
           {'metadata.layout': 'post'},
           {'metadata.layout': 'tabloid_news'}
         ]
-      };
+      }));
+
+      given('news', () => [{}]);
 
       beforeEach(function() {
-        sandbox.stub(News, 'findNews').yields(null, []);
+        sandbox.stub(News, 'findNews').yields(null, news);
       });
 
       it('finds published news', function(done) {
         subject(function(err) {
-          expect(News.findNews).to.have.been.calledWith(publishedCriteria);
+          expect(News.findNews).to.have.been.calledWith(criteria);
 
           done(err);
+        });
+      });
+
+      describe('advertising', () => {
+        given('criteria', () => ({
+          'status': 'published',
+          'metadata.layout': 'advertising',
+          'metadata.display_area': 'advertising_01'
+        }));
+
+        given('projection', () => ({
+          '_id': false,
+          'title':'$metadata.title',
+          'image':'$image',
+          'link':'$link'
+        }));
+
+        it('finds advertisings', function(done) {
+          subject(function(err) {
+            expect(News.findNews).to.have.been.calledWith(criteria, projection);
+
+            done(err);
+          });
+        });
+
+        it('generates areas', function(done) {
+          subject(function(err, home) {
+            expect(home.advertising_01, 'advertising_01').to.exist;
+            expect(home.advertising_02, 'advertising_02').to.exist;
+            expect(home.advertising_03, 'advertising_03').to.exist;
+
+            done(err);
+          });
         });
       });
     });
