@@ -157,6 +157,14 @@ describe('publisher', function() {
           });
         });
 
+        it('does not update last news data file', function(done){
+          subject(news, function(err) {
+            expect(hexo.updateAreaPage).to.not.have.been.called;
+
+            done(err);
+          });
+        });
+
         it('does not update home data file', function(done){
           subject(news, function(err) {
             expect(hexo.updateHomePage).to.not.have.been.called;
@@ -301,6 +309,14 @@ describe('publisher', function() {
     it('updates area', function(done) {
       subject(news, function(err, news) {
         expect(hexo.updateAreaPage).to.have.been.calledWith(news.metadata.area);
+
+        done(err);
+      });
+    });
+
+    it('updates last news', function(done) {
+      subject(news, function(err, _news) {
+        expect(hexo.updateAreaPage).to.have.been.calledWith('ultimas_noticias');
 
         done(err);
       });
