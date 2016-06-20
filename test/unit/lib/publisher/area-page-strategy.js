@@ -58,6 +58,36 @@ describe('area-page-strategy', function() {
         });
       });
 
+      it('last news page data has layout "news_list" and a simplified version of the last 20 published news for any area', function(done) {
+
+        areaPageStrategy.buildPageData('ultimas_noticias', function(err, areaPageData) {
+          if(err) throw err;
+
+          var simplifiedNews = _.map(lastNews, function(item) {
+            return {
+              cover: {
+                url: item.metadata.cover.link,
+                small: item.metadata.cover.small,
+                medium: item.metadata.cover.medium,
+                credits: item.metadata.cover.credits,
+                subtitle: item.metadata.cover.subtitle
+              },
+              hat: item.metadata.hat,
+              title: item.metadata.title,
+              description: item.metadata.description,
+              path: item.metadata.url,
+              date: item.published_at
+            };
+          });
+
+          assert.equal(areaPageData.layout, 'news_list');
+          assert.equal(areaPageData.area, 'últimas notícias');
+          assert.deepEqual(areaPageData.news, simplifiedNews);
+
+          done();
+        });
+      });
+
       describe('area field is a readable version of the area identifier', function() {
         it('direitos_humanos becomes "direitos humanos"', function(done) {
           areaPageStrategy.buildPageData('direitos_humanos', function(err, areaPageData) {
