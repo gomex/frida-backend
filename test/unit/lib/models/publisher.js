@@ -56,6 +56,14 @@ describe('publisher', function() {
         });
       });
 
+      it('updates last news data file', function(done){
+        subject(news, function(err) {
+          expect(hexo.updateAreaPage).to.have.been.calledWith('ultimas_noticias');
+
+          done(err);
+        });
+      });
+
       it('updates home data file', function(done){
         subject(news, function(err) {
           expect(hexo.updateHomePage).to.have.been.called;
