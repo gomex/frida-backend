@@ -12,7 +12,7 @@ describe('tabloid', () => {
     given('tabloid', () => factory.build());
     given('expectedData', () => ({areas: [], foo: 'bar'}));
 
-    before(() => {
+    beforeEach(() => {
       sandbox.stub(publisherNews, 'getData', () => (expectedData));
     });
 
@@ -45,7 +45,7 @@ describe('tabloid', () => {
 
       given('newsList', () => ([news1, news2, news3]));
 
-      before(() => {
+      beforeEach(() => {
         publisherNews.getData.restore();
         sandbox.stub(publisherNews, 'getData', function(news) {
           var obj = {};
@@ -68,6 +68,7 @@ describe('tabloid', () => {
       });
 
       it('delegates data news', () => {
+        getData;
         expect(publisherNews.getData).to.have.been.called;
       });
     });
