@@ -15,11 +15,12 @@ describe('area-page-strategy', function() {
   describe('buildPageData', function() {
 
     describe('when area is not column', function() {
-      var lastNews = [];
+      var lastNews;
 
-      before(function(done) {
+      beforeEach(function(done) {
         var metadata = metadataFactory.build({ url: '2016/03/news-' + Date.now() });
         var news = newsFactory.build({ metadata: metadata, published_at: new Date(), status: 'published' });
+        lastNews = [];
         for(var i = 0; i < 20; i++) {
           lastNews.push(news);
         }
@@ -31,7 +32,7 @@ describe('area-page-strategy', function() {
         var news = _.last(lastNews);
 
         areaPageStrategy.buildPageData(news.metadata.area, function(err, areaPageData) {
-          if(err) throw err;
+          if(err) return done(err);
 
           var simplifiedNews = _.map(lastNews, function(item) {
             return {
@@ -49,9 +50,9 @@ describe('area-page-strategy', function() {
             };
           });
 
-          assert.equal(areaPageData.layout, 'news_list');
-          assert.equal(areaPageData.area, news.metadata.area);
-          assert.deepEqual(areaPageData.news, simplifiedNews);
+          expect(areaPageData.layout).to.equal('news_list');
+          expect(areaPageData.area).to.equal(news.metadata.area);
+          expect(areaPageData.news).to.eql(simplifiedNews);
 
           done();
         });
@@ -78,9 +79,9 @@ describe('area-page-strategy', function() {
             };
           });
 
-          assert.equal(areaPageData.layout, 'news_list');
-          assert.equal(areaPageData.area, 'últimas notícias');
-          assert.deepEqual(areaPageData.news, simplifiedNews);
+          expect(areaPageData.layout).to.equal('news_list');
+          expect(areaPageData.area).to.equal('últimas notícias');
+          expect(areaPageData.news).to.eql(simplifiedNews);
 
           done();
         });
@@ -91,7 +92,7 @@ describe('area-page-strategy', function() {
           areaPageStrategy.buildPageData('direitos_humanos', function(err, areaPageData) {
             if(err) return done(err);
 
-            assert.equal(areaPageData.area, 'direitos humanos');
+            expect(areaPageData.area).to.equal('direitos humanos');
 
             done();
           });
@@ -101,7 +102,7 @@ describe('area-page-strategy', function() {
           areaPageStrategy.buildPageData('espanol', function(err, areaPageData) {
             if(err) return done(err);
 
-            assert.equal(areaPageData.area, 'español');
+            expect(areaPageData.area).to.equal('español');
 
             done();
           });
@@ -112,7 +113,7 @@ describe('area-page-strategy', function() {
     describe('when area is column', function() {
       var lastColumns = [];
 
-      before(function(done) {
+      beforeEach(function(done) {
 
         var columnMetadata = columnMetadataFactory.build({ url: '2016/03/column-' + Date.now() });
         var column = columnFactory.build({ metadata: columnMetadata, published_at: new Date(), status: 'published' });
@@ -138,8 +139,8 @@ describe('area-page-strategy', function() {
             };
           });
 
-          assert.equal(columnPageData.layout, 'columnists');
-          assert.deepEqual(columnPageData.columns, simplifiedColumns);
+          expect(columnPageData.layout).to.equal('columnists');
+          expect(columnPageData.columns).to.eql(simplifiedColumns);
 
           done();
         });
