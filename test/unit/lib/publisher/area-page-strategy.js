@@ -42,7 +42,6 @@ describe('area-page-strategy', function() {
                 credits: item.metadata.cover.credits,
                 subtitle: item.metadata.cover.subtitle
               },
-              hat: item.metadata.hat,
               title: item.metadata.title,
               description: item.metadata.description,
               path: item.metadata.url,
@@ -61,7 +60,7 @@ describe('area-page-strategy', function() {
       it('last news page data has layout "news_list" and a simplified version of the last 20 published news for any area', function(done) {
 
         areaPageStrategy.buildPageData('ultimas_noticias', function(err, areaPageData) {
-          if(err) throw err;
+          if(err) return done(err);
 
           var simplifiedNews = _.map(lastNews, function(item) {
             return {
@@ -72,7 +71,6 @@ describe('area-page-strategy', function() {
                 credits: item.metadata.cover.credits,
                 subtitle: item.metadata.cover.subtitle
               },
-              hat: item.metadata.hat,
               title: item.metadata.title,
               description: item.metadata.description,
               path: item.metadata.url,
@@ -91,7 +89,7 @@ describe('area-page-strategy', function() {
       describe('area field is a readable version of the area identifier', function() {
         it('direitos_humanos becomes "direitos humanos"', function(done) {
           areaPageStrategy.buildPageData('direitos_humanos', function(err, areaPageData) {
-            if(err) throw err;
+            if(err) return done(err);
 
             assert.equal(areaPageData.area, 'direitos humanos');
 
@@ -101,7 +99,7 @@ describe('area-page-strategy', function() {
 
         it('espanol becomes "español"', function(done) {
           areaPageStrategy.buildPageData('espanol', function(err, areaPageData) {
-            if(err) throw err;
+            if(err) return done(err);
 
             assert.equal(areaPageData.area, 'español');
 
@@ -128,7 +126,7 @@ describe('area-page-strategy', function() {
       it('page data has layout "columnists" and a simplified version of the last 20 published columns', function(done) {
 
         areaPageStrategy.buildPageData('column', function(err, columnPageData) {
-          if(err) throw err;
+          if(err) return done(err);
 
           var simplifiedColumns = _.map(lastColumns, function(item) {
             return {
