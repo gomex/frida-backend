@@ -1,6 +1,8 @@
 require('dotenv').config();
 require('../../lib/db/initializer');
 
+var mongoose = require('mongoose');
+
 global.chai = require('chai');
 global.expect = require('chai').expect;
 global.sinon = require('sinon');
@@ -14,10 +16,10 @@ beforeEach(function() {
   global.sandbox = sinon.sandbox.create();
 });
 
-afterEach(function() {
+afterEach(function(done) {
   global.sandbox.restore();
+  mongoose.connection.db.dropDatabase(done);
 });
-
 
 global.given = function(name, block) {
   var cache = null;
