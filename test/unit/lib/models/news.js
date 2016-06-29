@@ -26,7 +26,9 @@ describe('tabloid', () => {
   describe('#updateSanitized', () => {
     var subject = (cb) => { news.updateSanitized(attributes, cb); };
 
-    given('news', () => new News(newsFactory.build()));
+    given('news', () => new News(newsFactory.build({
+      status: 'draft'
+    })));
     given('attributes', () => ({
       foo: 'bar',
       status: 'status',
@@ -80,19 +82,25 @@ describe('tabloid', () => {
       });
     });
 
-    it('sets status to edited', (done) => {
-      subject((err) => {
-        expect(news.status).to.equal('edited');
-
-        done(err);
-      });
-    });
-
     it('saves attributes', (done) => {
       subject((err) => {
         expect(news.save).to.have.been.called;
 
         done(err);
+      });
+    });
+
+    describe('when status is published', () => {
+      given('news', () => new News(newsFactory.build({
+        status: 'published'
+      })));
+
+      it('sets status to edited', (done) => {
+        subject((err) => {
+          expect(news.status).to.equal('edited');
+
+          done(err);
+        });
       });
     });
 
