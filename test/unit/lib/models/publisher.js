@@ -17,13 +17,14 @@ describe('publisher', function() {
 
     describe('when news is not published', function() {
       var metadata = metadataFactory.build();
-      var news = new News(newsFactory.build(
+      given('news', () => new News(newsFactory.build(
         {
           metadata: metadata,
           published_at: new Date(),
           updated_at: new Date(),
           status: 'draft'
-        }));
+        }
+      )));
 
       beforeEach(function() {
         sandbox.stub(news, 'save').yields(null);
@@ -90,12 +91,12 @@ describe('publisher', function() {
 
       describe('and is modified', function() {
         var metadata = metadataFactory.build({ url: '/2016/05/21/what' });
-        var news = new News(newsFactory.build({
+        given('news', () => new News(newsFactory.build({
           metadata: metadata,
           published_at: new Date(1000),
           updated_at: new Date(),
           status: 'published'
-        }));
+        })));
 
         beforeEach(function() {
           sandbox.stub(news, 'save').yields(null);
@@ -123,11 +124,11 @@ describe('publisher', function() {
 
       describe('and is not modified', function() {
         var metadata = metadataFactory.build();
-        var news = new News(newsFactory.build({
+        given('news', () => new News(newsFactory.build({
           metadata: metadata,
           published_at: new Date(),
           updated_at: new Date(1000)
-        }));
+        })));
 
         beforeEach(function() {
           sandbox.stub(news, 'save').yields(null);
@@ -176,8 +177,10 @@ describe('publisher', function() {
     });
 
     describe('when is a tabloid', () => {
-      var aTabloid = new News(tabloidFactory.build());
-      var newsList = newsFactory.buildList(2);
+      given('aTabloid', () => new News(tabloidFactory.build({
+        status: 'draft'
+      })));
+      given('newsList', () => newsFactory.buildList(2));
 
       beforeEach(() => {
         sandbox.stub(tabloids, 'findNews').yields(null, newsList);
@@ -210,7 +213,9 @@ describe('publisher', function() {
     });
 
     describe('when is a tabloid news', () => {
-      given('tabloidNews', () => new News(tabloidNewsFactory.build()));
+      given('tabloidNews', () => new News(tabloidNewsFactory.build({
+        status: 'draft'
+      })));
       given('aTabloid', () => new News(tabloidFactory.build()));
 
       beforeEach(() => {
@@ -266,10 +271,8 @@ describe('publisher', function() {
   describe('.unpublish', function() {
     var subject = function(news, callback) { publisher.unpublish(news, callback); };
 
-    var news = new News(newsFactory.build({ status: 'published' }));
-
-    var updatedNews = _.clone(news);
-    updatedNews.status = 'draft';
+    given('news', () => new News(newsFactory.build({ status: 'published' })));
+    given('updatedNews', () => Object.assign({status: 'draft'}, news));
 
     beforeEach(function() {
       sandbox.stub(news, 'save').yields(null, updatedNews);
