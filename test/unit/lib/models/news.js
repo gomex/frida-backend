@@ -80,6 +80,14 @@ describe('tabloid', () => {
       });
     });
 
+    it('sets status to edited', (done) => {
+      subject((err) => {
+        expect(news.status).to.equal('edited');
+
+        done(err);
+      });
+    });
+
     it('saves attributes', (done) => {
       subject((err) => {
         expect(news.save).to.have.been.called;
