@@ -95,9 +95,9 @@ describe('tabloid', () => {
         status: 'published'
       })));
 
-      it('sets status to edited', (done) => {
+      it('sets status to changed', (done) => {
         subject((err) => {
-          expect(news.status).to.equal('edited');
+          expect(news.status).to.equal('changed');
 
           done(err);
         });
