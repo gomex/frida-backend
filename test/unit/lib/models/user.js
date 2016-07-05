@@ -24,6 +24,32 @@ describe('User', function() {
     });
   });
 
+  describe('.verifyPassword', function() {
+
+    var user;
+
+    beforeEach((done) => {
+      User.hash('my_password', (error, hash) => {
+        user = new User(factory.build({'hashed_password': hash}));
+        done(error);
+      });
+    });
+
+    it('returns true if the given password is the correct one', (done) => {
+      user.verifyPassword('my_password', (error, verified) => {
+        expect(verified).to.be.true;
+        done();
+      });
+    });
+
+    it('returns false if the given password is not the correct one', (done) => {
+      user.verifyPassword('my_wrong_password', (error, verified) => {
+        expect(verified).to.be.false;
+        done();
+      });
+    });
+  });
+
   given('user', () => new User(factory.build()));
 
   it('validates hashed_password is present', (done) => {
