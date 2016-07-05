@@ -2,10 +2,27 @@
 
 'use strict';
 
-var factory = require('../../../factories/user-attributes').user;
-var User    = require('../../../../lib/models/user');
+var factory   = require('../../../factories/user-attributes').user;
+var User      = require('../../../../lib/models/user');
 
 describe('User', function() {
+
+  describe('.hash', function() {
+
+    var hashedPassword;
+
+    beforeEach((done) => {
+      User.hash('my_bad_password', (error, hash) => {
+        hashedPassword = hash;
+        done(error);
+      });
+    });
+
+    it('result has the format pbkdf2$10000$hash$salt', (done) => {
+      expect(hashedPassword).to.match(/pbkdf2\$10000\$[0-9a-fA-F]{128}\$[0-9a-fA-F]{128}/);
+      done();
+    });
+  });
 
   given('user', () => new User(factory.build()));
 
