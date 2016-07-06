@@ -18,11 +18,18 @@ var publish = (news, cb) => {
   hexo.publish(news, cb);
 };
 
+var sleep = (cb) => {
+  setTimeout(() => {
+    cb();
+  }, 100);
+}
+
 var update = (news, cb) => {
   console.log('updating - "%s"', news.metadata.title);
   news.metadata.area = dest;
 
   async.series([
+    sleep,
     news.save,
     async.apply(publish, news)
   ], cb);
@@ -35,20 +42,20 @@ var publishArea = () => {
 
     console.log('published');
     process.exit();
-  })
+  });
 };
 
 News.find({
-    'metadata.area': source
-  })
-  .exec((err, result) => {
+  'metadata.area': source
+})
+.exec((err, result) => {
+  if(err) throw err;
+
+  console.log('%s news found', result.length);
+
+  async.eachSeries(result, update, (err) => {
     if(err) throw err;
 
-    console.log('%s news found', result.length);
-
-    async.eachSeries(result, update, (err) => {
-      if(err) throw err;
-
-      publishArea();
-    });
+    publishArea();
   });
+});
