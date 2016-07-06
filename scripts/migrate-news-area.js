@@ -22,7 +22,7 @@ var sleep = (cb) => {
   setTimeout(() => {
     cb();
   }, 100);
-}
+};
 
 var update = (news, cb) => {
   console.log('updating - "%s"', news.metadata.title);
