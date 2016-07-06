@@ -3,9 +3,10 @@ var grayMatter  = require('gray-matter');
 var slug        = require('slug');
 var supertest   = require('supertest');
 
-var News = require('../../lib/models/news');
-var publisher = require('../../lib/models/publisher');
-var server          = require('../../lib/http/server');
+var News        = require('../../lib/models/news');
+var UserService = require('../../lib/services/user_service');
+var publisher   = require('../../lib/models/publisher');
+var server      = require('../../lib/http/server');
 
 var metadataFactory     = require('../factories/news-attributes').metadata;
 var newsFactory         = require('../factories/news-attributes').news;
@@ -81,17 +82,25 @@ describe('REST API:', function() {
     sinon.useFakeTimers(testDate.getTime(), 'Date');
     newsCreatedAt = Date.now();
 
-    News.remove({}, function(){
-      deleteDirSync(hexoPaths.sourcePath);
+    deleteDirSync(hexoPaths.sourcePath);
+    done();
+  });
+
+  beforeEach((done) => {
+    if(process.env.MULTIPLE_USERS_ENABLED) {
+      UserService.createUser('User', 'user@user.com', 'password', (err) => {
+        process.env['EDITOR_USERNAME'] = 'user@user.com';
+        process.env['EDITOR_PASSWORD'] = 'password';
+        done(err);
+      });
+    } else {
       done();
-    });
+    }
   });
 
   after(function(done) {
-    News.remove({}, function() {
-      deleteDirSync(hexoPaths.sourcePath);
-      done();
-    });
+    deleteDirSync(hexoPaths.sourcePath);
+    done();
   });
 
   function itFailsWhenCredentialsAreNotSent(method, resource) {
