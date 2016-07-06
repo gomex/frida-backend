@@ -7,8 +7,6 @@ var hexo = require('../lib/publisher/hexo');
 var source = process.argv[2];
 var dest = process.argv[3];
 
-console.log(process.argv);
-
 var publish = (news, cb) => {
   if(news.status == 'draft') {
     return cb();
