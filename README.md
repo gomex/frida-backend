@@ -67,6 +67,14 @@ $ pm2 start pm2-config.json
 
 Remember to make a request to some resource in the API URL (ex.: https://localhost:5000/news) and add the certificate to the browser you'll be using frida-frontend with.
 
+## Creating users
+
+To use frida-backend you will need to create at least one user to login into the system. To do so run
+
+```bash
+$ node lib/cli/frida.js create
+```
+
 # Code Style
 
 We are using [ESLint](http://eslint.org/) to lint javascript files.
