@@ -28,6 +28,19 @@ describe('area-page-strategy', function() {
         News.create(lastNews, done);
       });
 
+      it('area page data has at least one page of news for the area', function(done) {
+        var news = _.last(lastNews);
+
+        areaPageStrategy.buildPageData(news.metadata.area, function(err, areaPageData) {
+          if(err) return done(err);
+
+          expect(areaPageData).to.be.instanceof(Array);
+          expect(areaPageData).to.have.length.above(0);
+
+          done();
+        });
+      });
+
       it('area page data has layout "news_list" and a simplified version of the last 20 published news for the area', function(done) {
         var news = _.last(lastNews);
 
@@ -50,9 +63,9 @@ describe('area-page-strategy', function() {
             };
           });
 
-          expect(areaPageData.layout).to.equal('news_list');
-          expect(areaPageData.area).to.equal(news.metadata.area);
-          expect(areaPageData.news).to.eql(simplifiedNews);
+          expect(areaPageData[0].layout).to.equal('news_list');
+          expect(areaPageData[0].area).to.equal(news.metadata.area);
+          expect(areaPageData[0].news).to.eql(simplifiedNews);
 
           done();
         });
@@ -79,9 +92,9 @@ describe('area-page-strategy', function() {
             };
           });
 
-          expect(areaPageData.layout).to.equal('news_list');
-          expect(areaPageData.area).to.equal('últimas notícias');
-          expect(areaPageData.news).to.eql(simplifiedNews);
+          expect(areaPageData[0].layout).to.equal('news_list');
+          expect(areaPageData[0].area).to.equal('últimas notícias');
+          expect(areaPageData[0].news).to.eql(simplifiedNews);
 
           done();
         });
@@ -92,7 +105,7 @@ describe('area-page-strategy', function() {
           areaPageStrategy.buildPageData('direitos_humanos', function(err, areaPageData) {
             if(err) return done(err);
 
-            expect(areaPageData.area).to.equal('direitos humanos');
+            expect(areaPageData[0].area).to.equal('direitos humanos');
 
             done();
           });
@@ -102,7 +115,7 @@ describe('area-page-strategy', function() {
           areaPageStrategy.buildPageData('espanol', function(err, areaPageData) {
             if(err) return done(err);
 
-            expect(areaPageData.area).to.equal('español');
+            expect(areaPageData[0].area).to.equal('español');
 
             done();
           });
@@ -111,10 +124,10 @@ describe('area-page-strategy', function() {
     });
 
     describe('when area is column', function() {
-      var lastColumns = [];
+      var lastColumns;
 
       beforeEach(function(done) {
-
+        lastColumns = [];
         var columnMetadata = columnMetadataFactory.build({ url: '2016/03/column-' + Date.now() });
         var column = columnFactory.build({ metadata: columnMetadata, published_at: new Date(), status: 'published' });
         for(var i = 0; i < 20; i++) {
@@ -122,6 +135,18 @@ describe('area-page-strategy', function() {
         }
 
         News.create(lastColumns, done);
+      });
+
+      it('page data has at least one page of columns', function(done) {
+
+        areaPageStrategy.buildPageData('column', function(err, columnPageData) {
+          if(err) return done(err);
+
+          expect(columnPageData).to.be.instanceof(Array);
+          expect(columnPageData).to.have.length.above(0);
+
+          done();
+        });
       });
 
       it('page data has layout "columnists" and a simplified version of the last 20 published columns', function(done) {
@@ -139,8 +164,8 @@ describe('area-page-strategy', function() {
             };
           });
 
-          expect(columnPageData.layout).to.equal('columnists');
-          expect(columnPageData.columns).to.eql(simplifiedColumns);
+          expect(columnPageData[0].layout).to.equal('columnists');
+          expect(columnPageData[0].columns).to.eql(simplifiedColumns);
 
           done();
         });
