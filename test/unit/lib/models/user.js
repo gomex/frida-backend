@@ -96,7 +96,7 @@ describe('User', function() {
     user.email = 'email@domain.com';
 
     user.validate((error) => {
-      expect(error).to.be.empty;
+      expect(error).to.not.exist;
       done();
     });
   });
