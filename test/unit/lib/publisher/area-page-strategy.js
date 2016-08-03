@@ -46,7 +46,9 @@ describe('area-page-strategy', function() {
               title: item.metadata.title,
               description: item.metadata.description,
               path: item.metadata.url,
-              date: item.published_at
+              date: item.published_at,
+              author: item.metadata.author,
+              updated_at: item.updated_at
             };
           });
 
@@ -75,7 +77,9 @@ describe('area-page-strategy', function() {
               title: item.metadata.title,
               description: item.metadata.description,
               path: item.metadata.url,
-              date: item.published_at
+              date: item.published_at,
+              author: item.metadata.author,
+              updated_at: item.updated_at
             };
           });
 
