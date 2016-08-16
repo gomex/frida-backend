@@ -19,7 +19,7 @@ describe('area-page-strategy', function() {
 
       beforeEach(function(done) {
         var metadata = metadataFactory.build({ url: '2016/03/news-' + Date.now() });
-        var news = newsFactory.build({ metadata: metadata, published_at: new Date(), status: 'published' });
+        var news = newsFactory.build({ metadata: metadata, published_at: new Date(), updated_at: new Date(), status: 'published' });
         lastNews = [];
         for(var i = 0; i < 20; i++) {
           lastNews.push(news);
@@ -59,7 +59,9 @@ describe('area-page-strategy', function() {
               title: item.metadata.title,
               description: item.metadata.description,
               path: item.metadata.url,
-              date: item.published_at
+              date: item.published_at,
+              author: item.metadata.author,
+              updated_at: item.updated_at
             };
           });
 
@@ -88,7 +90,9 @@ describe('area-page-strategy', function() {
               title: item.metadata.title,
               description: item.metadata.description,
               path: item.metadata.url,
-              date: item.published_at
+              date: item.published_at,
+              author: item.metadata.author,
+              updated_at: item.updated_at
             };
           });
 

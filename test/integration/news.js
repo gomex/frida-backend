@@ -87,15 +87,11 @@ describe('REST API:', function() {
   });
 
   beforeEach((done) => {
-    if(process.env.MULTIPLE_USERS_ENABLED) {
-      UserService.createUser('User', 'user@user.com', 'password', (err) => {
-        process.env['EDITOR_USERNAME'] = 'user@user.com';
-        process.env['EDITOR_PASSWORD'] = 'password';
-        done(err);
-      });
-    } else {
-      done();
-    }
+    UserService.createUser('User', 'user@user.com', 'password', (err) => {
+      process.env['EDITOR_USERNAME'] = 'user@user.com';
+      process.env['EDITOR_PASSWORD'] = 'password';
+      done(err);
+    });
   });
 
   after(function(done) {
