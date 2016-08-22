@@ -269,22 +269,18 @@ describe('publisher', function() {
   });
 
   describe('.remove', function() {
-
     it('exists', () => {
       expect(publisher.remove).to.exist;
     });
 
     describe('when news status is not "draft"', function () {
-
       given('news', () => new News(newsFactory.build({status: 'published'})));
 
       beforeEach(function(){
         sandbox.stub(news, 'save').yields(null);
-
       });
       
       it('status was not changed to "delete"', (done) => {
-        
         publisher.remove(news, (err) => {
           expect(news.status).to.not.equal('delete');
 
@@ -293,50 +289,35 @@ describe('publisher', function() {
       });
 
       it('news was not saved in dataBase', (done) => {
-        
         publisher.remove(news, (err) => {
           expect(news.save).to.not.have.been.called;
-          
-          
-          done(err);
 
+          done(err);
         });
-        
       });
     });
 
-
     describe('when status is "draft"', function () {
-
-
-       
       given('news', () => new News(newsFactory.build({status: 'draft'})));
 
       beforeEach(function(){
         sandbox.stub(news, 'save').yields(null);
-
       });
 
       it('news status was changed to "delete"', (done) => {
-        
         publisher.remove(news, (err) => {
           expect(news.status).to.equal('delete');
-
 
           done(err);
         });
       });
 
       it('news was saved in dataBase', (done) => {
-        
         publisher.remove(news, (err) => {
           expect(news.save).to.have.been.called;
           
-          
           done(err);
-
         });
-        
       });
     });
   }); 
