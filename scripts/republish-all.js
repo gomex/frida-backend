@@ -9,7 +9,7 @@ var publish = (news, cb) => {
 
   async.series([
     sleep,
-    async.apply(hexo.publish, news),
+    async.apply(hexo.publish, news)
   ], cb);
 };
 
