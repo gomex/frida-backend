@@ -280,9 +280,9 @@ describe('publisher', function() {
         sandbox.stub(news, 'save').yields(null);
       });
       
-      it('status was not changed to "delete"', (done) => {
+      it('status was not changed to "deleted"', (done) => {
         publisher.remove(news, (err) => {
-          expect(news.status).to.not.equal('delete');
+          expect(news.status).to.not.equal('deleted');
 
           done(err);
         });
@@ -304,9 +304,9 @@ describe('publisher', function() {
         sandbox.stub(news, 'save').yields(null);
       });
 
-      it('news status was changed to "delete"', (done) => {
+      it('news status was changed to "deleted"', (done) => {
         publisher.remove(news, (err) => {
-          expect(news.status).to.equal('delete');
+          expect(news.status).to.equal('deleted');
 
           done(err);
         });
