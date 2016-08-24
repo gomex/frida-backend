@@ -77,6 +77,20 @@ $ node lib/cli/frida.js create
 
 **Note:** You will need to provide Email, Name and a Password to create the user
 
+## Scripts
+
+* Repulish all news
+
+```bash
+$ node ./scripts/republish-all.js
+```
+
+* Rename news area
+
+```bash
+$ node ./scripts/migrate-news-area.js OLD_AREA NEW_AREA
+```
+
 # Code Style
 
 We are using [ESLint](http://eslint.org/) to lint javascript files.
