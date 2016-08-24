@@ -6,11 +6,16 @@ var hexo = require('../lib/publisher/hexo');
 
 var publish = (news, cb) => {
   console.log('republishing [%s]- "%s"', news.metadata.area, news.metadata.title);
-
-  async.series([
-    sleep,
-    async.apply(hexo.publish, news)
-  ], cb);
+  try {
+    async.series([
+      sleep,
+      async.apply(hexo.publish, news)
+    ], cb);
+  } catch (e) {
+    console.log(news);
+    console.log(e);
+    cb();
+  }
 };
 
 var sleep = (cb) => {
