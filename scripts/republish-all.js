@@ -6,13 +6,13 @@ var hexo = require('../lib/publisher/hexo');
 
 var publishSecure = (news, cb) => {
   try {
-    hexo.publish(news, cb)
+    hexo.publish(news, cb);
   } catch (e) {
     console.log(e);
     console.log(news);
     cb();
   }
-}
+};
 
 var publish = (news, cb) => {
   console.log('republishing [%s]- "%s"', news.metadata.area, news.metadata.title);
