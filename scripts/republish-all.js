@@ -4,18 +4,22 @@ var async = require('async');
 var News = require('../lib/models/news');
 var hexo = require('../lib/publisher/hexo');
 
-var publish = (news, cb) => {
-  console.log('republishing [%s]- "%s"', news.metadata.area, news.metadata.title);
+var publishSecure = (news, cb) => {
   try {
-    async.series([
-      sleep,
-      async.apply(hexo.publish, news)
-    ], cb);
+    hexo.publish(news, cb)
   } catch (e) {
-    console.log(news);
     console.log(e);
+    console.log(news);
     cb();
   }
+}
+
+var publish = (news, cb) => {
+  console.log('republishing [%s]- "%s"', news.metadata.area, news.metadata.title);
+  async.series([
+    sleep,
+    async.apply(publishSecure, news)
+  ], cb);
 };
 
 var sleep = (cb) => {
