@@ -4,8 +4,8 @@ var factory = require('../../../factories/photo-caption-attributes').photoCaptio
 
 
 describe('photoCaption', () => {
-  describe('.findNews', () => {
-    var subject = (callback) => photoCaption.findNews(aPhotoCaption, callback);
+  describe('.find', () => {
+    var subject = (callback) => photoCaption.find(aPhotoCaption, callback);
 
     var aPhotoCaption = factory.build();
     var criteria = {
