@@ -22,6 +22,7 @@ describe('news', () => {
       place: news.metadata.place,
       date: news.published_at,
       published_at: news.published_at,
+      other_news: [],
       cover: {
         link: news.metadata.cover.link,
         thumbnail: news.metadata.cover.thumbnail,
@@ -41,13 +42,26 @@ describe('news', () => {
       expect(getData).to.eql(expectedData);
     });
 
-    describe('when there is a cover', () => {
+    describe('when there is no cover', () => {
       beforeEach(() => {
         delete news.metadata.cover;
       });
 
       it('does not exist on data', () => {
         expect(getData.cover).to.not.exist;
+      });
+    });
+
+    describe('when there is other news', () => {
+      given('news', () => factory.build({
+        published_at: new Date(), metadata: metadata, other_news: [otherNews]
+      }));
+
+      given('otherNews', () => factory.build());
+      given('expectedOtherNews', () => publisherNews.getData(otherNews));
+
+      it('delegates to data news', () => {
+        expect(getData.other_news).to.eql([expectedOtherNews]);
       });
     });
   });
