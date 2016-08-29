@@ -2,6 +2,7 @@ var photoCaption = require('../../../../lib/models/photo-caption');
 var News = require('../../../../lib/models/news');
 var factory = require('../../../factories/photo-caption-attributes').photoCaption;
 
+
 describe('photoCaption', () => {
   describe('.findNews', () => {
     var subject = (callback) => photoCaption.findNews(aPhotoCaption, callback);
