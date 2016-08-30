@@ -1,26 +1,51 @@
 /*eslint no-undef: "off"*/
 
 var News = require('../../../../lib/models/news');
-var tabloidFactory = require('../../../factories/tabloid-attributes').tabloid;
 var newsFactory = require('../../../factories/news-attributes').news;
+var metadataFactory     = require('../../../factories/news-attributes').metadata;
 
-describe('tabloid', () => {
-  describe('#isTabloid', () => {
-    subj('isTabloid', () => tabloid.isTabloid());
+describe('news', () => {
+  var behaviourAsIsLayout = (name, layout) => {
+    subj('isLayout', () => news[name]());
 
-    given('tabloid', () => new News(tabloidFactory.build()));
+    given('news', () => new News(newsFactory.build({metadata: metadata})));
+    given('metadata', () => metadataFactory.build({layout: layout}));
 
     it('is true', () => {
-      expect(isTabloid).to.be.true;
+      expect(isLayout).to.be.true;
     });
 
     describe('when is not', () => {
-      given('tabloid', () => new News(newsFactory.build()));
+      given('metadata', () => metadataFactory.build({layout: 'absent_layout'}));
 
       it('is false', () => {
-        expect(isTabloid).to.be.false;
+        expect(isLayout).to.be.false;
       });
     });
+  };
+
+  describe('#isPost', () => {
+    behaviourAsIsLayout('isPost', 'post');
+  });
+
+  describe('#isColumn', () => {
+    behaviourAsIsLayout('isColumn', 'column');
+  });
+
+  describe('#isTabloid', () => {
+    behaviourAsIsLayout('isTabloid', 'tabloid');
+  });
+
+  describe('#isTabloidNews', () => {
+    behaviourAsIsLayout('isTabloidNews', 'tabloid_news');
+  });
+
+  describe('#isPhotoCaption', () => {
+    behaviourAsIsLayout('isPhotoCaption', 'photo_caption');
+  });
+
+  describe('#isAdvertising', () => {
+    behaviourAsIsLayout('isAdvertising', 'advertising');
   });
 
   describe('#updateSanitized', () => {
