@@ -22,7 +22,6 @@ describe('news', () => {
       place: news.metadata.place,
       date: news.published_at,
       published_at: news.published_at,
-      other_news: [],
       cover: {
         link: news.metadata.cover.link,
         thumbnail: news.metadata.cover.thumbnail,
@@ -52,17 +51,5 @@ describe('news', () => {
       });
     });
 
-    describe('when there is other news', () => {
-      given('news', () => factory.build({
-        published_at: new Date(), metadata: metadata, other_news: [otherNews]
-      }));
-
-      given('otherNews', () => factory.build());
-      given('expectedOtherNews', () => publisherNews.getData(otherNews));
-
-      it('delegates to data news', () => {
-        expect(getData.other_news).to.eql([expectedOtherNews]);
-      });
-    });
   });
 });
