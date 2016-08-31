@@ -4,7 +4,7 @@
 var _ = require('lodash');
 var publisher = require('../../../../lib/models/publisher');
 var News = require('../../../../lib/models/news');
-var tabloids = require('../../../../lib/models/tabloids');
+var tabloids = require('../../../../lib/models/news/tabloids');
 var hexo = require('../../../../lib/publisher/hexo');
 var newsFactory = require('../../../factories/news-attributes').news;
 var metadataFactory = require('../../../factories/news-attributes').metadata;
@@ -279,7 +279,7 @@ describe('publisher', function() {
       beforeEach(function(){
         sandbox.stub(news, 'save').yields(null);
       });
-      
+
       it('status was not changed to "deleted"', (done) => {
         publisher.remove(news, (err) => {
           expect(news.status).to.not.equal('deleted');
@@ -315,12 +315,12 @@ describe('publisher', function() {
       it('news was saved in dataBase', (done) => {
         publisher.remove(news, (err) => {
           expect(news.save).to.have.been.called;
-          
+
           done(err);
         });
       });
     });
-  }); 
+  });
 
   describe('.unpublish', function() {
     var subject = function(news, callback) { publisher.unpublish(news, callback); };

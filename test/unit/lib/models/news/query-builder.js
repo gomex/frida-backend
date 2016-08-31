@@ -1,6 +1,6 @@
 /*eslint no-undef: "off"*/
 
-var queryBuilder = require('../../../../lib/models/news/query-builder');
+var queryBuilder = require('../../../../../lib/models/news/query-builder');
 
 describe('queryBuilder', () => {
   describe('.build', () => {
