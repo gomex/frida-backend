@@ -1,7 +1,6 @@
 /*eslint no-undef: "off"*/
 
 var publisherPhotoCaption = require('../../../../lib/publisher/photo-caption');
-var publisherNews = require('../../../../lib/publisher/news');
 var factory = require('../../../factories/photo-caption-attributes').photoCaption;
 
 describe.skip('Photo Caption', () => {
