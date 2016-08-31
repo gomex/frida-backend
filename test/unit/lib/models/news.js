@@ -24,6 +24,24 @@ describe('news', () => {
     });
   };
 
+  var behaviourAsIsStatus = (name, status) => {
+    subj('isStatus', () => news[name]());
+
+    given('news', () => new News(newsFactory.build({status: status})));
+
+    it('is true', () => {
+      expect(isStatus).to.be.true;
+    });
+
+    describe('when is not', () => {
+      given('news', () => new News(newsFactory.build({status: 'absent_status'})));
+
+      it('is false', () => {
+        expect(isStatus).to.be.false;
+      });
+    });
+  };
+
   describe('#isPost', () => {
     behaviourAsIsLayout('isPost', 'post');
   });
@@ -46,6 +64,18 @@ describe('news', () => {
 
   describe('#isAdvertising', () => {
     behaviourAsIsLayout('isAdvertising', 'advertising');
+  });
+
+  describe('#isDraft', () => {
+    behaviourAsIsStatus('isDraft', 'draft');
+  });
+
+  describe('#isPublished', () => {
+    behaviourAsIsStatus('isPublished', 'published');
+  });
+
+  describe('#isChanged', () => {
+    behaviourAsIsStatus('isChanged', 'changed');
   });
 
   describe('#updateSanitized', () => {

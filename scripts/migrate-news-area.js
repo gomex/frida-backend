@@ -8,7 +8,7 @@ var source = process.argv[2];
 var dest = process.argv[3];
 
 var publish = (news, cb) => {
-  if(news.status == 'draft') {
+  if(news.isDraft()) {
     return cb();
   }
 
