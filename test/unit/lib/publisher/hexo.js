@@ -9,7 +9,7 @@ var tabloidFactory = require('../../../factories/tabloid-attributes').tabloid;
 var tabloidMetadataFactory = require('../../../factories/tabloid-attributes').metadata;
 var newsMetadataFactory = require('../../../factories/news-attributes').metadata;
 var newsPublisher = require('../../../../lib/publisher/news');
-var tabloidPublisher = require('../../../../lib/publisher/tabloid');
+var tabloidPublisher = require('../../../../lib/publisher/news/tabloid');
 var hexo = require('../../../../lib/publisher/hexo');
 var path = require('path');
 
