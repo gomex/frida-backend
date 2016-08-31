@@ -47,14 +47,11 @@ describe('tabloid', () => {
 
       beforeEach(() => {
         publisherNews.getData.restore();
-        sandbox.stub(publisherNews, 'getData', function(news) {
-          var obj = {};
-          obj[news1.metadata.title] = newsData1;
-          obj[news2.metadata.title] = newsData2;
-          obj[news3.metadata.title] = newsData3;
 
-          return obj[news.metadata.title];
-        });
+        var stub = sandbox.stub(publisherNews, 'getData');
+        stub.withArgs(news1).returns(newsData1);
+        stub.withArgs(news2).returns(newsData2);
+        stub.withArgs(news3).returns(newsData3);
       });
 
       it('generates areas', () => {

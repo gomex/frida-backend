@@ -26,12 +26,9 @@ describe('post', () => {
     });
 
     beforeEach(() => {
-      sandbox.stub(publisherNews, 'getData', function(news) {
-        var map = {};
-        map[news.metadata.title] = newsData;
-        map[otherNews.metadata.title] = otherNewsData;
-        return map[news.metadata.title];
-      });
+      var stub = sandbox.stub(publisherNews, 'getData');
+      stub.withArgs(news).returns(newsData);
+      stub.withArgs(otherNews).returns(otherNewsData);
     });
 
     it('exists', () => {
