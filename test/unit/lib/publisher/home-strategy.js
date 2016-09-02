@@ -74,8 +74,6 @@ describe('home-strategy', function() {
             expect(home.advertising_03, 'advertising_03').to.exist;
             expect(home.advertising_04, 'advertising_04').to.exist;
             expect(home.advertising_05, 'advertising_05').to.exist;
-            expect(home.advertising_06, 'advertising_06').to.exist;
-
             done(err);
           });
         });
