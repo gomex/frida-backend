@@ -42,25 +42,59 @@ describe('queryBuilder', () => {
       it('returns', () => {
         expect(build).to.eql(query);
       });
+
+      describe('when has more status', () => {
+        given('params', () => ({
+          status: [
+            'draft',
+            'published'
+          ]
+        }));
+
+        given('query', () => ({
+          $or: [
+            {'status': 'draft'},
+            {'status': 'published'}
+          ]
+        }));
+
+        it('returns', () => {
+          expect(build).to.eql(query);
+        });
+      });
     });
 
-    describe('when has more status', () => {
+    describe('with layout', () => {
       given('params', () => ({
-        status: [
-          'draft',
-          'published'
-        ]
+        layouts: 'draft'
       }));
 
       given('query', () => ({
-        $or: [
-          {'status': 'draft'},
-          {'status': 'published'}
-        ]
+        'metadata.layout': 'draft'
       }));
 
       it('returns', () => {
         expect(build).to.eql(query);
+      });
+
+      describe('when has more layout', () => {
+        given('params', () => ({
+          layouts: [
+            'post',
+            'column'
+          ]
+        }));
+
+        given('query', () => ({
+          $or: [
+            {'metadata.layout': 'post'},
+            {'metadata.layout': 'column'}
+          ]
+        }));
+
+        it('returns', () => {
+          expect(build).to.eql(query);
+        });
       });
     });
   });
