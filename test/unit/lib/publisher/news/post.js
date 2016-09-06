@@ -1,10 +1,10 @@
 /*eslint no-undef: "off"*/
 
 var publisherNews = require('../../../../../lib/publisher/news');
-var factory = require('../../../../factories/news-attributes').news;
+var factory = require('../../../../factories/post-attributes').post;
 var publisherPost = require('../../../../../lib/publisher/news/post');
 
-describe.only('lib/publisher/news/post.js', () => {
+describe('lib/publisher/news/post.js', () => {
   describe('getData', () => {
     subj('getData', () => publisherPost.getData(news));
 
@@ -59,9 +59,43 @@ describe.only('lib/publisher/news/post.js', () => {
         getDataStub.withArgs(relatedNews).returns(relatedNewsData);
       });
 
-      it('delegates to publisherNews', () => {
+      it('sets related_news', () => {
         expect(getData.related_news).to.eql([relatedNewsData]);
       });
+    });
+  });
+
+  describe('getDataToList', () => {
+    subj('getDataToList', () => publisherPost.getDataToList(post));
+
+    given('post', () => factory.build());
+    given('dataPost', () => ({
+      foo: 'bar',
+      related_news: []
+    }));
+    given('expected', () => ({
+      foo: 'bar'
+    }));
+
+    beforeEach(() => {
+      sandbox.stub(publisherNews, 'getData').returns(dataPost);
+    });
+
+    it('exists', () => {
+      expect(publisherPost.getDataToList).to.exist;
+    });
+
+    it('delegates to publisherNews', () => {
+      getDataToList;
+      expect(publisherNews.getData).to.have.been.calledWith(post);
+    });
+
+    it('removes related_news', () => {
+      expect(getDataToList).to.not.have.property('related_news');
+    });
+
+    it('returns data', () => {
+      expect(getDataToList).to.eql(expected);
     });
   });
 });

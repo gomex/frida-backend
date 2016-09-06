@@ -9,7 +9,10 @@ describe('news', () => {
     subj('getData', () => publisherNews.getData(news));
 
     given('metadata', () => metadataFactory.build());
-    given('news', () => factory.build({published_at: new Date(), metadata: metadata}));
+    given('news', () => factory.build({
+      published_at: new Date(),
+      metadata: metadata
+    }));
 
     given('expectedData', () => ({
       layout: news.metadata.layout,
