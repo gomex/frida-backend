@@ -80,6 +80,41 @@ describe('publisher', function() {
           done(err);
         });
       });
+
+      describe('when news does NOT have tags', function() {
+        it('doesn\'t update radio area data file', function(done){
+          subject(news, function(err) {
+            expect(hexo.updateAreaPage).to.not.have.been.calledWith('radio');
+            done(err);
+          });
+        });
+      });
+
+      describe('when news does NOT have RADIO in tags', function() {
+        beforeEach(() => {
+          news.metadata.tags = ['hex', 'drugs', 'rock and roll'];
+        });
+
+        it('doesn\'t update radio area data file', function(done){
+          subject(news, function(err) {
+            expect(hexo.updateAreaPage).to.not.have.been.calledWith('radio');
+            done(err);
+          });
+        });
+      });
+
+      describe('when news HAS radio in tags', function() {
+        beforeEach(() => {
+          news.metadata.tags = ['hex', 'drugs', 'rádio'];
+        });
+
+        it('updates radio area data file', function(done){
+          subject(news, function(err) {
+            expect(hexo.updateAreaPage).to.have.been.calledWith('radio');
+            done(err);
+          });
+        });
+      });
     });
 
     describe('when news is already published', function() {
@@ -384,6 +419,41 @@ describe('publisher', function() {
         expect(hexo.updateHomePage).to.have.been.called;
 
         done(err);
+      });
+    });
+
+    describe('when news does NOT have tags', function() {
+      it('doesn\'t update radio area data file', function(done){
+        subject(news, function(err) {
+          expect(hexo.updateAreaPage).to.not.have.been.calledWith('radio');
+          done(err);
+        });
+      });
+    });
+
+    describe('when news does NOT have RADIO in tags', function() {
+      beforeEach(() => {
+        news.metadata.tags = ['hex', 'drugs', 'rock and roll'];
+      });
+
+      it('doesn\'t update radio area data file', function(done){
+        subject(news, function(err) {
+          expect(hexo.updateAreaPage).to.not.have.been.calledWith('radio');
+          done(err);
+        });
+      });
+    });
+
+    describe('when news HAS radio in tags', function() {
+      beforeEach(() => {
+        news.metadata.tags = ['hex', 'drugs', 'radio'];
+      });
+
+      it('updates radio area data file', function(done){
+        subject(news, function(err) {
+          expect(hexo.updateAreaPage).to.have.been.calledWith('radio');
+          done(err);
+        });
       });
     });
 

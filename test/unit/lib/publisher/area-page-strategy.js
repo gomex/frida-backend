@@ -104,6 +104,76 @@ describe('area-page-strategy', function() {
         });
       });
 
+      describe('when there\'s no news tagged with radio', function() {
+        it('radio page data has layout "news_list", but no data', function(done) {
+
+          areaPageStrategy.buildPageData('radio', function(err, areaPageData) {
+            if(err) return done(err);
+
+            expect(areaPageData[0].layout).to.equal('news_list');
+            expect(areaPageData[0].area).to.equal('rádio');
+            expect(areaPageData[0].news).to.be.empty;
+
+            done();
+          });
+        });
+      });
+
+      describe('when there\'s news tagged with radio', function() {
+        var lastNews = [];
+
+        beforeEach(function(done) {
+          var metadata = metadataFactory.build({
+            url: '2016/03/news-radio-' + Date.now(),
+            tags: ['hex', 'durgs', 'rádio', 'rock n roll']
+          });
+
+          var news = newsFactory.build({
+            metadata: metadata,
+            published_at: new Date(),
+            updated_at: new Date(),
+            status: 'published'
+          });
+
+          lastNews = [];
+          for(var i = 0; i < 20; i++) {
+            lastNews.push(news);
+          }
+          News.create(lastNews, done);
+        });
+
+        it('radio page data has layout "news_list", and a simplified version of the last 20 published news tagged with radio', function(done) {
+
+          areaPageStrategy.buildPageData('radio', function(err, areaPageData) {
+            if(err) return done(err);
+
+            var simplifiedNews = _.map(lastNews, function(item) {
+              return {
+                cover: {
+                  url: item.metadata.cover.link,
+                  small: item.metadata.cover.small,
+                  medium: item.metadata.cover.medium,
+                  credits: item.metadata.cover.credits,
+                  subtitle: item.metadata.cover.subtitle
+                },
+                title: item.metadata.title,
+                description: item.metadata.description,
+                path: item.metadata.url,
+                date: item.published_at,
+                author: item.metadata.author,
+                updated_at: item.updated_at
+              };
+            });
+
+            expect(areaPageData[0].layout).to.equal('news_list');
+            expect(areaPageData[0].area).to.equal('rádio');
+            expect(areaPageData[0].news).to.eql(simplifiedNews);
+
+            done();
+          });
+        });
+      });
+
       describe('area field is a readable version of the area identifier', function() {
         it('direitos_humanos becomes "direitos humanos"', function(done) {
           areaPageStrategy.buildPageData('direitos_humanos', function(err, areaPageData) {
