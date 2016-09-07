@@ -119,13 +119,13 @@ describe('area-page-strategy', function() {
         });
       });
 
-      describe('when there\'s news tagged with radio', function() {
+      describe('when there\'s news tagged with radioagencia', function() {
         var lastNews = [];
 
         beforeEach(function(done) {
           var metadata = metadataFactory.build({
             url: '2016/03/news-radio-' + Date.now(),
-            tags: ['hex', 'durgs', 'rádio', 'rock n roll']
+            tags: ['hex', 'durgs', 'radioagência', 'rock n roll']
           });
 
           var news = newsFactory.build({
