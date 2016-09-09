@@ -104,7 +104,7 @@ describe('area-page-strategy', function() {
         });
       });
 
-      describe('when there\'s no news tagged with radio', function() {
+      describe('when there\'s no news tagged with radioagencia', function() {
         it('radio page data has layout "news_list", but no data', function(done) {
 
           areaPageStrategy.buildPageData('radio', function(err, areaPageData) {
@@ -124,12 +124,12 @@ describe('area-page-strategy', function() {
 
         beforeEach(function(done) {
           var metadata = metadataFactory.build({
-            url: '2016/03/news-radio-' + Date.now(),
-            tags: ['hex', 'durgs', 'radioagência', 'rock n roll']
+            url: '2016/03/news-radio-' + Date.now()
           });
 
           var news = newsFactory.build({
             metadata: metadata,
+            tags: ['hex', 'durgs', 'radioagência', 'rock n roll'],
             published_at: new Date(),
             updated_at: new Date(),
             status: 'published'
@@ -142,7 +142,7 @@ describe('area-page-strategy', function() {
           News.create(lastNews, done);
         });
 
-        it('radio page data has layout "news_list", and a simplified version of the last 20 published news tagged with radio', function(done) {
+        it('radio page data has layout "news_list", and a simplified version of the last 20 published news tagged with radioagencia', function(done) {
 
           areaPageStrategy.buildPageData('radio', function(err, areaPageData) {
             if(err) return done(err);
