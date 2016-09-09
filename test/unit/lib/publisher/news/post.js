@@ -64,38 +64,4 @@ describe('lib/publisher/news/post.js', () => {
       });
     });
   });
-
-  describe('getDataToList', () => {
-    subj('getDataToList', () => publisherPost.getDataToList(post));
-
-    given('post', () => factory.build());
-    given('dataPost', () => ({
-      foo: 'bar',
-      related_news: []
-    }));
-    given('expected', () => ({
-      foo: 'bar'
-    }));
-
-    beforeEach(() => {
-      sandbox.stub(publisherNews, 'getData').returns(dataPost);
-    });
-
-    it('exists', () => {
-      expect(publisherPost.getDataToList).to.exist;
-    });
-
-    it('delegates to publisherNews', () => {
-      getDataToList;
-      expect(publisherNews.getData).to.have.been.calledWith(post);
-    });
-
-    it('removes related_news', () => {
-      expect(getDataToList).to.not.have.property('related_news');
-    });
-
-    it('returns data', () => {
-      expect(getDataToList).to.eql(expected);
-    });
-  });
 });

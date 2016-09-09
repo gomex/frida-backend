@@ -53,6 +53,5 @@ describe('news', () => {
         expect(getData.cover).to.not.exist;
       });
     });
-
   });
 });
