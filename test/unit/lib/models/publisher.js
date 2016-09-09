@@ -5,11 +5,13 @@ var _ = require('lodash');
 var publisher = require('../../../../lib/models/publisher');
 var News = require('../../../../lib/models/news');
 var tabloids = require('../../../../lib/models/news/tabloids');
+var photoCaptions = require('../../../../lib/models/photo-caption');
 var hexo = require('../../../../lib/publisher/hexo');
 var newsFactory = require('../../../factories/news-attributes').news;
 var metadataFactory = require('../../../factories/news-attributes').metadata;
 var tabloidFactory = require('../../../factories/tabloid-attributes').tabloid;
 var tabloidNewsFactory = require('../../../factories/tabloid-news-attributes').tabloid;
+var photoCaptionFactory = require('../../../factories/photo-caption-attributes').photoCaption;
 
 describe('publisher', function() {
   describe('.publish', function() {
@@ -268,6 +270,37 @@ describe('publisher', function() {
         it('does not publishes tabloid', (done) => {
           subject(tabloidNews, (err) => {
             expect(hexo.publish).to.not.have.been.calledWith(aTabloid);
+
+            done(err);
+          });
+        });
+      });
+    });
+
+    describe('when is a photo_caption', () => {
+      given('photoCaption', () => new News(photoCaptionFactory.build({
+        status: 'draft'
+      })));
+
+      given('list', () => ['foo', 'bar']);
+
+      describe('republishes photo-caption list', () => {
+        beforeEach(() => {
+          sandbox.stub(photoCaptions, 'find').yields(null, list);
+          sandbox.stub(hexo, 'publishList').yields(null);
+        });
+
+        it('searches list', (done) => {
+          subject(photoCaption, (err) => {
+            expect(photoCaptions.find).to.have.been.called;
+
+            done(err);
+          });
+        });
+
+        it('publishes list', (done) => {
+          subject(photoCaption, (err) => {
+            expect(hexo.publishList).to.have.been.calledWith(list);
 
             done(err);
           });
