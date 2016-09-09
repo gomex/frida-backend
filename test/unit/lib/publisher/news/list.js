@@ -20,8 +20,8 @@ describe('lib/models/news/list.js', () => {
       expect(getData.layout).to.eql('photo_caption_list');
     });
 
-    it('sets news', () => {
-      expect(getData.news).to.eql([newsData, newsData]);
+    it('sets list', () => {
+      expect(getData.list).to.eql([newsData, newsData]);
     });
 
     it('sets area', () => {
