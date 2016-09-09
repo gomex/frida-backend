@@ -286,13 +286,13 @@ describe('publisher', function() {
 
       describe('republishes photo-caption list', () => {
         beforeEach(() => {
-          sandbox.stub(photoCaptions, 'find').yields(null, list);
+          sandbox.stub(photoCaptions, 'getList').yields(null, list);
           sandbox.stub(hexo, 'publishList').yields(null);
         });
 
         it('searches list', (done) => {
           subject(photoCaption, (err) => {
-            expect(photoCaptions.find).to.have.been.called;
+            expect(photoCaptions.getList).to.have.been.called;
 
             done(err);
           });

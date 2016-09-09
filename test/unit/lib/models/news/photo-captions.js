@@ -2,8 +2,8 @@ var photoCaption = require('../../../../../lib/models/news/photo-captions');
 var News = require('../../../../../lib/models/news');
 
 describe('photoCaption', () => {
-  describe('.find', () => {
-    var subject = (callback) => photoCaption.find(callback);
+  describe('.getList', () => {
+    var subject = (callback) => photoCaption.getList(callback);
 
     var criteria = {
       'metadata.layout': 'photo_caption',
