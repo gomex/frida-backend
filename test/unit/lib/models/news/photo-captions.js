@@ -1,5 +1,5 @@
-var photoCaption = require('../../../../lib/models/photo-caption');
-var News = require('../../../../lib/models/news');
+var photoCaption = require('../../../../../lib/models/news/photo-captions');
+var News = require('../../../../../lib/models/news');
 
 describe('photoCaption', () => {
   describe('.find', () => {
