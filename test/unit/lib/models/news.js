@@ -3,6 +3,9 @@
 var News = require('../../../../lib/models/news');
 var newsFactory = require('../../../factories/news-attributes').news;
 var metadataFactory     = require('../../../factories/news-attributes').metadata;
+var advertisingFactory = require('../../../factories/advertising-attributes').advertising;
+var advertisingMetadataFactory = require('../../../factories/advertising-attributes').metadata;
+
 
 describe('news', () => {
   var behaviourAsIsLayout = (name, layout) => {
@@ -76,6 +79,30 @@ describe('news', () => {
 
   describe('#isChanged', () => {
     behaviourAsIsStatus('isChanged', 'changed');
+  });
+
+  describe('#isInNewsAdvertising', () => {
+    describe('when news is NOT and advertisement', () => {
+      given('news', () => new News(newsFactory.build()));
+      it('is false', () => {
+        expect(news.isInNewsAdvertising()).to.be.false;
+      });
+    });
+
+    describe('when news is a home page advertisement', () => {
+      given('news', () => new News(advertisingFactory.build()));
+      it('is false', () => {
+        expect(news.isInNewsAdvertising()).to.be.false;
+      });
+    });
+
+    describe('when news is an in-news advertisement', () => {
+      given('metadata', () => advertisingMetadataFactory.build({display_area: 'advertising_06'}));
+      given('news', () => new News(advertisingFactory.build({metadata: metadata})));
+      it('is true', () => {
+        expect(news.isInNewsAdvertising()).to.be.true;
+      });
+    });
   });
 
   describe('#updateSanitized', () => {

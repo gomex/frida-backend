@@ -9,6 +9,7 @@ var metadata = new Factory()
 var advertising = new Factory()
   .attr('metadata', function() { return metadata.build(); })
   .attr('link', function() { return faker.internet.url(); })
-  .attr('image', function() { return faker.internet.url; });
+  .attr('image', function() { return faker.internet.url(); });
 
 module.exports.advertising = advertising;
+module.exports.metadata = metadata;

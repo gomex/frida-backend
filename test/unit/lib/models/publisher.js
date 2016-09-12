@@ -12,6 +12,8 @@ var metadataFactory = require('../../../factories/news-attributes').metadata;
 var tabloidFactory = require('../../../factories/tabloid-attributes').tabloid;
 var tabloidNewsFactory = require('../../../factories/tabloid-news-attributes').tabloid;
 var photoCaptionFactory = require('../../../factories/photo-caption-attributes').photoCaption;
+var advertisingFactory = require('../../../factories/advertising-attributes').advertising;
+var advertisingMetadataFactory = require('../../../factories/advertising-attributes').metadata;
 
 describe('publisher', function() {
   describe('.publish', function() {
@@ -307,6 +309,35 @@ describe('publisher', function() {
         });
       });
     });
+
+    describe('when is an advertisement', () => {
+      beforeEach(() => {
+        sandbox.stub(hexo, 'updateAdvertisingData').yields(null);
+      });
+
+      describe('but is NOT an in-news advertisement', () => {
+        given('news', () => new News(advertisingFactory.build({status: 'draft'})));
+
+        it('does NOT update advertising data file', function(done){
+          subject(news, function(err) {
+            expect(hexo.updateAdvertisingData).to.not.have.been.called;
+            done(err);
+          });
+        });
+      });
+
+      describe('and is publishing in-news advertisement', () => {
+        given('metadata', () => advertisingMetadataFactory.build({display_area: 'advertising_06'}));
+        given('news', () => new News(advertisingFactory.build({status: 'draft', metadata: metadata})));
+
+        it('updates advertising data file', function(done){
+          subject(news, function(err) {
+            expect(hexo.updateAdvertisingData).to.have.been.calledWith(news);
+            done(err);
+          });
+        });
+      });
+    });
   });
 
   describe('.remove', function() {
@@ -473,6 +504,35 @@ describe('publisher', function() {
           subject(tabloidNews, (err) => {
             expect(hexo.publish).to.not.have.been.calledWith(aTabloid);
 
+            done(err);
+          });
+        });
+      });
+    });
+
+    describe('when is an advertisement', () => {
+      beforeEach(() => {
+        sandbox.stub(hexo, 'updateAdvertisingData').yields(null);
+      });
+
+      describe('but is NOT an in-news advertisement', () => {
+        given('news', () => new News(advertisingFactory.build({status: 'published'})));
+
+        it('does NOT update advertising data file', function(done){
+          subject(news, function(err) {
+            expect(hexo.updateAdvertisingData).to.not.have.been.called;
+            done(err);
+          });
+        });
+      });
+
+      describe('and is publishing in-news advertisement', () => {
+        given('metadata', () => advertisingMetadataFactory.build({display_area: 'advertising_06'}));
+        given('news', () => new News(advertisingFactory.build({status: 'published', metadata: metadata})));
+
+        it('updates advertising data file', function(done){
+          subject(news, function(err) {
+            expect(hexo.updateAdvertisingData).to.have.been.calledWith(news);
             done(err);
           });
         });

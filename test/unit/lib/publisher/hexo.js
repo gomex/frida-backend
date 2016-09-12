@@ -3,13 +3,17 @@
 var fs = require('fs');
 var grayMatter = require('gray-matter');
 var moment = require('moment');
+var YAML = require('js-yaml');
 
 var newsFactory = require('../../../factories/news-attributes').news;
 var tabloidFactory = require('../../../factories/tabloid-attributes').tabloid;
+var advertisingFactory = require('../../../factories/advertising-attributes').advertising;
 var tabloidMetadataFactory = require('../../../factories/tabloid-attributes').metadata;
 var newsMetadataFactory = require('../../../factories/news-attributes').metadata;
+var advertisingMetadataFactory = require('../../../factories/advertising-attributes').metadata;
 var newsPublisher = require('../../../../lib/publisher/news');
 var tabloidPublisher = require('../../../../lib/publisher/news/tabloid');
+var News = require('../../../../lib/models/news');
 var hexo = require('../../../../lib/publisher/hexo');
 var path = require('path');
 
@@ -200,6 +204,68 @@ describe('hexo', function() {
         assert.notEqual(homePageData.data, null);
 
         done();
+      });
+    });
+  });
+
+  describe('updateAdvertisingData', function() {
+    given('metadata', () => advertisingMetadataFactory.build({display_area: 'advertising_06'}));
+    given('expectedDataDir', () => path.join(process.env.HEXO_SOURCE_PATH, '_data'));
+    given('expectedPath', () => path.join(expectedDataDir, 'advertisings.yml'));
+
+    beforeEach(function() {
+      if (!fs.existsSync(expectedDataDir)){
+        fs.mkdirSync(expectedDataDir);
+      }
+    });
+
+    describe('when in-news advertising is beig unpublished', function() {
+      given('news', () => new News(advertisingFactory.build({status: 'changed', metadata: metadata})));
+
+      it('creates advertising yaml file in the configured hexo data folder', function(done) {
+        try { fs.unlinkSync(expectedPath); } catch(e) { /* ignore */ }
+
+        hexo.updateAdvertisingData(news, function() {
+          assert.ok(fs.existsSync(expectedPath));
+          done();
+        });
+      });
+
+      it('advertising data file is empty yaml', function(done) {
+        try { fs.unlinkSync(expectedPath); } catch(e) { /* ignore */ }
+        var expectedYaml = '';
+        hexo.updateAdvertisingData(news, function() {
+          var writtenYaml = fs.readFileSync(expectedPath, 'utf8');
+          assert.equal(writtenYaml, expectedYaml);
+          done();
+        });
+      });
+    });
+
+    describe('when in-news advertising is beig published', function() {
+      given('news', () => new News(advertisingFactory.build({status: 'published', metadata: metadata})));
+
+      it('creates advertising yaml file in the configured hexo data folder', function(done) {
+        try { fs.unlinkSync(expectedPath); } catch(e) { /* ignore */ }
+
+        hexo.updateAdvertisingData(news, function() {
+          assert.ok(fs.existsSync(expectedPath));
+          done();
+        });
+      });
+
+      it('advertising data file has yaml for advertising', function(done) {
+        try { fs.unlinkSync(expectedPath); } catch(e) { /* ignore */ }
+
+        hexo.updateAdvertisingData(news, function() {
+          var writtenYaml = YAML.safeLoad(fs.readFileSync(expectedPath, 'utf8'));
+          var writtenDataList = Object.keys(writtenYaml);
+
+          expect(writtenDataList).to.have.lengthOf(1);
+          expect(writtenYaml[writtenDataList[0]]).to.have.all.keys('title', 'image', 'link');
+
+          done();
+        });
       });
     });
   });
