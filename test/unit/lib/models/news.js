@@ -176,5 +176,19 @@ describe('news', () => {
         });
       });
     });
+
+    describe('when there is a empty value on related_news', () => {
+      given('attributes', () => ({
+        related_news: ['', 'some_id']
+      }));
+
+      it('it saves as null', (done) => {
+        subject((err) => {
+          assert(news.related_news, 'null', 'some_id');
+
+          done(err);
+        });
+      });
+    });
   });
 });
