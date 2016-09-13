@@ -5,13 +5,13 @@ var grayMatter = require('gray-matter');
 var moment = require('moment');
 var YAML = require('js-yaml');
 
-var newsFactory = require('../../../factories/news-attributes').news;
+var postFactory = require('../../../factories/post-attributes').post;
 var tabloidFactory = require('../../../factories/tabloid-attributes').tabloid;
 var advertisingFactory = require('../../../factories/advertising-attributes').advertising;
 var tabloidMetadataFactory = require('../../../factories/tabloid-attributes').metadata;
 var newsMetadataFactory = require('../../../factories/news-attributes').metadata;
 var advertisingMetadataFactory = require('../../../factories/advertising-attributes').metadata;
-var newsPublisher = require('../../../../lib/publisher/news');
+var postPublisher = require('../../../../lib/publisher/presenters/post');
 var tabloidPublisher = require('../../../../lib/publisher/news/tabloid');
 var News = require('../../../../lib/models/news');
 var hexo = require('../../../../lib/publisher/hexo');
@@ -22,7 +22,7 @@ describe('hexo', function() {
   describe('unpublish', function() {
     var subject = function(callback) { return hexo.unpublish(news, callback); };
 
-    given('news', () => newsFactory.build({
+    given('news', () => postFactory.build({
       published_at: new Date(),
       metadata: newsMetadataFactory.build({url: 'url'})
     }));
@@ -68,16 +68,16 @@ describe('hexo', function() {
     var subject = function(callback) { return hexo.publish(news, callback); };
 
     given('metadata', () => newsMetadataFactory.build({url: 'url'}));
-    given('news', () => newsFactory.build({published_at: new Date(), metadata: metadata}));
+    given('news', () => postFactory.build({published_at: new Date(), metadata: metadata}));
 
     describe('', () => {
       beforeEach(function() {
-        sandbox.spy(newsPublisher, 'getData');
+        sandbox.spy(postPublisher, 'getData');
       });
 
       it('gets news data', function(done) {
         subject(function(err) {
-          expect(newsPublisher.getData).to.have.been.called;
+          expect(postPublisher.getData).to.have.been.called;
 
           done(err);
         });
