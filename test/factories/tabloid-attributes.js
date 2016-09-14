@@ -12,7 +12,6 @@ var tabloid = new Factory()
   .attr('body', function() { return faker.lorem.paragraphs(); })
   .attr('issuu', function() { return faker.internet.url(); })
   .attr('edition', function() { return faker.lorem.word(); })
-  .attr('regional_area', function() { return faker.lorem.word(); })
   .attr('metadata', function() { return metadata.build(); });
 
 module.exports.metadata = metadata;

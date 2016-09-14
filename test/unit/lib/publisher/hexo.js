@@ -12,7 +12,7 @@ var tabloidMetadataFactory = require('../../../factories/tabloid-attributes').me
 var newsMetadataFactory = require('../../../factories/news-attributes').metadata;
 var advertisingMetadataFactory = require('../../../factories/advertising-attributes').metadata;
 var postPublisher = require('../../../../lib/publisher/presenters/post');
-var tabloidPublisher = require('../../../../lib/publisher/news/tabloid');
+var tabloidPresenter = require('../../../../lib/publisher/presenters/tabloid');
 var News = require('../../../../lib/models/news');
 var hexo = require('../../../../lib/publisher/hexo');
 var path = require('path');
@@ -102,12 +102,12 @@ describe('hexo', function() {
       given('metadata', () => tabloidMetadataFactory.build({url: 'url'}));
 
       beforeEach(function() {
-        sandbox.spy(tabloidPublisher, 'getData');
+        sandbox.spy(tabloidPresenter, 'getData');
       });
 
       it('gets news data', function(done) {
         subject(function(err) {
-          expect(tabloidPublisher.getData).to.have.been.called;
+          expect(tabloidPresenter.getData).to.have.been.called;
 
           done(err);
         });

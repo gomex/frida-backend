@@ -5,7 +5,9 @@ var factory = require('../../../../factories/post-attributes').post;
 var metadataFactory = require('../../../../factories/post-attributes').metadata;
 
 describe('lib/publisher/presenters/post.js', () => {
-  given('metadata', () => metadataFactory.build());
+  given('metadata', () => metadataFactory.build({
+    url: 'some_url'
+  }));
   given('post', () => factory.build({
     metadata: metadata,
     url: 'some_url',
