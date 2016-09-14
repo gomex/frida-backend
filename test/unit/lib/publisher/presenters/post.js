@@ -1,6 +1,7 @@
 /*eslint no-undef: "off"*/
 
 var presenter = require('../../../../../lib/publisher/presenters/post');
+var coverPresenter = require('../../../../../lib/publisher/presenters/cover');
 var factory = require('../../../../factories/post-attributes').post;
 var metadataFactory = require('../../../../factories/post-attributes').metadata;
 
@@ -15,6 +16,10 @@ describe('lib/publisher/presenters/post.js', () => {
     other_news: [],
     related_news: []
   }));
+
+  beforeEach(() => {
+    sandbox.spy(coverPresenter, 'getData');
+  });
 
   describe('getData', () => {
     subj('getData', () => presenter.getData(post));
@@ -34,15 +39,7 @@ describe('lib/publisher/presenters/post.js', () => {
       published_at: post.published_at,
       other_news: post.other_news,
       related_news: post.related_news,
-      cover: {
-        link: post.metadata.cover.link,
-        thumbnail: post.metadata.cover.thumbnail,
-        medium: post.metadata.cover.medium,
-        small: post.metadata.cover.small,
-        title: post.metadata.cover.title,
-        credits: post.metadata.cover.credits,
-        subtitle: post.metadata.cover.subtitle
-      }
+      cover: post.metadata.cover
     }));
 
     it('exists', () => {
@@ -53,14 +50,9 @@ describe('lib/publisher/presenters/post.js', () => {
       expect(getData).to.eql(expectedData);
     });
 
-    describe('when there is no cover', () => {
-      beforeEach(() => {
-        delete post.metadata.cover;
-      });
-
-      it('does not exist on data', () => {
-        expect(getData.cover).to.not.exist;
-      });
+    it('calls cover presenter', () => {
+      getData;
+      expect(coverPresenter.getData).to.have.been.calledWith(post);
     });
 
     describe('when there is other_news', () => {
@@ -115,15 +107,7 @@ describe('lib/publisher/presenters/post.js', () => {
       url: post.metadata.url,
       date: post.published_at,
       published_at: post.published_at,
-      cover: {
-        link: post.metadata.cover.link,
-        thumbnail: post.metadata.cover.thumbnail,
-        medium: post.metadata.cover.medium,
-        small: post.metadata.cover.small,
-        title: post.metadata.cover.title,
-        credits: post.metadata.cover.credits,
-        subtitle: post.metadata.cover.subtitle
-      }
+      cover: post.metadata.cover
     }));
 
     it('exists', () => {
@@ -134,14 +118,9 @@ describe('lib/publisher/presenters/post.js', () => {
       expect(getListData).to.eql(expectedData);
     });
 
-    describe('when there is no cover', () => {
-      beforeEach(() => {
-        delete post.metadata.cover;
-      });
-
-      it('does not exist on data', () => {
-        expect(getListData.cover).to.not.exist;
-      });
+    it('calls cover presenter', () => {
+      getListData;
+      expect(coverPresenter.getData).to.have.been.calledWith(post);
     });
   });
 });

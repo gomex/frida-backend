@@ -2,6 +2,7 @@
 
 var presenter = require('../../../../../lib/publisher/presenters/tabloid');
 var postPresenter = require('../../../../../lib/publisher/presenters/post');
+var coverPresenter = require('../../../../../lib/publisher/presenters/cover');
 var factory = require('../../../../factories/tabloid-attributes').tabloid;
 var metadataFactory = require('../../../../factories/tabloid-attributes').metadata;
 var tabloidNewsFactory = require('../../../../factories/tabloid-news-attributes').tabloid;
@@ -32,12 +33,21 @@ describe('lib/publisher/presenters/tabloid.js', () => {
       areas: []
     }));
 
+    beforeEach(() => {
+      sandbox.stub(coverPresenter, 'getData');
+    });
+
     it('exists', () => {
       expect(presenter.getData).to.exist;
     });
 
     it('returns data', () => {
       expect(getData).to.eql(expectedData);
+    });
+
+    it('calls cover presenter', () => {
+      getData;
+      expect(coverPresenter.getData).to.have.been.calledWith(tabloid);
     });
 
     describe('with news', () => {
