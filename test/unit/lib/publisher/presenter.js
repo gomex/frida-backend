@@ -9,6 +9,8 @@ var tabloidPresenter = require('../../../../lib/publisher/presenters/tabloid');
 var columnFactory = require ('../../../factories/column-attributes').column;
 var columnPresenter = require('../../../../lib/publisher/presenters/column');
 var newsPublisher = require('../../../../lib/publisher/news');
+var tabloidNewsFactory = require ('../../../factories/tabloid-news-attributes').tabloid;
+var tabloidNewsPresenter = require('../../../../lib/publisher/presenters/tabloid-news');
 
 describe('lib/publisher/presenter.js', () => {
   describe('of', () => {
@@ -33,6 +35,15 @@ describe('lib/publisher/presenter.js', () => {
         expect(of).to.equals(tabloidPresenter);
       });
     });
+
+    describe.only('when is tabloidNews', () => {
+      given('news', () => new News(tabloidNewsFactory.build()));
+
+      it('returns tabloidNews presenter', () => {
+        expect(of).to.equals(tabloidNewsPresenter);
+      });
+    });
+
 
     describe('when is column', () => {
       given('news', () => new News(columnFactory.build()));
