@@ -73,6 +73,14 @@ describe('lib/publisher/presenters/post.js', () => {
       it('returns other_news data', () => {
         expect(getData.other_news).to.eql([otherNewsData]);
       });
+
+      describe('when has null vaule', () => {
+        given('post', () => factory.build({other_news: [null, otherNews]}));
+
+        it('removes null', () => {
+          expect(getData.other_news).to.eql([otherNewsData]);
+        });
+      });
     });
 
     describe('when there is related_news', () => {
@@ -92,6 +100,14 @@ describe('lib/publisher/presenters/post.js', () => {
 
       it('returns related_news data', () => {
         expect(getData.related_news).to.eql([relatedNewsData]);
+      });
+
+      describe('when has null vaule', () => {
+        given('post', () => factory.build({related_news: [null, relatedNews]}));
+
+        it('removes null', () => {
+          expect(getData.related_news).to.eql([relatedNewsData]);
+        });
       });
     });
   });

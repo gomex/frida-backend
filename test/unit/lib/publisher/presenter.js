@@ -36,7 +36,7 @@ describe('lib/publisher/presenter.js', () => {
       });
     });
 
-    describe.only('when is tabloidNews', () => {
+    describe('when is tabloidNews', () => {
       given('news', () => new News(tabloidNewsFactory.build()));
 
       it('returns tabloidNews presenter', () => {
