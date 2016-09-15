@@ -26,10 +26,8 @@ describe('lib/publisher/presenters/column.js', () => {
       layout: column.metadata.layout,
       display_area: column.metadata.display_area,
       url: column.metadata.url,
-      hat: column.metadata.hat,
       title: column.metadata.title,
       description: column.metadata.description,
-      place: column.metadata.place,
       date: column.published_at,
       columnist: column.metadata.columnist,
       published_at: column.published_at,
@@ -55,7 +53,6 @@ describe('lib/publisher/presenters/column.js', () => {
 
     given('expectedData', () => ({
       title: column.metadata.title,
-      hat: column.metadata.hat,
       description: column.metadata.description,
       url: column.metadata.url,
       date: column.published_at,
