@@ -8,6 +8,7 @@ var tabloidFactory = require ('../../../factories/tabloid-attributes').tabloid;
 var tabloidPresenter = require('../../../../lib/publisher/presenters/tabloid');
 var columnFactory = require ('../../../factories/column-attributes').column;
 var columnPresenter = require('../../../../lib/publisher/presenters/column');
+var newsPublisher = require('../../../../lib/publisher/news');
 
 describe('lib/publisher/presenter.js', () => {
   describe('of', () => {
@@ -38,6 +39,16 @@ describe('lib/publisher/presenter.js', () => {
 
       it('returns column presenter', () => {
         expect(of).to.equals(columnPresenter);
+      });
+    });
+
+    describe('when has other layout', () => {
+      given('news', () => new News(postFactoty.build({
+        metadata: { layout: 'other_layout' }
+      })));
+
+      it('returns news presenter', () => {
+        expect(of).to.equals(newsPublisher);
       });
     });
   });

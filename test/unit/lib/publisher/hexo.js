@@ -6,13 +6,11 @@ var moment = require('moment');
 var YAML = require('js-yaml');
 
 var postFactory = require('../../../factories/post-attributes').post;
-var tabloidFactory = require('../../../factories/tabloid-attributes').tabloid;
 var advertisingFactory = require('../../../factories/advertising-attributes').advertising;
-var tabloidMetadataFactory = require('../../../factories/tabloid-attributes').metadata;
 var newsMetadataFactory = require('../../../factories/news-attributes').metadata;
 var advertisingMetadataFactory = require('../../../factories/advertising-attributes').metadata;
 var postPublisher = require('../../../../lib/publisher/presenters/post');
-var tabloidPresenter = require('../../../../lib/publisher/presenters/tabloid');
+var presenter = require('../../../../lib/publisher/presenter');
 var News = require('../../../../lib/models/news');
 var hexo = require('../../../../lib/publisher/hexo');
 var path = require('path');
@@ -68,7 +66,13 @@ describe('hexo', function() {
     var subject = function(callback) { return hexo.publish(news, callback); };
 
     given('metadata', () => newsMetadataFactory.build({url: 'url'}));
-    given('news', () => postFactory.build({published_at: new Date(), metadata: metadata}));
+    given('news', () => new News(postFactory.build({
+      published_at: new Date(), metadata: metadata
+    })));
+
+    beforeEach(function() {
+      sandbox.spy(presenter, 'of');
+    });
 
     describe('', () => {
       beforeEach(function() {
@@ -97,20 +101,11 @@ describe('hexo', function() {
       });
     });
 
-    describe('when is a tabloid', function() {
-      given('news', () => tabloidFactory.build({published_at: new Date(), metadata: metadata}));
-      given('metadata', () => tabloidMetadataFactory.build({url: 'url'}));
+    it('gets presenter for news', function(done) {
+      subject(function(err) {
+        expect(presenter.of).to.have.been.calledWith(news);
 
-      beforeEach(function() {
-        sandbox.spy(tabloidPresenter, 'getData');
-      });
-
-      it('gets news data', function(done) {
-        subject(function(err) {
-          expect(tabloidPresenter.getData).to.have.been.called;
-
-          done(err);
-        });
+        done(err);
       });
     });
   });
