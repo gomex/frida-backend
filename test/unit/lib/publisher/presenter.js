@@ -11,6 +11,8 @@ var columnPresenter = require('../../../../lib/publisher/presenters/column');
 var newsPublisher = require('../../../../lib/publisher/news');
 var tabloidNewsFactory = require ('../../../factories/tabloid-news-attributes').tabloid;
 var tabloidNewsPresenter = require('../../../../lib/publisher/presenters/tabloid-news');
+var photoCaptionFactory = require ('../../../factories/photo-caption-attributes').photoCaption;
+var photoCaptionPresenter = require('../../../../lib/publisher/presenters/photo-caption');
 var advertisingFactory = require ('../../../factories/advertising-attributes').advertising;
 var advertisingPresenter = require('../../../../lib/publisher/presenters/advertising');
 
@@ -59,6 +61,14 @@ describe('lib/publisher/presenter.js', () => {
 
       it('returns advertising presenter', () => {
         expect(of).to.equals(advertisingPresenter);
+      });
+    });
+
+    describe('when is photo caption', () => {
+      given('news', () => new News(photoCaptionFactory.build()));
+
+      it('returns advertising presenter', () => {
+        expect(of).to.equals(photoCaptionPresenter);
       });
     });
 
