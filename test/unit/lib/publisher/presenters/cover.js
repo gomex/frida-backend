@@ -42,5 +42,15 @@ describe('lib/publisher/presenters/cover.js', () => {
         expect(getData.cover).to.not.exist;
       });
     });
+
+    describe('when there is no link', () => {
+      beforeEach(() => {
+        delete post.metadata.cover.link;
+      });
+
+      it('does not exist on data', () => {
+        expect(getData.cover).to.not.exist;
+      });
+    });
   });
 });
