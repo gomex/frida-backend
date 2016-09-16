@@ -8,7 +8,6 @@ var tabloidFactory = require ('../../../factories/tabloid-attributes').tabloid;
 var tabloidPresenter = require('../../../../lib/publisher/presenters/tabloid');
 var columnFactory = require ('../../../factories/column-attributes').column;
 var columnPresenter = require('../../../../lib/publisher/presenters/column');
-var newsPublisher = require('../../../../lib/publisher/news');
 var tabloidNewsFactory = require ('../../../factories/tabloid-news-attributes').tabloid;
 var tabloidNewsPresenter = require('../../../../lib/publisher/presenters/tabloid-news');
 var photoCaptionFactory = require ('../../../factories/photo-caption-attributes').photoCaption;
@@ -77,8 +76,8 @@ describe('lib/publisher/presenter.js', () => {
         metadata: { layout: 'other_layout' }
       })));
 
-      it('returns news presenter', () => {
-        expect(of).to.equals(newsPublisher);
+      it('throws error', () => {
+        expect(() => of).to.throw(Error);
       });
     });
   });

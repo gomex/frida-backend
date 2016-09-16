@@ -1,7 +1,7 @@
 /*eslint no-undef: "off"*/
 
 var publisherList = require('../../../../../lib/publisher/news/list');
-var publisherNews = require('../../../../../lib/publisher/news');
+var photoCaptionPresenter = require('../../../../../lib/publisher/presenters/photo-caption');
 var newsFactory = require('../../../../factories/news-attributes').news;
 
 describe('lib/models/news/list.js', () => {
@@ -13,7 +13,7 @@ describe('lib/models/news/list.js', () => {
     given('newsData', () => ({foo: 'bar'}));
 
     beforeEach(() => {
-      sandbox.stub(publisherNews, 'getData').returns(newsData);
+      sandbox.stub(photoCaptionPresenter, 'getData').returns(newsData);
     });
 
     it('sets layout', () => {
