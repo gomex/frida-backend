@@ -469,7 +469,7 @@ describe('REST API:', function() {
             News.findById(photoCaptionId, function(err, result) {
               if(err) throw err;
               assert.equal(result.status, 'published');
-              assert.equal(fs.existsSync(hexoPaths.postsPath + newsYearMonthURL + photoCaptionId + '.md'), false);
+              assert.equal(fs.existsSync(hexoPaths.postsPath + newsYearMonthURL + photoCaptionId + '.md'), true);
               done();
             });
           });
