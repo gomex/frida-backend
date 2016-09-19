@@ -11,7 +11,6 @@ describe('lib/publisher/presenters/advertising.js', () => {
 
     given('expectedData', () => ({
       title: advertising.metadata.title,
-      layout: advertising.metadata.layout,
       link: advertising.link,
       image: advertising.image
     }));
