@@ -1,8 +1,8 @@
 /*eslint no-undef: "off"*/
 
-var publisherList = require('../../../../../lib/publisher/news/list');
-var photoCaptionPresenter = require('../../../../../lib/publisher/presenters/photo-caption');
-var newsFactory = require('../../../../factories/news-attributes').news;
+var publisherList = require('../../../../lib/publisher/photo-caption-list');
+var photoCaptionPresenter = require('../../../../lib/publisher/presenters/photo-caption');
+var newsFactory = require('../../../factories/news-attributes').news;
 
 describe('lib/models/news/list.js', () => {
   describe('getData', () => {
