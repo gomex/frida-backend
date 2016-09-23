@@ -128,7 +128,7 @@ describe('hexo', function() {
         expect(staticFiles.generate).to.have.been.calledWith('contato', 'static_contact');
         expect(staticFiles.generate).to.have.been.calledWith('mapa-do-site', 'static_sitemap');
         expect(staticFiles.generate).to.have.been.calledWith('publicidade', 'static_advertising');
-        expect(staticFiles.generate).to.have.been.calledWith('parceiros', 'partners');
+        expect(staticFiles.generate).to.have.been.calledWith('parceiros', 'static_partners');
 
         done(err);
       });
