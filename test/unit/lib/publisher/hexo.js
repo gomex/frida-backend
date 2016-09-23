@@ -124,9 +124,9 @@ describe('hexo', function() {
 
     it('generates files', (done) => {
       subject((err) => {
-        expect(staticFiles.generate).to.have.been.calledWith('quem_somos', 'static_about');
+        expect(staticFiles.generate).to.have.been.calledWith('quem-somos', 'static_about');
         expect(staticFiles.generate).to.have.been.calledWith('contato', 'static_contact');
-        expect(staticFiles.generate).to.have.been.calledWith('mapa_do_site', 'static_sitemap');
+        expect(staticFiles.generate).to.have.been.calledWith('mapa-do-site', 'static_sitemap');
         expect(staticFiles.generate).to.have.been.calledWith('publicidade', 'static_advertising');
         expect(staticFiles.generate).to.have.been.calledWith('parceiros', 'partners');
 
