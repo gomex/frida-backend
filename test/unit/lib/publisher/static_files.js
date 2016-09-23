@@ -4,7 +4,7 @@ var fs = require('fs');
 var grayMatter = require('gray-matter');
 var staticFiles = require('../../../../lib/publisher/static_files');
 
-describe.only('lib/publisher/static_files.js', () => {
+describe('lib/publisher/static_files.js', () => {
   describe('.generate', () => {
     var subject = (callback) => staticFiles.generate(name, layout, callback);
 
