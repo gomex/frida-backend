@@ -5,6 +5,8 @@
     "instances"  : 1,
     "merge_logs" : true,
     "node_args"  : "--harmony",
-    "log_date_format" : "YYYY-MM-DD HH:mm Z"
+    "log_date_format" : "YYYY-MM-DD HH:mm Z",
+    "out_file"  : "/var/log/pm2/pm2-out.log",
+    "error_file"  : "/var/log/pm2/pm2-err.log",
   }
 ]
