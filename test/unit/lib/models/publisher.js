@@ -35,6 +35,7 @@ describe('publisher', function() {
         sandbox.stub(hexo, 'publish').yields(null);
         sandbox.stub(hexo, 'updateAreaPage').yields(null);
         sandbox.stub(hexo, 'updateHomePage').yields(null);
+        sandbox.stub(hexo, 'publishStaticFiles').yields(null);
       });
 
       it('updates status on database', function(done){
@@ -88,6 +89,14 @@ describe('publisher', function() {
       it('sets url', function(done) {
         subject(news, function(err, publishedNews) {
           expect(publishedNews.metadata.url).to.exist;
+
+          done(err);
+        });
+      });
+
+      it('creates static files', function(done){
+        subject(news, function(err) {
+          expect(hexo.publishStaticFiles).to.have.been.called;
 
           done(err);
         });

@@ -14,6 +14,7 @@ var presenter = require('../../../../lib/publisher/presenter');
 var News = require('../../../../lib/models/news');
 var hexo = require('../../../../lib/publisher/hexo');
 var path = require('path');
+var staticFiles = require('../../../../lib/publisher/static-files');
 
 describe('hexo', function() {
 
@@ -104,6 +105,30 @@ describe('hexo', function() {
     it('gets presenter for news', function(done) {
       subject(function(err) {
         expect(presenter.of).to.have.been.calledWith(news);
+
+        done(err);
+      });
+    });
+  });
+
+  describe('.publishStaticFiles', () => {
+    var subject = (callback) => hexo.publishStaticFiles(callback);
+
+    beforeEach(() => {
+      sandbox.stub(staticFiles, 'generate').yields(null);
+    });
+
+    it('exists', () => {
+      expect(hexo.publishStaticFiles).to.exist;
+    });
+
+    it('generates files', (done) => {
+      subject((err) => {
+        expect(staticFiles.generate).to.have.been.calledWith('quem_somos', 'static_about');
+        expect(staticFiles.generate).to.have.been.calledWith('contato', 'static_contact');
+        expect(staticFiles.generate).to.have.been.calledWith('mapa_do_site', 'static_sitemap');
+        expect(staticFiles.generate).to.have.been.calledWith('publicidade', 'static_advertising');
+        expect(staticFiles.generate).to.have.been.calledWith('parceiros', 'partners');
 
         done(err);
       });
