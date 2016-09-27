@@ -112,6 +112,33 @@ describe('lib/publisher/presenters/post.js', () => {
     });
   });
 
+  describe('getRSSData', () => {
+
+    subj('getRSSData', () => presenter.getRSSData(post));
+
+    given('expectedData', () => ({
+      url: post.metadata.url,
+      hat: post.metadata.hat,
+      title: post.metadata.title,
+      description: post.metadata.description,
+      author: post.metadata.author,
+      place: post.metadata.place,
+      published_at: post.published_at,
+      other_news: post.other_news,
+      cover: post.metadata.cover,
+      content: post.body
+    }));
+
+    it('exists', () => {
+      expect(presenter.getRSSData).to.exist;
+    });
+
+    it('returns data', () => {
+      expect(getRSSData).to.eql(expectedData);
+    });
+
+  });
+
   describe('getListData', () => {
     subj('getListData', () => presenter.getListData(post));
 
