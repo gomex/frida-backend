@@ -293,7 +293,29 @@ describe('publisher', function() {
         status: 'draft'
       })));
 
-      given('list', () => ['foo', 'bar']);
+      given('list', () => [
+        photoCaptionFactory.build({metadata: metadataFactory.build({url: 'url'})}
+      )]);
+
+      beforeEach(() => {
+        sandbox.stub(photoCaptions, 'getRelateds').yields(null, list);
+      });
+
+      it('searches relateds', (done) => {
+        subject(photoCaption, (err) => {
+          expect(photoCaptions.getRelateds).to.have.been.calledWith(photoCaption);
+
+          done(err);
+        });
+      });
+
+      it('sets related_photo_captions', (done) => {
+        subject(photoCaption, (err) => {
+          expect(photoCaption.related_photo_captions).to.eql(list);
+
+          done(err);
+        });
+      });
 
       describe('republishes photo-caption list', () => {
         beforeEach(() => {

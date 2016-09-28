@@ -6,7 +6,8 @@ var factory = require('../../../../factories/photo-caption-attributes').photoCap
 
 describe('lib/publisher/presenters/photoCaption.js', () => {
   given('photoCaption', () => factory.build({
-    published_at: new Date()
+    published_at: new Date(),
+    related_photo_captions: []
   }));
 
   beforeEach(() => {
@@ -20,7 +21,8 @@ describe('lib/publisher/presenters/photoCaption.js', () => {
       layout: photoCaption.metadata.layout,
       url: photoCaption.metadata.url,
       title: photoCaption.metadata.title,
-      cover: photoCaption.metadata.cover
+      cover: photoCaption.metadata.cover,
+      related_photo_captions: []
     }));
 
     it('exists', () => {
@@ -34,6 +36,23 @@ describe('lib/publisher/presenters/photoCaption.js', () => {
     it('calls cover presenter', () => {
       getData;
       expect(coverPresenter.getData).to.have.been.calledWith(photoCaption);
+    });
+
+    describe('related_photo_captions', () => {
+      given('photoCaption', () => factory.build({
+        published_at: new Date(),
+        related_photo_captions: factory.buildList(2)
+      }));
+
+      given('data', () => ({foo: 'bar'}));
+
+      beforeEach(() => {
+        sandbox.stub(presenter, 'getListData').returns(data);
+      });
+
+      it('sets data', () => {
+        expect(getData.related_photo_captions).to.eql([data, data]);
+      });
     });
   });
 
