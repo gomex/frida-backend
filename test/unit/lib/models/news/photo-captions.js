@@ -40,7 +40,10 @@ describe('photoCaptions', () => {
 
     given('query', () => ({
       'metadata.layout': 'photo_caption',
-      status: 'published'
+      status: 'published',
+      _id: {
+        $ne: news._id
+      }
     }));
 
     given('options', () => ({
@@ -49,9 +52,7 @@ describe('photoCaptions', () => {
     }));
 
     given('news', () => new News(factory.build()));
-
     given('newsList', () => (['foo', 'bar']));
-    given('expectedList', () => newsList);
 
     beforeEach(() => {
       sandbox.stub(News, 'find').yields(null, newsList);
@@ -71,30 +72,9 @@ describe('photoCaptions', () => {
 
     it('returns list', (done) => {
       subject((err, list) => {
-        expect(list).to.deep.equal(expectedList);
+        expect(list).to.deep.equal(newsList);
 
         done(err);
-      });
-    });
-
-    describe('when news is one of related news', () => {
-      given('otherNews1', () => new News(factory.build()));
-      given('otherNews2', () => new News(factory.build()));
-
-      given('newsList', () => ([news, otherNews1, otherNews2]));
-      given('expectedList', () => ([otherNews1, otherNews2]));
-
-      beforeEach(() => {
-        News.find.restore();
-        sandbox.stub(News, 'find').yields(null, newsList);
-      });
-
-      it('excludes news from relateds', (done) => {
-        subject((err, list) => {
-          expect(list).to.deep.equal(expectedList);
-
-          done(err);
-        });
       });
     });
   });
