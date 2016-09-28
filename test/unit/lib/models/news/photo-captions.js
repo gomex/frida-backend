@@ -1,12 +1,12 @@
 /*eslint no-undef: "off"*/
 
-var photoCaption = require('../../../../../lib/models/news/photo-captions');
+var photoCaptions = require('../../../../../lib/models/news/photo-captions');
 var News = require('../../../../../lib/models/news');
 var factory = require('../../../../factories/photo-caption-attributes').photoCaption;
 
-describe('photoCaption', () => {
+describe('photoCaptions', () => {
   describe('.getList', () => {
-    var subject = (callback) => photoCaption.getList(callback);
+    var subject = (callback) => photoCaptions.getList(callback);
 
     var criteria = {
       'metadata.layout': 'photo_caption',
@@ -36,7 +36,7 @@ describe('photoCaption', () => {
   });
 
   describe('.getRelateds', () => {
-    var subject = (callback) => photoCaption.getRelateds(news, callback);
+    var subject = (callback) => photoCaptions.getRelateds(news, callback);
 
     given('query', () => ({
       'metadata.layout': 'photo_caption',
@@ -58,7 +58,7 @@ describe('photoCaption', () => {
     });
 
     it('exists', () => {
-      expect(photoCaption.getRelateds).to.exist;
+      expect(photoCaptions.getRelateds).to.exist;
     });
 
     it('find news', (done) => {
