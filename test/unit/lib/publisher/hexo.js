@@ -15,9 +15,9 @@ var News = require('../../../../lib/models/news');
 var hexo = require('../../../../lib/publisher/hexo');
 var path = require('path');
 var staticFiles = require('../../../../lib/publisher/static-files');
+var writer = require('../../../../lib/publisher/writer');
 
 describe('hexo', function() {
-
   describe('unpublish', function() {
     var subject = function(callback) { return hexo.unpublish(news, callback); };
 
@@ -28,11 +28,11 @@ describe('hexo', function() {
 
     given('newsPath', () => {
       var dir = moment(news.published_at).format('YYYY/MM');
-      return path.join(process.env.HEXO_SOURCE_PATH, '_posts', dir, news._id + '.md');
+      return path.join('_posts', dir, news._id + '.md');
     });
 
     beforeEach(function() {
-      sandbox.stub(fs, 'unlink').yields(null);
+      sandbox.stub(writer, 'remove').yields(null);
     });
 
     it('exists', function() {
@@ -41,24 +41,9 @@ describe('hexo', function() {
 
     it('removes md file', function(done) {
       subject(function(err) {
-        expect(fs.unlink).to.have.been.calledWith(newsPath);
+        expect(writer.remove).to.have.been.calledWith(newsPath);
 
         done(err);
-      });
-    });
-
-    describe('when the files does not exist', function() {
-      beforeEach(function() {
-        fs.unlink.restore();
-        sandbox.stub(fs, 'unlink').yields({ code: 'ENOENT' });
-      });
-
-      it('succeeds', function(done) {
-        subject(function(err) {
-          expect(err).to.not.exist;
-
-          done(err);
-        });
       });
     });
   });
