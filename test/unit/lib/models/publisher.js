@@ -5,6 +5,7 @@ var _ = require('lodash');
 var publisher = require('../../../../lib/models/publisher');
 var News = require('../../../../lib/models/news');
 var tabloids = require('../../../../lib/models/news/tabloids');
+var advertisings = require('../../../../lib/models/news/advertisings');
 var photoCaptions = require('../../../../lib/models/news/photo-captions');
 var hexo = require('../../../../lib/publisher/hexo');
 var newsFactory = require('../../../factories/news-attributes').news;
@@ -13,7 +14,6 @@ var tabloidFactory = require('../../../factories/tabloid-attributes').tabloid;
 var tabloidNewsFactory = require('../../../factories/tabloid-news-attributes').tabloid;
 var photoCaptionFactory = require('../../../factories/photo-caption-attributes').photoCaption;
 var advertisingFactory = require('../../../factories/advertising-attributes').advertising;
-var advertisingMetadataFactory = require('../../../factories/advertising-attributes').metadata;
 
 describe('publisher', function() {
   describe('.publish', function() {
@@ -342,30 +342,28 @@ describe('publisher', function() {
     });
 
     describe('when is an advertisement', () => {
+      given('news', () => new News(advertisingFactory.build({
+        status: 'draft'
+      })));
+
+      given('advertisingList', () => advertisingFactory.buildList(2));
+
       beforeEach(() => {
+        sandbox.stub(advertisings, 'getList').yields(null, advertisingList);
         sandbox.stub(hexo, 'updateAdvertisingData').yields(null);
       });
 
-      describe('but is NOT an in-news advertisement', () => {
-        given('news', () => new News(advertisingFactory.build({status: 'draft'})));
-
-        it('does NOT update advertising data file', function(done){
-          subject(news, function(err) {
-            expect(hexo.updateAdvertisingData).to.not.have.been.called;
-            done(err);
-          });
+      it('queries list', function(done){
+        subject(news, function(err) {
+          expect(advertisings.getList).to.have.been.called;
+          done(err);
         });
       });
 
-      describe('and is publishing in-news advertisement', () => {
-        given('metadata', () => advertisingMetadataFactory.build({display_area: 'advertising_06'}));
-        given('news', () => new News(advertisingFactory.build({status: 'draft', metadata: metadata})));
-
-        it('updates advertising data file', function(done){
-          subject(news, function(err) {
-            expect(hexo.updateAdvertisingData).to.have.been.calledWith(news);
-            done(err);
-          });
+      it('updates advertising data file', function(done){
+        subject(news, function(err) {
+          expect(hexo.updateAdvertisingData).to.have.been.calledWith(advertisingList);
+          done(err);
         });
       });
     });
@@ -542,30 +540,28 @@ describe('publisher', function() {
     });
 
     describe('when is an advertisement', () => {
+      given('news', () => new News(advertisingFactory.build({
+        status: 'draft'
+      })));
+
+      given('advertisingList', () => advertisingFactory.buildList(2));
+
       beforeEach(() => {
+        sandbox.stub(advertisings, 'getList').yields(null, advertisingList);
         sandbox.stub(hexo, 'updateAdvertisingData').yields(null);
       });
 
-      describe('but is NOT an in-news advertisement', () => {
-        given('news', () => new News(advertisingFactory.build({status: 'published'})));
-
-        it('does NOT update advertising data file', function(done){
-          subject(news, function(err) {
-            expect(hexo.updateAdvertisingData).to.not.have.been.called;
-            done(err);
-          });
+      it('queries list', function(done){
+        subject(news, function(err) {
+          expect(advertisings.getList).to.have.been.called;
+          done(err);
         });
       });
 
-      describe('and is publishing in-news advertisement', () => {
-        given('metadata', () => advertisingMetadataFactory.build({display_area: 'advertising_06'}));
-        given('news', () => new News(advertisingFactory.build({status: 'published', metadata: metadata})));
-
-        it('updates advertising data file', function(done){
-          subject(news, function(err) {
-            expect(hexo.updateAdvertisingData).to.have.been.calledWith(news);
-            done(err);
-          });
+      it('updates advertising data file', function(done){
+        subject(news, function(err) {
+          expect(hexo.updateAdvertisingData).to.have.been.calledWith(advertisingList);
+          done(err);
         });
       });
     });

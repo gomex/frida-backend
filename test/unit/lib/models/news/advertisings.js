@@ -26,27 +26,27 @@ describe('lib/models/news/t.js', () => {
     it('searchs t', (done) => {
       subject((err) => {
         expect(News.find).to.have.been.calledWith(Object.assign(
-          criteria, {display_area: 'advertising_01'}
+          criteria, {'metadata.display_area': 'advertising_01'}
         ));
 
         expect(News.find).to.have.been.calledWith(Object.assign(
-          criteria, {display_area: 'advertising_02'}
+          criteria, {'metadata.display_area': 'advertising_02'}
         ));
 
         expect(News.find).to.have.been.calledWith(Object.assign(
-          criteria, {display_area: 'advertising_03'}
+          criteria, {'metadata.display_area': 'advertising_03'}
         ));
 
         expect(News.find).to.have.been.calledWith(Object.assign(
-          criteria, {display_area: 'advertising_04'}
+          criteria, {'metadata.display_area': 'advertising_04'}
         ));
 
         expect(News.find).to.have.been.calledWith(Object.assign(
-          criteria, {display_area: 'advertising_05'}
+          criteria, {'metadata.display_area': 'advertising_05'}
         ));
 
         expect(News.find).to.have.been.calledWith(Object.assign(
-          criteria, {display_area: 'advertising_06'}
+          criteria, {'metadata.display_area': 'advertising_06'}
         ));
 
         done(err);

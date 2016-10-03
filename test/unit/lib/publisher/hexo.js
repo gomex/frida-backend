@@ -8,9 +8,9 @@ var YAML = require('js-yaml');
 var postFactory = require('../../../factories/post-attributes').post;
 var advertisingFactory = require('../../../factories/advertising-attributes').advertising;
 var newsMetadataFactory = require('../../../factories/news-attributes').metadata;
-var advertisingMetadataFactory = require('../../../factories/advertising-attributes').metadata;
 var postPublisher = require('../../../../lib/publisher/presenters/post');
 var presenter = require('../../../../lib/publisher/presenter');
+var advertisingsPresenter = require('../../../../lib/publisher/advertisings');
 var News = require('../../../../lib/models/news');
 var hexo = require('../../../../lib/publisher/hexo');
 var path = require('path');
@@ -214,64 +214,36 @@ describe('hexo', function() {
   });
 
   describe('updateAdvertisingData', function() {
-    given('metadata', () => advertisingMetadataFactory.build({display_area: 'advertising_06'}));
-    given('expectedDataDir', () => path.join(process.env.HEXO_SOURCE_PATH, '_data'));
-    given('expectedPath', () => path.join(expectedDataDir, 'advertisings.yml'));
+    var subject = (callback) => hexo.updateAdvertisingData(advertisingList, callback);
 
-    beforeEach(function() {
-      if (!fs.existsSync(expectedDataDir)){
-        fs.mkdirSync(expectedDataDir);
-      }
+    given('advertisingList', () => advertisingFactory.buildList(1));
+    given('advertisingData', () => ({bar: 'foo'}));
+    given('advertisingPath', () => path.join('_data', 'advertisings.yml'));
+    given('ymlData', () => YAML.dump(advertisingData));
+
+    beforeEach(() => {
+      sandbox.stub(advertisingsPresenter, 'getData').returns(advertisingData);
+      sandbox.stub(writer, 'write').yields(null);
     });
 
-    describe('when in-news advertising is beig unpublished', function() {
-      given('news', () => new News(advertisingFactory.build({status: 'changed', metadata: metadata})));
+    it('calls presenter', (done) => {
+      subject((err) => {
+        expect(advertisingsPresenter.getData).to.have.been.calledWith(advertisingList);
 
-      it('creates advertising yaml file in the configured hexo data folder', function(done) {
-        try { fs.unlinkSync(expectedPath); } catch(e) { /* ignore */ }
-
-        hexo.updateAdvertisingData(news, function() {
-          assert.ok(fs.existsSync(expectedPath));
-          done();
-        });
-      });
-
-      it('advertising data file is empty yaml', function(done) {
-        try { fs.unlinkSync(expectedPath); } catch(e) { /* ignore */ }
-        var expectedYaml = '';
-        hexo.updateAdvertisingData(news, function() {
-          var writtenYaml = fs.readFileSync(expectedPath, 'utf8');
-          assert.equal(writtenYaml, expectedYaml);
-          done();
-        });
+        done(err);
       });
     });
 
-    describe('when in-news advertising is beig published', function() {
-      given('news', () => new News(advertisingFactory.build({status: 'published', metadata: metadata})));
+    it('writes yaml data', (done) => {
+      subject((err) => {
+        expect(writer.write).to.have.been.calledWith(advertisingPath, ymlData);
 
-      it('creates advertising yaml file in the configured hexo data folder', function(done) {
-        try { fs.unlinkSync(expectedPath); } catch(e) { /* ignore */ }
-
-        hexo.updateAdvertisingData(news, function() {
-          assert.ok(fs.existsSync(expectedPath));
-          done();
-        });
+        done(err);
       });
+    });
 
-      it('advertising data file has yaml for advertising', function(done) {
-        try { fs.unlinkSync(expectedPath); } catch(e) { /* ignore */ }
+    it('writes file', () => {
 
-        hexo.updateAdvertisingData(news, function() {
-          var writtenYaml = YAML.safeLoad(fs.readFileSync(expectedPath, 'utf8'));
-          var writtenDataList = Object.keys(writtenYaml);
-
-          expect(writtenDataList).to.have.lengthOf(1);
-          expect(writtenYaml[writtenDataList[0]]).to.have.all.keys('title', 'image', 'link');
-
-          done();
-        });
-      });
     });
   });
 });
