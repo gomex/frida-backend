@@ -4,7 +4,7 @@ var coverAttributes = require('./cover-attributes').cover;
 
 var metadata = new Factory()
   .attr('layout', 'column')
-  .attr('columnist', function() { return faker.internet.email(); })
+  .attr('columnist', function() { return 'brunopadron@yahoo.com.br'; })
   .attr('hat', 'Opinião')
   .attr('title', function() { return faker.lorem.sentence(); })
   .attr('display_area', 'column_01')
