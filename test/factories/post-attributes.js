@@ -12,7 +12,16 @@ var metadata = new Factory()
   .attr('author', function() { return faker.name.findName(); })
   .attr('place', function() { return faker.address.state(); })
   .attr('cover', function() { return coverAttributes.build(); })
-  .attr('area', () => _.sample(['opiniao', 'politica']));
+  .attr('area', () => _.sample([
+    'direitos_humanos',
+    'cultura',
+    'geral',
+    'internacional',
+    'espanol',
+    'especiais',
+    'opiniao',
+    'politica'
+  ]));
 
 var post = new Factory()
   .attr('body', function() { return faker.lorem.paragraphs(); })

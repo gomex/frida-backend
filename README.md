@@ -69,13 +69,21 @@ Remember to make a request to some resource in the API URL (ex.: https://localho
 
 ## Creating users
 
-To use frida-backend you will need to create at least one user to login into the system. To do it, go to the folder **/home/frida/components/frida-backend** and run the following command
+To use frida-backend you will need to create at least one user to login into the system. To do it, go to the folder `/home/frida/components/frida-backend` and run the following command
 
 ```bash
 $ node lib/cli/frida.js create
 ```
 
 **Note:** You will need to provide Email, Name and a Password to create the user
+
+## Creating fake database
+
+You can create fake data to fill site.
+
+```bash
+$ node lib/cli/frida.js seeds
+```
 
 ## Scripts
 
