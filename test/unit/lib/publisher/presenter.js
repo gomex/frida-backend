@@ -14,6 +14,8 @@ var photoCaptionFactory = require ('../../../factories/photo-caption-attributes'
 var photoCaptionPresenter = require('../../../../lib/publisher/presenters/photo-caption');
 var advertisingFactory = require ('../../../factories/advertising-attributes').advertising;
 var advertisingPresenter = require('../../../../lib/publisher/presenters/advertising');
+var spotlightFactory = require ('../../../factories/spotlight-attributes').spotlight;
+var spotlightPresenter = require('../../../../lib/publisher/presenters/spotlight');
 
 describe('lib/publisher/presenter.js', () => {
   describe('of', () => {
@@ -68,6 +70,14 @@ describe('lib/publisher/presenter.js', () => {
 
       it('returns advertising presenter', () => {
         expect(of).to.equals(photoCaptionPresenter);
+      });
+    });
+
+    describe('when is spotlight', () => {
+      given('news', () => new News(spotlightFactory.build()));
+
+      it('returns advertising presenter', () => {
+        expect(of).to.equals(spotlightPresenter);
       });
     });
 
