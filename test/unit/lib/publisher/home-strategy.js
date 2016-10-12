@@ -78,6 +78,37 @@ describe('home-strategy', function() {
           });
         });
       });
+
+      describe('spotlight', () => {
+        given('criteria', () => ({
+          'status': 'published',
+          'metadata.layout': 'spotlight',
+          'metadata.display_area': 'spotlight_01'
+        }));
+
+        given('projection', () => ({
+          '_id': false,
+          'title':'$metadata.title',
+          'image':'$image',
+          'link':'$link'
+        }));
+
+        it('finds spotlights', function(done) {
+          subject(function(err) {
+            expect(News.findNews).to.have.been.calledWith(criteria, projection);
+
+            done(err);
+          });
+        });
+
+        it('generates areas', function(done) {
+          subject(function(err, home) {
+            expect(home.spotlight_01, 'spotlight_01').to.exist;
+            expect(home.spotlight_02, 'spotlight_02').to.exist;
+            done(err);
+          });
+        });
+      });
     });
 
     function shouldHaveFeatured(sessionName) {
