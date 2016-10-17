@@ -7,7 +7,7 @@ var News        = require('../../lib/models/news');
 var UserService = require('../../lib/services/user_service');
 var publisher   = require('../../lib/models/publisher');
 var server      = require('../../lib/http/server');
-
+var shared = require('./shared');
 var metadataFactory     = require('../factories/news-attributes').metadata;
 var newsFactory         = require('../factories/news-attributes').news;
 var columnFactory       = require('../factories/column-attributes').column;
@@ -99,33 +99,14 @@ describe('REST API:', function() {
     done();
   });
 
-  function itFailsWhenCredentialsAreNotSent(method, resource) {
-    var subject = api[method](resource).send();
-    it('it fails when credentials are not sent', function(done) {
-      subject
-        .expect(401)
-        .end(done);
-    });
-  }
-
-  function itFailsWhenCredentialsAreWrong(method, resource) {
-    var subject = api[method](resource).auth(process.env.EDITOR_USERNAME + 'bla', process.env.EDITOR_PASSWORD + 'bla').send();
-    it('it fails when credentials are wrong', function(done) {
-      subject
-        .expect(401)
-        .end(done);
-    });
-  }
-
   describe('POST /news', function() {
-
     var subject = function(news) {
       return api.post(NEWS_RESOURCE).send(news).auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
     };
 
-    itFailsWhenCredentialsAreNotSent('post', NEWS_RESOURCE);
-
-    itFailsWhenCredentialsAreWrong('post', NEWS_RESOURCE);
+    shared.behavesAsAuthenticated(() =>
+      api.post(NEWS_RESOURCE)
+    );
 
     it('persists news', function(done) {
       var news = newsFactory.build();
@@ -191,9 +172,9 @@ describe('REST API:', function() {
       return api.get(NEWS_RESOURCE + '/' + newsId).send().auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
     };
 
-    itFailsWhenCredentialsAreNotSent('get', NEWS_RESOURCE + '/' + newsId);
-
-    itFailsWhenCredentialsAreWrong('get', NEWS_RESOURCE + '/' + newsId);
+    shared.behavesAsAuthenticated(() =>
+      api.get(NEWS_RESOURCE + '/' + newsId)
+    );
 
     it('retrieves previously saved news or column', function(done){
       subject()
@@ -242,9 +223,9 @@ describe('REST API:', function() {
         });
     });
 
-    itFailsWhenCredentialsAreNotSent('put', NEWS_RESOURCE + '/' + newsId);
-
-    itFailsWhenCredentialsAreWrong('put', NEWS_RESOURCE + '/' + newsId);
+    shared.behavesAsAuthenticated(() =>
+      api.put(NEWS_RESOURCE + '/' + newsId)
+    );
 
     it('updates previously saved news', function(done){
       news.metadata.title = 'Outro Título';
@@ -351,9 +332,9 @@ describe('REST API:', function() {
       });
     });
 
-    itFailsWhenCredentialsAreNotSent('post', NEWS_RESOURCE + '/' + newsId + '/unpublish');
-
-    itFailsWhenCredentialsAreWrong('post', NEWS_RESOURCE + '/' + newsId + '/unpublish');
+    shared.behavesAsAuthenticated(() =>
+      api.post(NEWS_RESOURCE + '/' + newsId + '/unpublish')
+    );
 
     it('succeeds', function(done) {
       subject().expect(200).end(done);
@@ -398,9 +379,9 @@ describe('REST API:', function() {
         return api.put(NEWS_RESOURCE + '/' + newsId + '/status/published').send(news).auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
       };
 
-      itFailsWhenCredentialsAreNotSent('put', NEWS_RESOURCE + '/' + newsId + '/status/published');
-
-      itFailsWhenCredentialsAreWrong('put', NEWS_RESOURCE + '/' + newsId + '/status/published');
+      shared.behavesAsAuthenticated(() =>
+        api.put(NEWS_RESOURCE + '/' + newsId + '/status/published')
+      );
 
       it('succeeds', function(done) {
         subject()
