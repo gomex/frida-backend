@@ -4,7 +4,6 @@ var slug        = require('slug');
 var supertest   = require('supertest');
 
 var News        = require('../../lib/models/news');
-var UserService = require('../../lib/services/user_service');
 var publisher   = require('../../lib/models/publisher');
 var server      = require('../../lib/http/server');
 var shared = require('./shared');
@@ -87,11 +86,7 @@ describe('REST API:', function() {
   });
 
   beforeEach((done) => {
-    UserService.createUser('User', 'user@user.com', 'password', (err) => {
-      process.env['EDITOR_USERNAME'] = 'user@user.com';
-      process.env['EDITOR_PASSWORD'] = 'password';
-      done(err);
-    });
+    shared.createUser(done);
   });
 
   after(function(done) {

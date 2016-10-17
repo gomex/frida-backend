@@ -1,5 +1,7 @@
 /*eslint no-undef: "off"*/
 
+var UserService = require('../../lib/services/user_service');
+
 function behavesAsAuthenticated(api) {
   describe('when credentials are not sent', () => {
     subj('auth', () => api().send());
@@ -20,8 +22,17 @@ function behavesAsAuthenticated(api) {
         .end(done);
     });
   });
-};
+}
+
+function createUser(done) {
+  UserService.createUser('User', 'user@user.com', 'password', (err) => {
+    process.env['EDITOR_USERNAME'] = 'user@user.com';
+    process.env['EDITOR_PASSWORD'] = 'password';
+    done(err);
+  });
+}
 
 module.exports = {
-  behavesAsAuthenticated: behavesAsAuthenticated
-}
+  behavesAsAuthenticated: behavesAsAuthenticated,
+  createUser: createUser
+};
