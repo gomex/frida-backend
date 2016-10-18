@@ -96,7 +96,7 @@ describe('hexo', function() {
     });
   });
 
-  describe.only('.publishStaticFiles', () => {
+  describe('.publishStaticFiles', () => {
     var subject = (callback) => hexo.publishStaticFiles(callback);
 
     beforeEach(() => {
