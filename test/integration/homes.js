@@ -55,5 +55,15 @@ describe('/homes', () => {
           done(err);
         });
     });
+
+    describe('when is not found', () => {
+      given('name', () => 'absent_name');
+
+      it('returns 404', (done) => {
+        subject()
+          .expect(404)
+          .end(done);
+      });
+    });
   });
 });

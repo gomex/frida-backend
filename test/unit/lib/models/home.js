@@ -17,7 +17,7 @@ describe('unit/lib/models/home.js', () => {
     }));
 
     beforeEach(() => {
-      sandbox.stub(Home, 'find').yields(null, [expected]);
+      sandbox.stub(Home, 'findOne').yields(null, expected);
     });
 
     it('succeeds', (done) => {
@@ -28,7 +28,7 @@ describe('unit/lib/models/home.js', () => {
 
     it('searches', (done) => {
       subject((err) => {
-        expect(Home.find).to.have.been.calledWith(criteria);
+        expect(Home.findOne).to.have.been.calledWith(criteria);
 
         done(err);
       });
@@ -39,6 +39,21 @@ describe('unit/lib/models/home.js', () => {
         expect(national).to.equal(expected);
 
         done(err);
+      });
+    });
+
+    describe('when is not found', () => {
+      beforeEach(() => {
+        Home.findOne.restore();
+        sandbox.stub(Home, 'findOne').yields(null, null);
+      });
+
+      it('has error', (done) => {
+        subject((err) => {
+          expect(err).to.exist;
+
+          done();
+        });
       });
     });
   });
