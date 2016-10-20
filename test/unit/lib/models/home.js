@@ -3,8 +3,8 @@
 var Home = require('../../../../lib/models/home');
 
 describe('unit/lib/models/home.js', () => {
-  describe('getByName', () => {
-    var subject = (callback) => Home.getByName(name, callback);
+  describe('findByName', () => {
+    var subject = (callback) => Home.findByName(name, callback);
 
     given('name', () => 'some_name');
 
