@@ -57,4 +57,44 @@ describe('unit/lib/models/home.js', () => {
       });
     });
   });
+
+  describe('init', () => {
+    var subject = (callback) => Home.init(callback);
+
+    given('bdf', () => ({
+      name: 'bdf'
+    }));
+
+    beforeEach(() => {
+      sandbox.spy(Home, 'create');
+    });
+
+    it('succeeds', (done) => {
+      subject((err) => {
+        done(err);
+      });
+    });
+
+    it('creates bdf', (done) => {
+      subject((err) => {
+        expect(Home.create).to.have.been.calledWith(bdf);
+        done(err);
+      });
+    });
+
+    describe('when already exists', () => {
+      beforeEach((done) => {
+        Home.create(bdf, done);
+        Home.create.restore();
+        sandbox.spy(Home, 'create');
+      });
+
+      it('creates bdf', (done) => {
+        subject((err) => {
+          expect(Home.create).to.not.have.been.called;
+          done(err);
+        });
+      });
+    });
+  });
 });
