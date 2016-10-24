@@ -27,6 +27,7 @@ var post = new Factory()
   .attr('body', function() { return faker.lorem.paragraphs(); })
   .attr('metadata', function() { return metadata.build(); })
   .attr('tags', () => ([faker.lorem.word()]))
+  .attr('audio', function() { return 'https://soundcloud.com/user-555/oi'; })
   .attr('related_news', () => ([]));
 
 module.exports.metadata = metadata;

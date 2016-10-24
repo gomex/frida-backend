@@ -15,6 +15,7 @@ var metadata = new Factory()
 
 var news = new Factory()
   .attr('body', function() { return faker.lorem.paragraphs(); })
+  .attr('audio', function() { return 'https://soundcloud.com/user-555/oi'; })
   .attr('metadata', function() { return metadata.build(); });
 
 module.exports.metadata = metadata;
