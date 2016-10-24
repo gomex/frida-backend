@@ -114,7 +114,6 @@ describe('hexo', function() {
         expect(staticFiles.generate).to.have.been.calledWith('mapa-do-site', 'static_sitemap');
         expect(staticFiles.generate).to.have.been.calledWith('publicidade', 'static_advertising');
         expect(staticFiles.generate).to.have.been.calledWith('parceiros', 'static_partners');
-        expect(staticFiles.generate).to.have.been.calledWith('marcas-da-lama', 'static_special');
 
         done(err);
       });
