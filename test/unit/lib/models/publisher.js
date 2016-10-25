@@ -38,6 +38,21 @@ describe('publisher', function() {
         sandbox.stub(hexo, 'publishStaticFiles').yields(null);
       });
 
+      describe('and the area is "nenhuma"', function() {
+
+        beforeEach(function() {
+          news.metadata.area = 'nenhuma';
+        });
+
+        it('does not update area data file', function(done){
+          subject(news, function(err) {
+            expect(hexo.updateAreaPage).to.not.have.been.calledWith('nenhuma');
+
+            done(err);
+          });
+        });
+      });
+
       it('updates status on database', function(done){
         subject(news, function(err) {
           expect(news.save).to.have.been.called;
