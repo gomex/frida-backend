@@ -66,4 +66,41 @@ describe('/homes', () => {
       });
     });
   });
+
+  describe('PUT /:name', () => {
+    var subject = () => {
+      return api.put(`/homes/${home.name}`)
+        .send(updatedHome)
+        .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+    };
+
+    given('home', () => ({
+      name: 'some_name'
+    }));
+    given('updatedHome', () => Object.assign(home, {featured_01: '123456789012345678901234'}));
+
+    beforeEach((done) => {
+      Home.create(home, done);
+    });
+
+    shared.behavesAsAuthenticated(() =>
+      api.get(`/homes/${home.name}`)
+    );
+
+    it('succeeds', (done) => {
+      subject()
+        .expect(200)
+        .end(done);
+    });
+
+    it('returns updated home', (done) => {
+      subject()
+        .expect(200)
+        .end((err, res) => {
+          expect(res.body.featured_01).to.equal(updatedHome.featured_01);
+
+          done(err);
+        });
+    });
+  });
 });
