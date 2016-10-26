@@ -4,6 +4,7 @@
 var _ = require('lodash');
 var publisher = require('../../../../lib/models/publisher');
 var News = require('../../../../lib/models/news');
+var Home = require('../../../../lib/models/home');
 var tabloids = require('../../../../lib/models/news/tabloids');
 var advertisings = require('../../../../lib/models/news/advertisings');
 var photoCaptions = require('../../../../lib/models/news/photo-captions');
@@ -578,6 +579,37 @@ describe('publisher', function() {
           expect(hexo.updateAdvertisingData).to.have.been.calledWith(advertisingList);
           done(err);
         });
+      });
+    });
+  });
+
+  describe('publishHome', () => {
+    var subject = (callback) => publisher.publishHome(home, callback);
+
+    given('home', () => new Home({name: 'bdf'}));
+
+    beforeEach(() => {
+      sandbox.spy(home, 'populate');
+      sandbox.stub(hexo, 'publishHome').yields(null);
+    });
+
+    it('succeeds', (done) => {
+      subject((err) => {
+        done(err);
+      });
+    });
+
+    it('populates news', (done) => {
+      subject((err) => {
+        expect(home.populate).to.have.been.calledWith('featured_01');
+        done(err);
+      });
+    });
+
+    it('delegates to hexo', (done) => {
+      subject((err) => {
+        expect(hexo.publishHome).to.have.been.calledWith(home);
+        done(err);
       });
     });
   });

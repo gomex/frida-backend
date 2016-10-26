@@ -91,4 +91,24 @@ describe('lib/publisher/presenter.js', () => {
       });
     });
   });
+
+  describe('getListData', () => {
+    subj('of', () => presenter.getListData(post));
+    given('post', () => new News(postFactoty.build()));
+
+    beforeEach(() => {
+      sandbox.spy(presenter, 'of');
+      sandbox.spy(postPresenter, 'getListData');
+    });
+
+    it('selects presenter', () => {
+      of;
+      expect(presenter.of).to.have.been.calledWith(post);
+    });
+
+    it('gets list data', () => {
+      of;
+      expect(postPresenter.getListData).to.have.been.calledWith(post);
+    });
+  });
 });
