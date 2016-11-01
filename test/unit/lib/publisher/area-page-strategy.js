@@ -6,6 +6,8 @@ var metadataFactory         = require('../../../factories/news-attributes').meta
 var newsFactory             = require('../../../factories/news-attributes').news;
 var columnMetadataFactory   = require('../../../factories/column-attributes').metadata;
 var columnFactory           = require('../../../factories/column-attributes').column;
+var tabloidNewsMetadataFactory   = require('../../../factories/tabloid-news-attributes').metadata;
+var tabloidNewsFactory           = require('../../../factories/tabloid-news-attributes').tabloid;
 
 var areaPageStrategy    = require('../../../../lib/publisher/area-page-strategy');
 var News      = require('../../../../lib/models/news');
@@ -13,6 +15,34 @@ var News      = require('../../../../lib/models/news');
 describe('area-page-strategy', function() {
 
   describe('buildPageData', function() {
+
+    describe('when area is tabloid_news', function() {
+      var lastNews;
+
+      beforeEach(function(done) {
+        var metadata = tabloidNewsMetadataFactory.build({ url: '2016/10/news-' + Date.now() });
+        var news = tabloidNewsFactory.build({ metadata: metadata, published_at: new Date(), updated_at: new Date(), status: 'published' });
+        lastNews = [];
+        for(var i = 0; i < 20; i++) {
+          lastNews.push(news);
+        }
+
+        News.create(lastNews, done);
+      });
+
+      it('area page data has at least one page of news for the area', function(done) {
+        var news = _.last(lastNews);
+
+        areaPageStrategy.buildPageData(news.metadata.area, function(err, areaPageData) {
+          if(err) return done(err);
+
+          expect(areaPageData[0].news).to.be.instanceof(Array);
+          expect(areaPageData[0].news).to.have.length.above(0);
+
+          done();
+        });
+      });
+    });
 
     describe('when area is not column', function() {
       var lastNews;
@@ -34,8 +64,8 @@ describe('area-page-strategy', function() {
         areaPageStrategy.buildPageData(news.metadata.area, function(err, areaPageData) {
           if(err) return done(err);
 
-          expect(areaPageData).to.be.instanceof(Array);
-          expect(areaPageData).to.have.length.above(0);
+          expect(areaPageData[0].news).to.be.instanceof(Array);
+          expect(areaPageData[0].news).to.have.length.above(0);
 
           done();
         });
