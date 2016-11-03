@@ -111,6 +111,16 @@ describe('lib/publisher/presenters/post.js', () => {
         });
       });
     });
+
+    describe('when there is no audio field', () => {
+      beforeEach(() => {
+        delete post.audio;
+      });
+
+      it('returns null', () => {
+        expect(getData.audio).to.eql(null);
+      });
+    });
   });
 
   describe('getListData', () => {
