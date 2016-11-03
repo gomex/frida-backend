@@ -9,6 +9,7 @@ var postFactory = require('../../../factories/post-attributes').post;
 var advertisingFactory = require('../../../factories/advertising-attributes').advertising;
 var newsMetadataFactory = require('../../../factories/news-attributes').metadata;
 var postPublisher = require('../../../../lib/publisher/presenters/post');
+var homePresenter = require('../../../../lib/publisher/presenters/home');
 var presenter = require('../../../../lib/publisher/presenter');
 var advertisingsPresenter = require('../../../../lib/publisher/advertisings');
 var News = require('../../../../lib/models/news');
@@ -114,6 +115,41 @@ describe('hexo', function() {
         expect(staticFiles.generate).to.have.been.calledWith('mapa-do-site', 'static_sitemap');
         expect(staticFiles.generate).to.have.been.calledWith('publicidade', 'static_advertising');
         expect(staticFiles.generate).to.have.been.calledWith('parceiros', 'static_partners');
+
+        done(err);
+      });
+    });
+  });
+
+  describe('.publishHome', () => {
+    var subject = (callback) => hexo.publishHome(home, callback);
+
+    given('home', () => ({foo: 'bar'}));
+    given('homeData', () => ({some: 'data'}));
+    given('stringified', () => grayMatter.stringify('', homeData));
+
+    beforeEach(() => {
+      sandbox.stub(homePresenter, 'getData').returns(homeData);
+      sandbox.stub(writer, 'write').yields(null);
+    });
+
+    it('succeeds', (done) => {
+      subject((err) => {
+        done(err);
+      });
+    });
+
+    it('gets data', (done) => {
+      subject((err) => {
+        expect(homePresenter.getData).to.have.been.calledWith(home);
+
+        done(err);
+      });
+    });
+
+    it('writes home', (done) => {
+      subject((err) => {
+        expect(writer.write).to.have.been.calledWith('index.md', stringified);
 
         done(err);
       });

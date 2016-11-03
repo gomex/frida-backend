@@ -4,6 +4,11 @@ var server = require('../../lib/http/server');
 var supertest   = require('supertest');
 var shared = require('./shared');
 var Home = require('../../lib/models/home');
+var News = require('../../lib/models/news');
+var writer = require('../../lib/publisher/writer');
+var publisher = require('../../lib//models/publisher');
+var postFactory = require('../factories/post-attributes').post;
+var async = require('async');
 
 describe('/homes', () => {
   given('api', () => supertest('https://localhost:5000'));
@@ -77,10 +82,20 @@ describe('/homes', () => {
     given('home', () => ({
       name: 'some_name'
     }));
-    given('updatedHome', () => Object.assign(home, {featured_01: '123456789012345678901234'}));
+    given('post', () => postFactory.build({status: 'draft'}));
+    var updatedHome;
 
     beforeEach((done) => {
-      Home.create(home, done);
+      sandbox.spy(writer, 'write');
+
+      async.series([
+        (callback) => Home.create(home, callback),
+        (callback) => News.create(post, (err, post) => {
+          updatedHome = Object.assign({featured_01: post.id}, home);
+
+          publisher.publish(post, callback);
+        })
+      ], done);
     });
 
     shared.behavesAsAuthenticated(() =>
@@ -93,11 +108,45 @@ describe('/homes', () => {
         .end(done);
     });
 
+    it('updates home', (done) => {
+      subject()
+        .expect(200)
+        .end((err) => {
+          if(err) return done(err);
+
+          Home.findByName(home.name, (err, res) => {
+            expect(res.featured_01.toString()).to.equal(updatedHome.featured_01);
+
+            done(err);
+          });
+        });
+    });
+
+    it('saves home', (done) => {
+      subject()
+        .expect(200)
+        .end((err, res) => {
+          expect(res.body.featured_01).to.equal(updatedHome.featured_01);
+
+          done(err);
+        });
+    });
+
     it('returns updated home', (done) => {
       subject()
         .expect(200)
         .end((err, res) => {
           expect(res.body.featured_01).to.equal(updatedHome.featured_01);
+
+          done(err);
+        });
+    });
+
+    it('writes file', (done) => {
+      subject()
+        .expect(200)
+        .end((err) => {
+          expect(writer.write).to.have.been.calledWith('index.md');
 
           done(err);
         });

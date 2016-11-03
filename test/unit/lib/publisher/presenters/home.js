@@ -11,7 +11,7 @@ describe('lib/publisher/presenters/home.js', () => {
     subj('getData', () => presenter.getData(home));
 
     given('home', () => new Home({
-      layout: 'layout',
+      name: 'layout',
       featured_01: featured_01
     }));
     given('featured_01', () => new News(postFactory.build()));
@@ -21,7 +21,7 @@ describe('lib/publisher/presenters/home.js', () => {
     });
 
     it('sets layout', () => {
-      expect(getData.layout).to.equal(home.layout);
+      expect(getData.layout).to.equal(home.name);
     });
 
     it('sets featured_01', () => {
