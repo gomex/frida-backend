@@ -41,21 +41,6 @@ describe('unit/lib/models/home.js', () => {
         done(err);
       });
     });
-
-    describe('when is not found', () => {
-      beforeEach(() => {
-        Home.findOne.restore();
-        sandbox.stub(Home, 'findOne').yields(null, null);
-      });
-
-      it('has error', (done) => {
-        subject((err) => {
-          expect(err).to.exist;
-
-          done();
-        });
-      });
-    });
   });
 
   describe('init', () => {
