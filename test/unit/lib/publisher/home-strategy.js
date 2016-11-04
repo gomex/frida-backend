@@ -105,6 +105,7 @@ describe('home-strategy', function() {
           subject(function(err, home) {
             expect(home.spotlight_01, 'spotlight_01').to.exist;
             expect(home.spotlight_02, 'spotlight_02').to.exist;
+            expect(home.spotlight_03, 'spotlight_03').to.exist;
             done(err);
           });
         });
