@@ -50,6 +50,10 @@ describe('unit/lib/models/home.js', () => {
       name: 'bdf'
     }));
 
+    given('radioAgencia', () => ({
+      name: 'radio_agencia'
+    }));
+
     beforeEach(() => {
       sandbox.spy(Home, 'create');
     });
@@ -67,7 +71,14 @@ describe('unit/lib/models/home.js', () => {
       });
     });
 
-    describe('when already exists', () => {
+    it('creates radio_agencia', (done) => {
+      subject((err) => {
+        expect(Home.create).to.have.been.calledWith(radioAgencia);
+        done(err);
+      });
+    });
+
+    describe('when bdf already exists', () => {
       beforeEach((done) => {
         Home.create(bdf, done);
         Home.create.restore();
@@ -76,7 +87,22 @@ describe('unit/lib/models/home.js', () => {
 
       it('creates bdf', (done) => {
         subject((err) => {
-          expect(Home.create).to.not.have.been.called;
+          expect(Home.create).to.not.have.been.calledWith(bdf);
+          done(err);
+        });
+      });
+    });
+
+    describe('when radio_agencia already exists', () => {
+      beforeEach((done) => {
+        Home.create(radioAgencia, done);
+        Home.create.restore();
+        sandbox.spy(Home, 'create');
+      });
+
+      it('creates bdf', (done) => {
+        subject((err) => {
+          expect(Home.create).to.not.have.been.calledWith(radioAgencia);
           done(err);
         });
       });
