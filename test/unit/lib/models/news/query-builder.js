@@ -64,6 +64,20 @@ describe('queryBuilder', () => {
       });
     });
 
+    describe('with tags', () => {
+      given('params', () => ({
+        tags: 'radioagencia'
+      }));
+
+      given('query', () => ({
+        'tags': {$in: ['radioagencia']}
+      }));
+
+      it('returns', () => {
+        expect(build).to.eql(query);
+      });
+    });
+
     describe('with layout', () => {
       given('params', () => ({
         layouts: 'draft'
