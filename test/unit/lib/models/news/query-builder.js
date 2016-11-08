@@ -76,6 +76,20 @@ describe('queryBuilder', () => {
       it('returns', () => {
         expect(build).to.eql(query);
       });
+
+      describe('when has more than one tag', () => {
+        given('params', () => ({
+          tags: ['radioagencia', 'radio']
+        }));
+
+        given('query', () => ({
+          'tags': {$in: ['radioagencia', 'radio']}
+        }));
+
+        it('returns', () => {
+          expect(build).to.eql(query);
+        });
+      });
     });
 
     describe('with layout', () => {
