@@ -47,11 +47,15 @@ describe('unit/lib/models/home.js', () => {
     var subject = (callback) => Home.init(callback);
 
     given('bdf', () => ({
-      name: 'bdf'
+      name: 'bdf',
+      layout: 'national',
+      path: '/'
     }));
 
     given('radioAgencia', () => ({
-      name: 'radio_agencia'
+      name: 'radio_agencia',
+      layout: 'radioagencia',
+      path: '/radioagencia'
     }));
 
     beforeEach(() => {

@@ -125,7 +125,7 @@ describe('hexo', function() {
   describe('.publishHome', () => {
     var subject = (callback) => hexo.publishHome(home, callback);
 
-    given('home', () => new Home({ name: 'radio_agencia', featured_01: new News(postFactory.build()) }));
+    given('home', () => new Home({ name: 'radio_agencia', path: '/radioagencia', featured_01: new News(postFactory.build()) }));
     given('homeData', () => ({some: 'data'}));
     given('stringified', () => grayMatter.stringify('', homeData));
 
@@ -150,7 +150,7 @@ describe('hexo', function() {
 
     it('writes home', (done) => {
       subject((err) => {
-        expect(writer.write).to.have.been.calledWith('index.md', stringified);
+        expect(writer.write).to.have.been.calledWith('/radioagencia/index.md', stringified);
 
         done(err);
       });
