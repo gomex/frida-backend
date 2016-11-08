@@ -5,6 +5,7 @@ var coverAttributes = require('./cover-attributes').cover;
 
 var metadata = new Factory()
   .attr('title', function() { return faker.lorem.sentence(); })
+  .attr('url', function() { return faker.internet.url(); })
   .attr('layout', 'post')
   .attr('display_area', 'destaque_foto_grande')
   .attr('hat', 'Olimpíadas')
@@ -26,6 +27,7 @@ var metadata = new Factory()
 var post = new Factory()
   .attr('body', function() { return faker.lorem.paragraphs(); })
   .attr('metadata', function() { return metadata.build(); })
+  .attr('published_at', function() { return faker.date.recent(); })
   .attr('tags', () => ([faker.lorem.word()]))
   .attr('audio', function() { return 'https://soundcloud.com/user-555/oi'; })
   .attr('related_news', () => ([]));

@@ -1,7 +1,6 @@
 /*eslint no-undef: "off"*/
 
 var News = require('../../../../lib/models/news');
-var Home = require('../../../../lib/models/home');
 var presenter = require('../../../../lib/publisher/presenter');
 var postPresenter = require('../../../../lib/publisher/presenters/post');
 var postFactoty = require('../../../factories/post-attributes').post;
@@ -17,7 +16,6 @@ var advertisingFactory = require ('../../../factories/advertising-attributes').a
 var advertisingPresenter = require('../../../../lib/publisher/presenters/advertising');
 var spotlightFactory = require ('../../../factories/spotlight-attributes').spotlight;
 var spotlightPresenter = require('../../../../lib/publisher/presenters/spotlight');
-var radioAgenciaPresenter = require('../../../../lib/publisher/presenters/radio-agencia');
 
 describe('lib/publisher/presenter.js', () => {
   describe('of', () => {
@@ -25,90 +23,74 @@ describe('lib/publisher/presenter.js', () => {
       expect(presenter.of).to.exist;
     });
 
-    describe('when is instance of Home', () => {
-      subj('of', () => presenter.of(home));
+    subj('of', () => presenter.of(news));
 
-      describe('when is radio_agencia', () => {
-        given('home', () => new Home({name: 'radio_agencia'}));
+    describe('when is post', () => {
+      given('news', () => new News(postFactoty.build()));
 
-        it('returns radio_agencia presenter', () => {
-          expect(of).to.equals(radioAgenciaPresenter);
-        });
+      it('returns post presenter', () => {
+        expect(of).to.equals(postPresenter);
       });
     });
 
-    describe('when is instance of News', () => {
-      subj('of', () => presenter.of(news));
+    describe('when is tabloid', () => {
+      given('news', () => new News(tabloidFactory.build()));
 
-      describe('when is post', () => {
-        given('news', () => new News(postFactoty.build()));
-
-        it('returns post presenter', () => {
-          expect(of).to.equals(postPresenter);
-        });
+      it('returns tabloid presenter', () => {
+        expect(of).to.equals(tabloidPresenter);
       });
+    });
 
-      describe('when is tabloid', () => {
-        given('news', () => new News(tabloidFactory.build()));
+    describe('when is tabloidNews', () => {
+      given('news', () => new News(tabloidNewsFactory.build()));
 
-        it('returns tabloid presenter', () => {
-          expect(of).to.equals(tabloidPresenter);
-        });
+      it('returns tabloidNews presenter', () => {
+        expect(of).to.equals(tabloidNewsPresenter);
       });
+    });
 
-      describe('when is tabloidNews', () => {
-        given('news', () => new News(tabloidNewsFactory.build()));
+    describe('when is column', () => {
+      given('news', () => new News(columnFactory.build()));
 
-        it('returns tabloidNews presenter', () => {
-          expect(of).to.equals(tabloidNewsPresenter);
-        });
+      it('returns column presenter', () => {
+        expect(of).to.equals(columnPresenter);
       });
+    });
 
-      describe('when is column', () => {
-        given('news', () => new News(columnFactory.build()));
+    describe('when is advertising', () => {
+      given('news', () => new News(advertisingFactory.build()));
 
-        it('returns column presenter', () => {
-          expect(of).to.equals(columnPresenter);
-        });
+      it('returns advertising presenter', () => {
+        expect(of).to.equals(advertisingPresenter);
       });
+    });
 
-      describe('when is advertising', () => {
-        given('news', () => new News(advertisingFactory.build()));
+    describe('when is photo caption', () => {
+      given('news', () => new News(photoCaptionFactory.build()));
 
-        it('returns advertising presenter', () => {
-          expect(of).to.equals(advertisingPresenter);
-        });
+      it('returns advertising presenter', () => {
+        expect(of).to.equals(photoCaptionPresenter);
       });
+    });
 
-      describe('when is photo caption', () => {
-        given('news', () => new News(photoCaptionFactory.build()));
+    describe('when is spotlight', () => {
+      given('news', () => new News(spotlightFactory.build()));
 
-        it('returns advertising presenter', () => {
-          expect(of).to.equals(photoCaptionPresenter);
-        });
+      it('returns advertising presenter', () => {
+        expect(of).to.equals(spotlightPresenter);
       });
+    });
 
-      describe('when is spotlight', () => {
-        given('news', () => new News(spotlightFactory.build()));
+    describe('when has other layout', () => {
+      given('news', () => new News(postFactoty.build({
+        metadata: { layout: 'other_layout' }
+      })));
 
-        it('returns advertising presenter', () => {
-          expect(of).to.equals(spotlightPresenter);
-        });
-      });
-
-      describe('when has other layout', () => {
-        given('news', () => new News(postFactoty.build({
-          metadata: { layout: 'other_layout' }
-        })));
-
-        it('throws error', () => {
-          expect(() => of).to.throw(Error);
-        });
+      it('throws error', () => {
+        expect(() => of).to.throw(Error);
       });
     });
   });
-
-
 
   describe('getListData', () => {
     subj('of', () => presenter.getListData(post));
