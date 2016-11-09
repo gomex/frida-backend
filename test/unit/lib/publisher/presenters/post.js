@@ -129,6 +129,7 @@ describe('lib/publisher/presenters/post.js', () => {
     given('expectedData', () => ({
       title: post.metadata.title,
       area: post.metadata.area,
+      audio: post.audio,
       hat: post.metadata.hat,
       description: post.metadata.description,
       url: post.metadata.url,

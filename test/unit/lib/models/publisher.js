@@ -587,9 +587,11 @@ describe('publisher', function() {
     var subject = (callback) => publisher.publishHome(home, callback);
 
     given('home', () => new Home({name: 'bdf'}));
+    given('newsList', () => newsFactory.buildList(2));
 
     beforeEach(() => {
       sandbox.spy(home, 'populate');
+      sandbox.stub(News, 'find').yields(null, newsList);
       sandbox.stub(hexo, 'publishHome').yields(null);
     });
 
@@ -610,6 +612,17 @@ describe('publisher', function() {
       subject((err) => {
         expect(hexo.publishHome).to.have.been.calledWith(home);
         done(err);
+      });
+    });
+
+    describe('when is radioagencia', () => {
+      given('home', () => new Home({name: 'radio_agencia'}));
+
+      it('enriches home with latest radioagencia news', (done) => {
+        subject((err) => {
+          expect(home.latest_news).to.equal(newsList);
+          done(err);
+        });
       });
     });
   });
