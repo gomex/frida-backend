@@ -587,11 +587,9 @@ describe('publisher', function() {
     var subject = (callback) => publisher.publishHome(home, callback);
 
     given('home', () => new Home({name: 'bdf'}));
-    given('newsList', () => newsFactory.buildList(2));
 
     beforeEach(() => {
-      sandbox.spy(home, 'populate');
-      sandbox.stub(News, 'find').yields(null, newsList);
+      sandbox.spy(home, 'populateAllFields');
       sandbox.stub(hexo, 'publishHome').yields(null);
     });
 
@@ -603,7 +601,7 @@ describe('publisher', function() {
 
     it('populates news', (done) => {
       subject((err) => {
-        expect(home.populate).to.have.been.calledWith('featured_01');
+        expect(home.populateAllFields).to.have.been.called;
         done(err);
       });
     });
@@ -616,7 +614,12 @@ describe('publisher', function() {
     });
 
     describe('when is radioagencia', () => {
+      given('newsList', () => newsFactory.buildList(2));
       given('home', () => new Home({name: 'radio_agencia'}));
+
+      beforeEach(() => {
+        sandbox.stub(News, 'find').yields(null, newsList);
+      });
 
       it('enriches home with latest radioagencia news', (done) => {
         subject((err) => {

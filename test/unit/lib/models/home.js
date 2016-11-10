@@ -43,6 +43,33 @@ describe('unit/lib/models/home.js', () => {
     });
   });
 
+  describe('.populateAllFields', () => {
+    var subject = (callback) => home.populateAllFields(callback);
+
+    given('home', () => new Home({
+      featured_01: '53cb6b9b4f4ddef1ad47f943',
+      featured_02: '53cb6b9b4f4ddef1ad47f943'
+    }));
+
+    beforeEach(() => {
+      sandbox.spy(home, 'populate');
+    });
+
+    it('succeeds', (done) => {
+      subject((err) => {
+        done(err);
+      });
+    });
+
+    it('calls populate', (done) => {
+      subject((err) => {
+        expect(home.populate).to.have.been.calledWith('featured_01 featured_02');
+
+        done(err);
+      });
+    });
+  });
+
   describe('init', () => {
     var subject = (callback) => Home.init(callback);
 
