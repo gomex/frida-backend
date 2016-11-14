@@ -75,13 +75,11 @@ describe('unit/lib/models/home.js', () => {
 
     given('bdf', () => ({
       name: 'bdf',
-      layout: 'national',
       path: '/'
     }));
 
     given('radioAgencia', () => ({
       name: 'radio_agencia',
-      layout: 'radioagencia',
       path: '/radioagencia'
     }));
 
