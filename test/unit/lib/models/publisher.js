@@ -628,5 +628,21 @@ describe('publisher', function() {
         });
       });
     });
+
+    describe('when is bdf', () => {
+      given('newsList', () => newsFactory.buildList(2));
+      given('home', () => new Home({name: 'bdf'}));
+
+      beforeEach(() => {
+        sandbox.stub(News, 'find').yields(null, newsList);
+      });
+
+      it('enriches with latest news', (done) => {
+        subject((err) => {
+          expect(home.last_news).to.equal(newsList);
+          done(err);
+        });
+      });
+    });
   });
 });
