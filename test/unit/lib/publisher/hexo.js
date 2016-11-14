@@ -10,6 +10,7 @@ var advertisingFactory = require('../../../factories/advertising-attributes').ad
 var newsMetadataFactory = require('../../../factories/news-attributes').metadata;
 var postPublisher = require('../../../../lib/publisher/presenters/post');
 var radioAgenciaPresenter = require('../../../../lib/publisher/presenters/radio-agencia');
+var bdfPresenter = require('../../../../lib/publisher/presenters/bdf');
 var presenter = require('../../../../lib/publisher/presenter');
 var advertisingsPresenter = require('../../../../lib/publisher/advertisings');
 var News = require('../../../../lib/models/news');
@@ -125,12 +126,14 @@ describe('hexo', function() {
   describe('.publishHome', () => {
     var subject = (callback) => hexo.publishHome(home, callback);
 
-    given('home', () => new Home({ name: 'radio_agencia', path: '/radioagencia', featured_01: new News(postFactory.build()) }));
+    given('home', () => new Home({
+      name: 'some_name',
+      path: '/some_path'
+    }));
     given('homeData', () => ({some: 'data'}));
     given('stringified', () => grayMatter.stringify('', homeData));
 
     beforeEach(() => {
-      sandbox.stub(radioAgenciaPresenter, 'getData').returns(homeData);
       sandbox.stub(writer, 'write').yields(null);
     });
 
@@ -140,19 +143,65 @@ describe('hexo', function() {
       });
     });
 
-    it('gets data', (done) => {
+    it('writes home', (done) => {
       subject((err) => {
-        expect(radioAgenciaPresenter.getData).to.have.been.calledWith(home);
+        expect(writer.write).to.have.been.calledWith(`${home.path}/index.md`);
 
         done(err);
       });
     });
 
-    it('writes home', (done) => {
-      subject((err) => {
-        expect(writer.write).to.have.been.calledWith('/radioagencia/index.md', stringified);
+    describe('when is radio agencia', () => {
+      given('home', () => new Home({
+        name: 'radio_agencia',
+        path: '/radioagencia'
+      }));
 
-        done(err);
+      beforeEach(() => {
+        sandbox.stub(radioAgenciaPresenter, 'getData').returns(homeData);
+      });
+
+      it('gets data', (done) => {
+        subject((err) => {
+          expect(radioAgenciaPresenter.getData).to.have.been.calledWith(home);
+
+          done(err);
+        });
+      });
+
+      it('writes home', (done) => {
+        subject((err) => {
+          expect(writer.write).to.have.been.calledWith(`${home.path}/index.md`, stringified);
+
+          done(err);
+        });
+      });
+    });
+
+    describe('when is bdf', () => {
+      given('home', () => new Home({
+        name: 'bdf',
+        path: ''
+      }));
+
+      beforeEach(() => {
+        sandbox.stub(bdfPresenter, 'getData').returns(homeData);
+      });
+
+      it('gets data', (done) => {
+        subject((err) => {
+          expect(bdfPresenter.getData).to.have.been.calledWith(home);
+
+          done(err);
+        });
+      });
+
+      it('writes home', (done) => {
+        subject((err) => {
+          expect(writer.write).to.have.been.calledWith('index.md', stringified);
+
+          done(err);
+        });
       });
     });
   });

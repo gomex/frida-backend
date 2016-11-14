@@ -57,8 +57,12 @@ describe('lib/publisher/presenters/bdf.js', () => {
       });
     }
 
-    it('layout is "national"', () => {
+    it('sets layout', () => {
       expect(getData.layout).to.equal('national');
+    });
+
+    it('sets path', () => {
+      expect(getData.path).to.equal('/');
     });
 
     behaviorLikeAListDataField('featured_01', 'featured_01');

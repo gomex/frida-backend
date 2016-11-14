@@ -15,8 +15,12 @@ describe('lib/publisher/presenters/home.js', () => {
       featured_01: featured_01
     }));
 
-    it('layout is "radioagencia"', () => {
+    it('sets layout', () => {
       expect(getData.layout).to.equal('radioagencia');
+    });
+
+    it('sets path', () => {
+      expect(getData.path).to.equal('/radioagencia');
     });
 
     it('sets featured_01', () => {
