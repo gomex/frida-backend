@@ -23,4 +23,24 @@ describe('lib/publisher/presenters/spotlight.js', () => {
       expect(getData).to.eql(expectedData);
     });
   });
+
+  describe('.getListData', () => {
+    subj('getListData', () => presenter.getListData(spotlight));
+
+    given('spotlight', () => factory.build());
+
+    given('expectedData', () => ({
+      title: spotlight.metadata.title,
+      link: spotlight.link,
+      image: spotlight.image
+    }));
+
+    it('exists', () => {
+      expect(presenter.getListData).to.exist;
+    });
+
+    it('returns data', () => {
+      expect(getListData).to.eql(expectedData);
+    });
+  });
 });

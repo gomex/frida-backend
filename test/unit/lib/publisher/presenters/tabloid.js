@@ -88,4 +88,31 @@ describe('lib/publisher/presenters/tabloid.js', () => {
       });
     });
   });
+
+  describe('.getListData', () => {
+    subj('getListData', () => presenter.getListData(tabloid));
+
+    given('metadata', () => metadataFactory.build({
+      url: 'some_url'
+    }));
+    given('tabloid', () => factory.build({
+      metadata: metadata,
+      published_at: new Date(),
+      news: []
+    }));
+
+    given('expectedData', () => ({
+      title: tabloid.metadata.title,
+      display_area: tabloid.metadata.display_area,
+      url: tabloid.metadata.url
+    }));
+
+    it('exists', () => {
+      expect(presenter.getListData).to.exist;
+    });
+
+    it('returns data', () => {
+      expect(getListData).to.eql(expectedData);
+    });
+  });
 });
