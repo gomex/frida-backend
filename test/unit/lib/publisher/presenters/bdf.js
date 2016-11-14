@@ -16,6 +16,7 @@ describe('lib/publisher/presenters/bdf.js', () => {
 
     given('home', () => new Home({
       name: 'bdf',
+
       featured_01: new News(postFactory.build()),
       featured_02: new News(postFactory.build()),
       featured_03: new News(postFactory.build()),
@@ -84,5 +85,28 @@ describe('lib/publisher/presenters/bdf.js', () => {
     behaviorLikeAListDataField('spotlight_01', 'spotlight_01');
     behaviorLikeAListDataField('spotlight_02', 'spotlight_02');
     behaviorLikeAListDataField('spotlight_03', 'spotlight_03');
+
+    describe('last_news', () => {
+      given('data', () => ({foo: 'bar'}));
+      given('last_news', () => ([
+        new News(postFactory.build())
+      ]));
+
+      beforeEach(() => {
+        home.last_news = last_news;
+
+        sandbox.stub(presenters, 'getListData').returns(data);
+      });
+
+      it('gets list data of each item', () => {
+        getData;
+
+        expect(presenters.getListData).to.have.been.calledWith(home.last_news[0]);
+      });
+
+      it('returns data', () => {
+        expect(getData.last_news).to.deep.equal([data]);
+      });
+    });
   });
 });
