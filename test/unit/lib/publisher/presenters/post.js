@@ -29,6 +29,7 @@ describe('lib/publisher/presenters/post.js', () => {
       display_area: post.metadata.display_area,
       area: post.metadata.area,
       url: post.metadata.url,
+      path: post.metadata.url,
       hat: post.metadata.hat,
       title: post.metadata.title,
       description: post.metadata.description,
@@ -133,6 +134,7 @@ describe('lib/publisher/presenters/post.js', () => {
       hat: post.metadata.hat,
       description: post.metadata.description,
       url: post.metadata.url,
+      path: post.metadata.url,
       date: post.published_at,
       published_at: post.published_at,
       cover: post.metadata.cover

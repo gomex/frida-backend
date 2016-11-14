@@ -20,6 +20,7 @@ describe('lib/publisher/presenters/photoCaption.js', () => {
     given('expectedData', () => ({
       layout: photoCaption.metadata.layout,
       url: photoCaption.metadata.url,
+      path: photoCaption.metadata.url,
       title: photoCaption.metadata.title,
       cover: photoCaption.metadata.cover,
       related_photo_captions: []
@@ -62,6 +63,7 @@ describe('lib/publisher/presenters/photoCaption.js', () => {
     given('expectedData', () => ({
       title: photoCaption.metadata.title,
       url: photoCaption.metadata.url,
+      path: photoCaption.metadata.url,
       cover: photoCaption.metadata.cover
     }));
 

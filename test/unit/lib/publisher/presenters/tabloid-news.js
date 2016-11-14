@@ -27,6 +27,7 @@ describe('lib/publisher/presenters/tabloidNews.js', () => {
       display_area: tabloidNews.metadata.display_area,
       area: tabloidNews.metadata.area,
       url: tabloidNews.metadata.url,
+      path: tabloidNews.metadata.url,
       hat: tabloidNews.metadata.hat,
       title: tabloidNews.metadata.title,
       description: tabloidNews.metadata.description,
@@ -62,6 +63,7 @@ describe('lib/publisher/presenters/tabloidNews.js', () => {
       hat: tabloidNews.metadata.hat,
       description: tabloidNews.metadata.description,
       url: tabloidNews.metadata.url,
+      path: tabloidNews.metadata.url,
       date: tabloidNews.published_at,
       published_at: tabloidNews.published_at,
       cover: tabloidNews.metadata.cover

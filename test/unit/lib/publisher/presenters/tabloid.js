@@ -25,6 +25,7 @@ describe('lib/publisher/presenters/tabloid.js', () => {
       layout: tabloid.metadata.layout,
       display_area: tabloid.metadata.display_area,
       url: tabloid.metadata.url,
+      path: tabloid.metadata.url,
       cover: tabloid.metadata.cover,
       date: tabloid.published_at,
       published_at: tabloid.published_at,
@@ -104,7 +105,8 @@ describe('lib/publisher/presenters/tabloid.js', () => {
     given('expectedData', () => ({
       title: tabloid.metadata.title,
       display_area: tabloid.metadata.display_area,
-      url: tabloid.metadata.url
+      url: tabloid.metadata.url,
+      path: tabloid.metadata.url
     }));
 
     it('exists', () => {
