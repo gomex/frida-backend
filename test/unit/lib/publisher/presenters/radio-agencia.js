@@ -1,19 +1,23 @@
 /*eslint no-undef: "off"*/
 
+var _ = require('underscore');
 var Home = require('../../../../../lib/models/home');
 var News = require('../../../../../lib/models/news');
 var presenter = require('../../../../../lib/publisher/presenters/radio-agencia');
+var postPresenter = require('../../../../../lib/publisher/presenters/post');
 var postFactory = require('../../../../factories/post-attributes').post;
 
 describe('lib/publisher/presenters/home.js', () => {
   describe('getData', () => {
     subj('getData', () => presenter.getData(home));
 
-    given('featured_01', () => new News(postFactory.build()));
-    given('home', () => new Home({
-      name: 'radio_agencia',
-      featured_01: featured_01
-    }));
+    given('latest_news', () => _.map(postFactory.buildList(21), (post) => new News(post)));
+    given('featured_01', () => _.first(latest_news));
+    given('home', () => {
+      var home = new Home({ name: 'radio_agencia', featured_01: featured_01 });
+      home.latest_news = latest_news;
+      return home;
+    });
 
     it('sets layout', () => {
       expect(getData.layout).to.equal('radioagencia');
@@ -24,7 +28,16 @@ describe('lib/publisher/presenters/home.js', () => {
     });
 
     it('sets featured_01', () => {
-      expect(getData.featured_01).to.exist;
+      expect(getData.featured_01).to.eql(postPresenter.getListData(featured_01));
     });
+
+    it('set latest_news', () => {
+      expect(getData.latest_news).to.not.be.empty;
+    });
+
+    it('removes "featured_01" from latest_news', () => {
+      expect(getData.latest_news).to.not.deep.include(getData.featured_01);
+    });
+
   });
 });
