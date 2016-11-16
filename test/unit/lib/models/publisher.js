@@ -510,11 +510,17 @@ describe('publisher', function() {
       });
     });
 
-    it('updates home page', function(done) {
-      subject(news, function(err, _news) {
-        expect(hexo.updateHomePage).to.have.been.called;
+    context('when TOGGLE_uOPfBeRx_HOME_EDIT is disabled', () => {
+      beforeEach(() => {
+        process.env.TOGGLE_uOPfBeRx_HOME_EDIT = false;
+      });
 
-        done(err);
+      it('updates home page', function(done) {
+        subject(news, function(err, _news) {
+          expect(hexo.updateHomePage).to.have.been.called;
+
+          done(err);
+        });
       });
     });
 
