@@ -68,6 +68,22 @@ describe('unit/lib/models/home.js', () => {
         done(err);
       });
     });
+
+    describe('when there is no field to populate', () => {
+      given('home', () => new Home({}));
+
+      beforeEach(() => {
+        sandbox.spy(home, 'populate');
+      });
+
+      it('does not populate', (done) => {
+        subject((err) => {
+          expect(home.populate).to.not.have.been.called;
+
+          done(err);
+        });
+      });
+    });
   });
 
   describe('init', () => {
