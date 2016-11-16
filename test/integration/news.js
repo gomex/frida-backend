@@ -487,7 +487,9 @@ describe('REST API:', function() {
               assert.equal(result.status, 'published');
               assert.equal(result.metadata.url, buildNewsHTTPPath(tabloid.metadata.title));
 
-              assert.ok(fs.existsSync(hexoPaths.sourcePath + '/index.md'));
+              if(!process.env.TOGGLE_uOPfBeRx_HOME_EDIT) {
+                assert.ok(fs.existsSync(hexoPaths.sourcePath + '/index.md'));
+              }
 
               var tabloidFileAsFrontMatters = fs.readFileSync(hexoPaths.postsPath + newsYearMonthURL + tabloidId + '.md', 'utf-8');
               var tabloidFileAsObj = grayMatter(tabloidFileAsFrontMatters);
