@@ -43,7 +43,7 @@ describe('lib/publisher/presenters/bdf.js', () => {
       tabloid_rj: new News(tabloidFactory.build())
     }));
 
-    function behaviorLikeAListDataField(fieldName, dataName) {
+    function behaviorLikeAListDataField(fieldName, dataName, optional) {
       describe(fieldName, () => {
         given('listData', () => ({foo: 'bar'}));
 
@@ -53,6 +53,18 @@ describe('lib/publisher/presenters/bdf.js', () => {
 
         it('sets featureds', () => {
           expect(getData[dataName]).to.equal(listData);
+        });
+      });
+
+      describe('when optional', () => {
+        beforeEach(() => {
+          home[fieldName] = null;
+        });
+
+        it('data is null', () => {
+          if(optional) {
+            expect(getData[dataName]).to.be.null;
+          }
         });
       });
     }
@@ -65,6 +77,8 @@ describe('lib/publisher/presenters/bdf.js', () => {
       expect(getData.path).to.equal('/');
     });
 
+    var optional = true;
+
     behaviorLikeAListDataField('featured_01', 'featured_01');
     behaviorLikeAListDataField('featured_02', 'featured_02');
     behaviorLikeAListDataField('featured_03', 'featured_03');
@@ -74,21 +88,21 @@ describe('lib/publisher/presenters/bdf.js', () => {
     behaviorLikeAListDataField('featured_07', 'featured_07');
     behaviorLikeAListDataField('featured_08', 'featured_08');
 
-    behaviorLikeAListDataField('column_01', 'column_01');
-    behaviorLikeAListDataField('column_02', 'column_02');
-    behaviorLikeAListDataField('column_03', 'column_03');
+    behaviorLikeAListDataField('column_01', 'column_01', optional);
+    behaviorLikeAListDataField('column_02', 'column_02', optional);
+    behaviorLikeAListDataField('column_03', 'column_03', optional);
 
     behaviorLikeAListDataField('photo_caption', 'photo_caption');
 
-    behaviorLikeAListDataField('tabloid_ce', 'ceara');
-    behaviorLikeAListDataField('tabloid_mg', 'minas_gerais');
-    behaviorLikeAListDataField('tabloid_pr', 'parana');
-    behaviorLikeAListDataField('tabloid_pe', 'pernambuco');
-    behaviorLikeAListDataField('tabloid_rj', 'rio_de_janeiro');
+    behaviorLikeAListDataField('tabloid_ce', 'ceara', optional);
+    behaviorLikeAListDataField('tabloid_mg', 'minas_gerais', optional);
+    behaviorLikeAListDataField('tabloid_pr', 'parana', optional);
+    behaviorLikeAListDataField('tabloid_pe', 'pernambuco', optional);
+    behaviorLikeAListDataField('tabloid_rj', 'rio_de_janeiro', optional);
 
-    behaviorLikeAListDataField('spotlight_01', 'spotlight_01');
-    behaviorLikeAListDataField('spotlight_02', 'spotlight_02');
-    behaviorLikeAListDataField('spotlight_03', 'spotlight_03');
+    behaviorLikeAListDataField('spotlight_01', 'spotlight_01', optional);
+    behaviorLikeAListDataField('spotlight_02', 'spotlight_02', optional);
+    behaviorLikeAListDataField('spotlight_03', 'spotlight_03', optional);
 
     describe('last_news', () => {
       given('data', () => ({foo: 'bar'}));
