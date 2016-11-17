@@ -11,7 +11,7 @@ describe('lib/publisher/presenters/home.js', () => {
   describe('getData', () => {
     subj('getData', () => presenter.getData(home));
 
-    given('latest_news', () => _.map(postFactory.buildList(21), (post) => new News(post)));
+    given('latest_news', () => _.map(postFactory.buildList(22), (post) => new News(post)));
     given('featured_01', () => _.first(latest_news));
     given('home', () => {
       var home = new Home({ name: 'radio_agencia', featured_01: featured_01 });
@@ -37,6 +37,10 @@ describe('lib/publisher/presenters/home.js', () => {
 
     it('removes "featured_01" from latest_news', () => {
       expect(getData.latest_news).to.not.deep.include(getData.featured_01);
+    });
+
+    it('it keeps only 20 items on latest_news', () => {
+      expect(getData.latest_news).to.have.length.of(20);
     });
 
   });
