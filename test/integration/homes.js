@@ -142,6 +142,16 @@ describe('/homes', () => {
         });
     });
 
+    it('increments version', (done) => {
+      subject()
+        .expect(200)
+        .end((err, res) => {
+          expect(res.body.__v).to.equal(1);
+
+          done(err);
+        });
+    });
+
     it('writes file', (done) => {
       subject()
         .expect(200)
