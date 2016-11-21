@@ -126,5 +126,28 @@ describe('lib/publisher/presenters/bdf.js', () => {
         expect(getData.last_news).to.deep.equal([data]);
       });
     });
+
+    describe('most_read', () => {
+      given('data', () => ({foo: 'bar'}));
+      given('most_read', () => ([
+        new News(postFactory.build())
+      ]));
+
+      beforeEach(() => {
+        home.most_read = most_read;
+
+        sandbox.stub(presenters, 'getListData').returns(data);
+      });
+
+      it('gets list data of each item', () => {
+        getData;
+
+        expect(presenters.getListData).to.have.been.calledWith(home.most_read[0]);
+      });
+
+      it('returns data', () => {
+        expect(getData.most_read).to.deep.equal([data]);
+      });
+    });
   });
 });

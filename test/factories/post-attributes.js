@@ -13,6 +13,7 @@ var metadata = new Factory()
   .attr('author', function() { return faker.name.findName(); })
   .attr('place', function() { return faker.address.state(); })
   .attr('cover', function() { return coverAttributes.build(); })
+  .attr('most_read', faker.random.boolean)
   .attr('area', () => _.sample([
     'direitos_humanos',
     'cultura',

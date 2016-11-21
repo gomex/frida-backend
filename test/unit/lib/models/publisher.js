@@ -8,6 +8,7 @@ var Home = require('../../../../lib/models/home');
 var tabloids = require('../../../../lib/models/news/tabloids');
 var advertisings = require('../../../../lib/models/news/advertisings');
 var photoCaptions = require('../../../../lib/models/news/photo-captions');
+var bdf = require('../../../../lib/models/home/bdf');
 var hexo = require('../../../../lib/publisher/hexo');
 var newsFactory = require('../../../factories/news-attributes').news;
 var metadataFactory = require('../../../factories/news-attributes').metadata;
@@ -646,12 +647,20 @@ describe('publisher', function() {
       given('home', () => new Home({name: 'bdf'}));
 
       beforeEach(() => {
-        sandbox.stub(News, 'find').yields(null, newsList);
+        sandbox.stub(bdf, 'getLastNews').yields(null, newsList);
+        sandbox.stub(bdf, 'getMostRead').yields(null, newsList);
       });
 
       it('enriches with latest news', (done) => {
         subject((err) => {
           expect(home.last_news).to.equal(newsList);
+          done(err);
+        });
+      });
+
+      it('enriches with most_read', (done) => {
+        subject((err) => {
+          expect(home.most_read).to.equal(newsList);
           done(err);
         });
       });
