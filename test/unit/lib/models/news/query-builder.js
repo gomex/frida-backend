@@ -13,7 +13,7 @@ describe('queryBuilder', () => {
     });
 
     it('returns empty filter', () => {
-      expect(build).to.eql({});
+      expect(build).to.eql({ $and: [] });
     });
 
     describe('with query', () => {
@@ -22,7 +22,9 @@ describe('queryBuilder', () => {
       }));
 
       given('query', () => ({
-        'metadata.title': new RegExp(params.q, 'i')
+        $and: [
+          { 'metadata.title': new RegExp(params.q, 'i') }
+        ]
       }));
 
       it('returns', () => {
@@ -36,7 +38,9 @@ describe('queryBuilder', () => {
       }));
 
       given('query', () => ({
-        status: 'draft'
+        $and: [
+          { status: 'draft' }
+        ]
       }));
 
       it('returns', () => {
@@ -52,9 +56,13 @@ describe('queryBuilder', () => {
         }));
 
         given('query', () => ({
-          $or: [
-            {'status': 'draft'},
-            {'status': 'published'}
+          $and: [
+            {
+              $or: [
+                {'status': 'draft'},
+                {'status': 'published'}
+              ]
+            }
           ]
         }));
 
@@ -70,7 +78,9 @@ describe('queryBuilder', () => {
       }));
 
       given('query', () => ({
-        'tags': {$in: ['radioagencia']}
+        $and: [
+          { 'tags': {$in: ['radioagencia']} }
+        ]
       }));
 
       it('returns', () => {
@@ -83,7 +93,9 @@ describe('queryBuilder', () => {
         }));
 
         given('query', () => ({
-          'tags': {$in: ['radioagencia', 'radio']}
+          $and: [
+            { 'tags': {$in: ['radioagencia', 'radio']} }
+          ]
         }));
 
         it('returns', () => {
@@ -98,7 +110,9 @@ describe('queryBuilder', () => {
       }));
 
       given('query', () => ({
-        'metadata.layout': 'draft'
+        $and: [
+          { 'metadata.layout': 'draft' }
+        ]
       }));
 
       it('returns', () => {
@@ -114,9 +128,13 @@ describe('queryBuilder', () => {
         }));
 
         given('query', () => ({
-          $or: [
-            {'metadata.layout': 'post'},
-            {'metadata.layout': 'column'}
+          $and: [
+            {
+              $or: [
+                {'metadata.layout': 'post'},
+                {'metadata.layout': 'column'}
+              ]
+            }
           ]
         }));
 
