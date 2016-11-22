@@ -231,9 +231,9 @@ describe('REST API:', function() {
       subject()
         .expect(200)
         .end(function(err, res) {
-          if(err){ done(err); }
+          if(err) return done(err);
 
-          var id = res.body.id;
+          var id = res.body._id;
           assert(typeof id !== 'undefined');
           assert.equal(id, newsId);
 
@@ -267,7 +267,7 @@ describe('REST API:', function() {
         .end(function(err, res) {
           if(err){ done(err); }
 
-          var id = res.body.id;
+          var id = res.body._id;
           assert(typeof id !== 'undefined');
           assert.equal(id, newsId);
 
@@ -275,6 +275,16 @@ describe('REST API:', function() {
             assert.equal(result.metadata.url, undefined);
             done();
           });
+        });
+    });
+
+    it('increments version', function(done){
+      subject()
+        .expect(200)
+        .end(function(err, res) {
+          expect(res.body.__v).to.equal(1);
+
+          done(err);
         });
     });
 
