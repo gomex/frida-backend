@@ -24,7 +24,6 @@ describe('lib/publisher/presenters/column.js', () => {
 
     given('expectedData', () => ({
       layout: column.metadata.layout,
-      display_area: column.metadata.display_area,
       url: column.metadata.url,
       path: column.metadata.url,
       title: column.metadata.title,

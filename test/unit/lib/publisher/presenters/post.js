@@ -26,7 +26,6 @@ describe('lib/publisher/presenters/post.js', () => {
 
     given('expectedData', () => ({
       layout: post.metadata.layout,
-      display_area: post.metadata.display_area,
       area: post.metadata.area,
       url: post.metadata.url,
       path: post.metadata.url,

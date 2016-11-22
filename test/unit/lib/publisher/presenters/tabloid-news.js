@@ -24,7 +24,6 @@ describe('lib/publisher/presenters/tabloidNews.js', () => {
 
     given('expectedData', () => ({
       layout: tabloidNews.metadata.layout,
-      display_area: tabloidNews.metadata.display_area,
       area: tabloidNews.metadata.area,
       url: tabloidNews.metadata.url,
       path: tabloidNews.metadata.url,
