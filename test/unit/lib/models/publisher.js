@@ -628,9 +628,10 @@ describe('publisher', function() {
 
     describe('when is radioagencia', () => {
       given('newsList', () => newsFactory.buildList(2));
-      given('home', () => new Home({name: 'radio_agencia'}));
+      given('home', () => new Home({ name: 'radio_agencia', featured_01: new News(newsFactory.build()) }));
 
       beforeEach(() => {
+        sandbox.stub(Home.prototype, 'populateAllFields').yields(null);
         sandbox.stub(News, 'find').yields(null, newsList);
       });
 

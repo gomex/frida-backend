@@ -34,14 +34,5 @@ describe('lib/publisher/presenters/home.js', () => {
     it('set latest_news', () => {
       expect(getData.latest_news).to.not.be.empty;
     });
-
-    it('removes "featured_01" from latest_news', () => {
-      expect(getData.latest_news).to.not.deep.include(getData.featured_01);
-    });
-
-    it('it keeps only 20 items on latest_news', () => {
-      expect(getData.latest_news).to.have.length.of(20);
-    });
-
   });
 });
