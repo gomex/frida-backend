@@ -23,7 +23,12 @@ describe('queryBuilder', () => {
 
       given('query', () => ({
         $and: [
-          { 'metadata.title': new RegExp(params.q, 'i') }
+          {
+            $or: [
+              { 'metadata.title': new RegExp(params.q, 'i') },
+              { 'metadata.url': new RegExp(params.q, 'i') }
+            ]
+          }
         ]
       }));
 
