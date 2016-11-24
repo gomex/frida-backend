@@ -117,13 +117,13 @@ describe('publisher', function() {
         sandbox.stub(hexo, 'updateAreaPage').yields(null);
       });
 
-      describe('and is modified', function() {
+      describe('and was modified', function() {
         var metadata = metadataFactory.build({ url: '/2016/05/21/what' });
         given('news', () => new News(newsFactory.build({
           metadata: metadata,
           published_at: new Date(1000),
           updated_at: new Date(),
-          status: 'published'
+          status: 'changed'
         })));
 
         beforeEach(function() {
@@ -150,47 +150,24 @@ describe('publisher', function() {
         });
       });
 
-      describe('and is not modified', function() {
+      describe('and was not changed', function() {
         var metadata = metadataFactory.build();
         given('news', () => new News(newsFactory.build({
           metadata: metadata,
           published_at: new Date(),
-          updated_at: new Date(1000)
+          updated_at: new Date(1000),
+          status: 'published'
         })));
 
         beforeEach(function() {
           sandbox.stub(news, 'save').yields(null);
         });
 
-        it('does not update status on database', function(done){
+        it('returns error', function(done) {
           subject(news, function(err) {
-            expect(news.save).to.not.have.been.called;
+            expect(err).to.exist;
 
-            done(err);
-          });
-        });
-
-        it('does not create news data file', function(done){
-          subject(news, function(err) {
-            expect(hexo.publish).to.not.have.been.called;
-
-            done(err);
-          });
-        });
-
-        it('does not update area data file', function(done){
-          subject(news, function(err) {
-            expect(hexo.updateAreaPage).to.not.have.been.called;
-
-            done(err);
-          });
-        });
-
-        it('does not update last news data file', function(done){
-          subject(news, function(err) {
-            expect(hexo.updateAreaPage).to.not.have.been.called;
-
-            done(err);
+            done();
           });
         });
       });

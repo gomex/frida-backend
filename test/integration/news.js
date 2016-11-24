@@ -325,7 +325,7 @@ describe('REST API:', function() {
     };
 
     beforeEach(function(done) {
-      news = new News(newsFactory.build());
+      news = new News(newsFactory.build({status: 'draft'}));
       news.save(function(err) {
         if (err) {
           done(err);
