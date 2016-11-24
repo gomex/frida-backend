@@ -36,7 +36,6 @@ describe('publisher', function() {
         sandbox.stub(news, 'save').yields(null);
         sandbox.stub(hexo, 'publish').yields(null);
         sandbox.stub(hexo, 'updateAreaPage').yields(null);
-        sandbox.stub(hexo, 'updateHomePage').yields(null);
         sandbox.stub(hexo, 'publishStaticFiles').yields(null);
       });
 
@@ -95,20 +94,6 @@ describe('publisher', function() {
         });
       });
 
-      context('when TOGGLE_uOPfBeRx_HOME_EDIT is disabled', () => {
-        beforeEach(() => {
-          process.env.TOGGLE_uOPfBeRx_HOME_EDIT = false;
-        });
-
-        it('updates home data file', function(done){
-          subject(news, function(err) {
-            expect(hexo.updateHomePage).to.have.been.called;
-
-            done(err);
-          });
-        });
-      });
-
       it('sets url', function(done) {
         subject(news, function(err, publishedNews) {
           expect(publishedNews.metadata.url).to.exist;
@@ -130,7 +115,6 @@ describe('publisher', function() {
       beforeEach(function() {
         sandbox.stub(hexo, 'publish').yields(null);
         sandbox.stub(hexo, 'updateAreaPage').yields(null);
-        sandbox.stub(hexo, 'updateHomePage').yields(null);
       });
 
       describe('and is modified', function() {
@@ -205,14 +189,6 @@ describe('publisher', function() {
         it('does not update last news data file', function(done){
           subject(news, function(err) {
             expect(hexo.updateAreaPage).to.not.have.been.called;
-
-            done(err);
-          });
-        });
-
-        it('does not update home data file', function(done){
-          subject(news, function(err) {
-            expect(hexo.updateHomePage).to.not.have.been.called;
 
             done(err);
           });
@@ -456,7 +432,6 @@ describe('publisher', function() {
       sandbox.stub(news, 'save').yields(null, updatedNews);
       sandbox.stub(hexo, 'unpublish').yields(null);
       sandbox.stub(hexo, 'updateAreaPage').yields(null);
-      sandbox.stub(hexo, 'updateHomePage').yields(null);
     });
 
     it('exists', function() {
@@ -508,20 +483,6 @@ describe('publisher', function() {
         expect(hexo.updateAreaPage).to.have.been.calledWith('radio');
 
         done(err);
-      });
-    });
-
-    context('when TOGGLE_uOPfBeRx_HOME_EDIT is disabled', () => {
-      beforeEach(() => {
-        process.env.TOGGLE_uOPfBeRx_HOME_EDIT = false;
-      });
-
-      it('updates home page', function(done) {
-        subject(news, function(err, _news) {
-          expect(hexo.updateHomePage).to.have.been.called;
-
-          done(err);
-        });
       });
     });
 

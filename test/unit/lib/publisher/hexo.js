@@ -272,33 +272,6 @@ describe('hexo', function() {
 
   });
 
-  describe('updateHomePage', function() {
-    it('creates home metadata file in the configured hexo posts folder', function(done) {
-      var expectedPath = process.env.HEXO_SOURCE_PATH + '/index.md';
-      try { fs.unlinkSync(expectedPath); } catch(e) { /* ignore */ }
-
-      hexo.updateHomePage(function() {
-        assert.ok(fs.existsSync(expectedPath));
-
-        done();
-      });
-    });
-
-    it('home page data file is valid front matter', function(done) {
-      hexo.updateHomePage(function(err) {
-        assert.equal(null, err);
-
-        var homePageDataFilePath = process.env.HEXO_SOURCE_PATH + '/index.md';
-        var homePageDataFile   = fs.readFileSync(homePageDataFilePath, 'utf-8');
-        var homePageData = grayMatter(homePageDataFile);
-
-        assert.notEqual(homePageData.data, null);
-
-        done();
-      });
-    });
-  });
-
   describe('updateAdvertisingData', function() {
     var subject = (callback) => hexo.updateAdvertisingData(advertisingList, callback);
 
