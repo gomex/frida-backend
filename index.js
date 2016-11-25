@@ -1,13 +1,19 @@
 require('dotenv').config();
 
 require('./lib/db/initializer');
-require('./lib/columnist/columnist-repository').write(),
 require('./lib/http/server').startServer();
 
 var Home = require('./lib/models/home');
+var columnistService = require('./lib/services/columnist');
 
 Home.init((err) => {
   if (err) {
-    return console.error('Error Home.init', err);
+    console.error('Error Home.init', err);
+  }
+});
+
+columnistService.write((err) => {
+  if (err) {
+    console.error('Error columnistService.write', err);
   }
 });
