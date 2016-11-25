@@ -358,8 +358,7 @@ describe('REST API:', function() {
     });
   });
 
-  describe('PUT /news/<id>/status/published', function() {
-
+  describe('PUT /news/<id>/publish', function() {
     describe('when entity is of type news', function() {
       var news;
       var newsId;
@@ -381,11 +380,11 @@ describe('REST API:', function() {
       });
 
       var subject = function() {
-        return api.put(NEWS_RESOURCE + '/' + newsId + '/status/published').send(news).auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+        return api.post(NEWS_RESOURCE + '/' + newsId + '/publish').send(news).auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
       };
 
       shared.behavesAsAuthenticated(() =>
-        api.put(NEWS_RESOURCE + '/' + newsId + '/status/published')
+        api.put(NEWS_RESOURCE + '/' + newsId + '/publish')
       );
 
       it('succeeds', function(done) {
@@ -443,7 +442,7 @@ describe('REST API:', function() {
       });
 
       var subject = function() {
-        return api.put(NEWS_RESOURCE + '/' + photoCaptionId + '/status/published').send(photoCaption).auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+        return api.post(NEWS_RESOURCE + '/' + photoCaptionId + '/publish').send(photoCaption).auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
       };
 
       it('does not create yaml front matter file', function(done) {
@@ -480,7 +479,7 @@ describe('REST API:', function() {
       });
 
       var subject = function() {
-        return api.put(NEWS_RESOURCE + '/' + tabloidId + '/status/published').send(tabloid).auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+        return api.post(NEWS_RESOURCE + '/' + tabloidId + '/publish').send(tabloid).auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
       };
 
       it('creates tabloid data file', function(done) {
