@@ -1,6 +1,6 @@
 /*eslint no-undef: "off"*/
 
-var UserService = require('../../lib/services/user_service');
+var UserService = require('../../lib/services/user');
 
 function behavesAsAuthenticated(api) {
   describe('when credentials are not sent', () => {
