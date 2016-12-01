@@ -28,7 +28,7 @@ var post = new Factory()
   .attr('body', function() { return faker.lorem.paragraphs(); })
   .attr('metadata', function() { return metadata.build(); })
   .attr('published_at', function() { return faker.date.recent(); })
-  .attr('tags', () => ([faker.lorem.word()]))
+  .attr('labels', () => ([faker.lorem.word()]))
   .attr('audio', function() { return 'https://soundcloud.com/user-555/oi'; })
   .attr('related_news', () => ([]));
 

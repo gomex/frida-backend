@@ -34,7 +34,7 @@ describe('lib/publisher/presenters/post.js', () => {
       description: post.metadata.description,
       author: post.metadata.author,
       place: post.metadata.place,
-      tags: post.tags,
+      labels: post.labels,
       audio: post.audio,
       date: post.published_at,
       published_at: post.published_at,
