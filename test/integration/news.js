@@ -304,12 +304,12 @@ describe('REST API:', function() {
         subject()
         .expect(200)
         .end(function(err, _result) {
+          if (err) return done(err);
 
           News.findById(newsIdent, function(err, result) {
             assert.equal(result.metadata.url, '/this-path-should-not-disappear');
-            done();
+            done(err);
           });
-
         });
       });
     });
