@@ -77,14 +77,14 @@ describe('queryBuilder', () => {
       });
     });
 
-    describe('with labels', () => {
+    describe('with tags', () => {
       given('params', () => ({
-        labels: 'radioagencia'
+        tags: 'radioagencia'
       }));
 
       given('query', () => ({
         $and: [
-          { 'labels': {$in: ['radioagencia']} }
+          { 'tags': {$in: ['radioagencia']} }
         ]
       }));
 
@@ -92,14 +92,14 @@ describe('queryBuilder', () => {
         expect(build).to.eql(query);
       });
 
-      describe('when has more than one label', () => {
+      describe('when has more than one tag', () => {
         given('params', () => ({
-          labels: ['radioagencia', 'radio']
+          tags: ['radioagencia', 'radio']
         }));
 
         given('query', () => ({
           $and: [
-            { 'labels': {$in: ['radioagencia', 'radio']} }
+            { 'tags': {$in: ['radioagencia', 'radio']} }
           ]
         }));
 

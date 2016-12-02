@@ -159,7 +159,7 @@ describe('area-page-strategy', function() {
 
           var news = newsFactory.build({
             metadata: metadata,
-            labels: ['hex', 'durgs', 'radioagência', 'rock n roll'],
+            tags: ['hex', 'durgs', 'radioagência', 'rock n roll'],
             published_at: new Date(),
             updated_at: new Date(),
             status: 'published'
