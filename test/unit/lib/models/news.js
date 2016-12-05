@@ -42,6 +42,20 @@ describe('news', () => {
     });
   };
 
+  var hasAreaFormated = (name, area) => {
+    subj('formatedArea', () => news[name]());
+
+    given('news', () => new News(newsFactory.build({'metadata.area': area})));
+
+    it('formats area direitos_humanos', () => {
+      expect(formatedArea).to.equal('direitos humanos')
+    });
+  };
+
+  describe.only('#areaIsFormated', () => {
+    hasAreaFormated('formatedArea', 'direitos_humanos');
+  });
+
   describe('#isPost', () => {
     behaviourAsIsLayout('isPost', 'post');
   });
