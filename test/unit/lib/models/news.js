@@ -42,18 +42,38 @@ describe('news', () => {
     });
   };
 
-  var hasAreaFormated = (name, area) => {
+  var hasAreaFormated = (name, area, formated_area) => {
     subj('formatedArea', () => news[name]());
 
     given('news', () => new News(newsFactory.build({'metadata.area': area})));
 
-    it('formats area direitos_humanos', () => {
-      expect(formatedArea).to.equal('direitos humanos')
+    it('formats area', () => {
+      expect(formatedArea).to.equal(formated_area)
     });
   };
 
-  describe.only('#areaIsFormated', () => {
-    hasAreaFormated('formatedArea', 'direitos_humanos');
+  describe('#direitosHumanosIsFormated', () => {
+    hasAreaFormated('formatedArea', 'direitos_humanos', 'direitos humanos');
+  });
+
+  describe('#espanolIsFormated', () => {
+    hasAreaFormated('formatedArea', 'espanol', 'español');
+  });
+
+  describe('#politicaIsFormated', () => {
+    hasAreaFormated('formatedArea', 'politica', 'política');
+  });
+
+  describe('#politicaIsFormated', () => {
+    hasAreaFormated('formatedArea', 'opiniao', 'opinião');
+  });
+
+  describe('#politicaIsFormated', () => {
+    hasAreaFormated('formatedArea', 'nenhuma', 'radioagência');
+  });
+
+  describe('#politicaIsFormated', () => {
+    hasAreaFormated('formatedArea', 'nacional', 'nacional');
   });
 
   describe('#isPost', () => {
