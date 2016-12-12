@@ -28,7 +28,6 @@ describe('lib/publisher/presenters/special.js', () => {
       title: special.metadata.title,
       description: special.metadata.description,
       published_at: special.published_at,
-      date: special.published_at,
       cover: special.metadata.cover,
       labels: special.tags,
       sections: []
