@@ -30,7 +30,7 @@ describe('lib/publisher/presenters/special.js', () => {
       published_at: special.published_at,
       cover: special.metadata.cover,
       labels: special.tags,
-      sections: []
+      sections: special.sections
     }));
 
     it('exists', () => {
