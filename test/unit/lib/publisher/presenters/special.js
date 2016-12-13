@@ -2,6 +2,7 @@
 
 var presenter = require('../../../../../lib/publisher/presenters/special');
 var coverPresenter = require('../../../../../lib/publisher/presenters/cover');
+var textPresenter = require('../../../../../lib/publisher/presenters/special/text');
 var factory = require('../../../../factories/special-attributes').special;
 var metadataFactory = require('../../../../factories/special-attributes').metadata;
 
@@ -30,7 +31,7 @@ describe('lib/publisher/presenters/special.js', () => {
       published_at: special.published_at,
       cover: special.metadata.cover,
       labels: special.tags,
-      sections: special.sections
+      sections: []
     }));
 
     it('exists', () => {
@@ -44,6 +45,37 @@ describe('lib/publisher/presenters/special.js', () => {
     it('calls cover presenter', () => {
       getData;
       expect(coverPresenter.getData).to.have.been.calledWith(special);
+    });
+
+    context('when there is sections', () => {
+      given('section', () => ({
+        type: 'some'
+      }));
+
+      beforeEach(() => {
+        special.sections = [section];
+      });
+
+      it('sets section', () => {
+        expect(getData.sections).to.deep.equal([section]);
+      });
+
+      context('when is type text', () => {
+        given('section', () => ({
+          type: 'text',
+          text: 'some text'
+        }));
+
+        beforeEach(() => {
+          special.sections = [section];
+          sandbox.spy(textPresenter, 'getData');
+        });
+
+        it('delegates to text presenter', () => {
+          getData;
+          expect(textPresenter.getData).to.have.been.called;
+        });
+      });
     });
   });
 
