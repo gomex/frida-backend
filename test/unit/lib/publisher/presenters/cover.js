@@ -21,7 +21,13 @@ describe('lib/publisher/presenters/cover.js', () => {
         small: post.metadata.cover.small,
         title: post.metadata.cover.title,
         credits: post.metadata.cover.credits,
-        subtitle: post.metadata.cover.subtitle
+        subtitle: post.metadata.cover.subtitle,
+        mobile: {
+          link: post.metadata.cover.mobile.link,
+          thumbnail: post.metadata.cover.mobile.thumbnail,
+          medium: post.metadata.cover.mobile.medium,
+          small: post.metadata.cover.mobile.small,
+        }
       }
     }));
 
@@ -50,6 +56,16 @@ describe('lib/publisher/presenters/cover.js', () => {
 
       it('does not exist on data', () => {
         expect(getData.cover).to.not.exist;
+      });
+    });
+
+    describe('when there is no mobile', () => {
+      beforeEach(() => {
+        delete post.metadata.cover.mobile;
+      });
+
+      it('does not exist on data', () => {
+        expect(getData.cover.mobile).to.not.exist;
       });
     });
   });

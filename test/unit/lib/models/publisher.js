@@ -39,15 +39,15 @@ describe('publisher', function() {
         sandbox.stub(hexo, 'publishStaticFiles').yields(null);
       });
 
-      describe('and the area is "nenhuma"', function() {
+      describe('and the area is "radioagencia"', function() {
 
         beforeEach(function() {
-          news.metadata.area = 'nenhuma';
+          news.metadata.area = 'radioagencia';
         });
 
         it('does not update area data file', function(done){
           subject(news, function(err) {
-            expect(hexo.updateAreaPage).to.not.have.been.calledWith('nenhuma');
+            expect(hexo.updateAreaPage).to.not.have.been.calledWith('radioagencia');
 
             done(err);
           });

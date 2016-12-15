@@ -16,6 +16,8 @@ var advertisingFactory = require ('../../../factories/advertising-attributes').a
 var advertisingPresenter = require('../../../../lib/publisher/presenters/advertising');
 var spotlightFactory = require ('../../../factories/spotlight-attributes').spotlight;
 var spotlightPresenter = require('../../../../lib/publisher/presenters/spotlight');
+var specialFactory = require ('../../../factories/special-attributes').special;
+var specialPresenter = require('../../../../lib/publisher/presenters/special');
 
 describe('lib/publisher/presenter.js', () => {
   describe('of', () => {
@@ -78,6 +80,14 @@ describe('lib/publisher/presenter.js', () => {
 
       it('returns advertising presenter', () => {
         expect(of).to.equals(spotlightPresenter);
+      });
+    });
+
+    describe('when is special', () => {
+      given('news', () => new News(specialFactory.build()));
+
+      it('returns special presenter', () => {
+        expect(of).to.equals(specialPresenter);
       });
     });
 

@@ -104,6 +104,10 @@ describe('news', () => {
     behaviourAsIsLayout('isSpotlight', 'spotlight');
   });
 
+  describe('#isSpecial', () => {
+    behaviourAsIsLayout('isSpecial', 'special');
+  });
+
   describe('#isDraft', () => {
     behaviourAsIsStatus('isDraft', 'draft');
   });
