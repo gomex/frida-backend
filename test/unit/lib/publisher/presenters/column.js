@@ -54,6 +54,7 @@ describe('lib/publisher/presenters/column.js', () => {
 
     given('expectedData', () => ({
       title: column.metadata.title,
+      hat: 'coluna',
       description: column.metadata.description,
       url: column.metadata.url,
       path: column.metadata.url,
