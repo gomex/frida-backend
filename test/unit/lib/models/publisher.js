@@ -36,7 +36,6 @@ describe('publisher', function() {
         sandbox.stub(news, 'save').yields(null);
         sandbox.stub(hexo, 'publish').yields(null);
         sandbox.stub(hexo, 'updateAreaPage').yields(null);
-        sandbox.stub(hexo, 'publishStaticFiles').yields(null);
       });
 
       describe('and the area is "radioagencia"', function() {
@@ -89,14 +88,6 @@ describe('publisher', function() {
       it('sets url', function(done) {
         subject(news, function(err, publishedNews) {
           expect(publishedNews.metadata.url).to.exist;
-
-          done(err);
-        });
-      });
-
-      it('creates static files', function(done){
-        subject(news, function(err) {
-          expect(hexo.publishStaticFiles).to.have.been.called;
 
           done(err);
         });
