@@ -26,6 +26,7 @@ describe('lib/publisher/presenters/column.js', () => {
       layout: column.metadata.layout,
       url: column.metadata.url,
       path: column.metadata.url,
+      hat: 'coluna',
       title: column.metadata.title,
       description: column.metadata.description,
       date: column.published_at,
