@@ -86,14 +86,6 @@ describe('publisher', function() {
         });
       });
 
-      it('updates radio area data file', function(done){
-        subject(news, function(err) {
-          expect(hexo.updateAreaPage).to.have.been.calledWith('radio');
-
-          done(err);
-        });
-      });
-
       it('sets url', function(done) {
         subject(news, function(err, publishedNews) {
           expect(publishedNews.metadata.url).to.exist;
@@ -450,14 +442,6 @@ describe('publisher', function() {
     it('updates last news', function(done) {
       subject(news, function(err, _news) {
         expect(hexo.updateAreaPage).to.have.been.calledWith('ultimas_noticias');
-
-        done(err);
-      });
-    });
-
-    it('updates radio area data file', function(done){
-      subject(news, function(err) {
-        expect(hexo.updateAreaPage).to.have.been.calledWith('radio');
 
         done(err);
       });
