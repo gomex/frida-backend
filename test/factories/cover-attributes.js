@@ -3,12 +3,14 @@ var faker = require('faker');
 
 var mobile = new Factory()
   .attr('link', faker.image.imageUrl)
+  .attr('original', faker.image.imageUrl)
   .attr('thumbnail', faker.image.imageUrl)
   .attr('medium', faker.image.imageUrl)
   .attr('small', faker.image.imageUrl);
 
 var cover = new Factory()
   .attr('link', faker.image.imageUrl)
+  .attr('original', faker.image.imageUrl)
   .attr('thumbnail', faker.image.imageUrl)
   .attr('medium', faker.image.imageUrl)
   .attr('small', faker.image.imageUrl)

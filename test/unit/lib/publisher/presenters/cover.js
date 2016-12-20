@@ -16,6 +16,7 @@ describe('lib/publisher/presenters/cover.js', () => {
     given('expectedData', () => ({
       cover: {
         link: post.metadata.cover.link,
+        original: post.metadata.cover.original,
         thumbnail: post.metadata.cover.thumbnail,
         medium: post.metadata.cover.medium,
         small: post.metadata.cover.small,
@@ -24,6 +25,7 @@ describe('lib/publisher/presenters/cover.js', () => {
         subtitle: post.metadata.cover.subtitle,
         mobile: {
           link: post.metadata.cover.mobile.link,
+          original: post.metadata.cover.mobile.original,
           thumbnail: post.metadata.cover.mobile.thumbnail,
           medium: post.metadata.cover.mobile.medium,
           small: post.metadata.cover.mobile.small,
