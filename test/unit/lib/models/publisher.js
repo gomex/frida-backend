@@ -550,7 +550,15 @@ describe('publisher', function() {
 
     describe('when is radioagencia', () => {
       given('newsList', () => newsFactory.buildList(2));
-      given('home', () => new Home({ name: 'radio_agencia', featured_01: new News(newsFactory.build()) }));
+      given('home', () => new Home({
+        name: 'radio_agencia',
+        featured_01: new News(newsFactory.build()),
+        service_01: new News(newsFactory.build()),
+        service_02: new News(newsFactory.build()),
+        service_03: new News(newsFactory.build()),
+        service_04: new News(newsFactory.build()),
+        service_05: new News(newsFactory.build())
+      }));
 
       beforeEach(() => {
         sandbox.stub(Home.prototype, 'populateAllFields').yields(null);
