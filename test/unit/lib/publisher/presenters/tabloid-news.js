@@ -32,7 +32,7 @@ describe('lib/publisher/presenters/tabloidNews.js', () => {
       description: tabloidNews.metadata.description,
       author: tabloidNews.metadata.author,
       place: tabloidNews.metadata.place,
-      regional_area: tabloidNews.regional_area,
+      region: tabloidNews.region,
       labels: tabloidNews.tags,
       date: tabloidNews.published_at,
       published_at: tabloidNews.published_at,

@@ -194,18 +194,28 @@ describe('publisher', function() {
 
     describe('when is a tabloid news', () => {
       given('tabloidNews', () => new News(tabloidNewsFactory.build({
-        status: 'draft'
+        status: 'draft',
+        region: 'minas_gerais'
       })));
       given('aTabloid', () => new News(tabloidFactory.build()));
 
       beforeEach(() => {
         sandbox.stub(tabloids, 'findTabloid').yields(null, aTabloid);
         sandbox.stub(hexo, 'publish').yields(null);
+        sandbox.stub(hexo, 'updateAreaPage').yields(null);
       });
 
       it('publishes news', (done) => {
         subject(tabloidNews, (err) => {
           expect(hexo.publish).to.have.been.calledWith(tabloidNews);
+
+          done(err);
+        });
+      });
+
+      it('updates regional news data file', function(done){
+        subject(tabloidNews, function(err) {
+          expect(hexo.updateAreaPage).to.have.been.calledWith(tabloidNews.region);
 
           done(err);
         });
