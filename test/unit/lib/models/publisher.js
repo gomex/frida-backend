@@ -21,6 +21,10 @@ describe('publisher', function() {
   describe('.publish', function() {
     var subject = function(news, callback) { publisher.publish(news, callback); };
 
+    beforeEach(() => {
+      sandbox.stub(publisher, 'publishHome').yields(null);
+    });
+
     describe('when news is not published', function() {
       var metadata = metadataFactory.build();
       given('news', () => new News(newsFactory.build(
@@ -32,25 +36,13 @@ describe('publisher', function() {
         }
       )));
 
+      given('home', () => new Home({name: 'bdf'}));
+
       beforeEach(function() {
         sandbox.stub(news, 'save').yields(null);
         sandbox.stub(hexo, 'publish').yields(null);
         sandbox.stub(hexo, 'updateAreaPage').yields(null);
-      });
-
-      describe('and the area is "radioagencia"', function() {
-
-        beforeEach(function() {
-          news.metadata.area = 'radioagencia';
-        });
-
-        it('does not update area data file', function(done){
-          subject(news, function(err) {
-            expect(hexo.updateAreaPage).to.not.have.been.calledWith('radioagencia');
-
-            done(err);
-          });
-        });
+        sandbox.stub(Home, 'findByName').yields(null, home);
       });
 
       it('updates status on database', function(done){
@@ -90,6 +82,28 @@ describe('publisher', function() {
           expect(publishedNews.metadata.url).to.exist;
 
           done(err);
+        });
+      });
+
+      it('publishes homes', (done) => {
+        subject(news, function(err) {
+          expect(publisher.publishHome).to.have.been.calledWith(home);
+
+          done(err);
+        });
+      });
+
+      describe('and the area is "radioagencia"', function() {
+        beforeEach(function() {
+          news.metadata.area = 'radioagencia';
+        });
+
+        it('does not update area data file', function(done){
+          subject(news, function(err) {
+            expect(hexo.updateAreaPage).to.not.have.been.calledWith('radioagencia');
+
+            done(err);
+          });
         });
       });
     });
@@ -397,11 +411,14 @@ describe('publisher', function() {
 
     given('news', () => new News(newsFactory.build({ status: 'published' })));
     given('updatedNews', () => Object.assign({status: 'draft'}, news));
+    given('home', () => new Home({name: 'bdf'}));
 
     beforeEach(function() {
       sandbox.stub(news, 'save').yields(null, updatedNews);
       sandbox.stub(hexo, 'unpublish').yields(null);
       sandbox.stub(hexo, 'updateAreaPage').yields(null);
+      sandbox.stub(publisher, 'publishHome').yields(null);
+      sandbox.stub(Home, 'findByName').yields(null, home);
     });
 
     it('exists', function() {
@@ -443,6 +460,14 @@ describe('publisher', function() {
     it('updates last news', function(done) {
       subject(news, function(err, _news) {
         expect(hexo.updateAreaPage).to.have.been.calledWith('ultimas_noticias');
+
+        done(err);
+      });
+    });
+
+    it('publishes homes', (done) => {
+      subject(news, function(err) {
+        expect(publisher.publishHome).to.have.been.calledWith(home);
 
         done(err);
       });
