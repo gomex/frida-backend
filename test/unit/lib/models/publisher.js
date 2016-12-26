@@ -473,6 +473,14 @@ describe('publisher', function() {
         });
       });
 
+      it('updates region', function(done) {
+        subject(tabloidNews, function(err, tabloidNews) {
+          expect(hexo.updateAreaPage).to.have.been.calledWith(tabloidNews.region);
+
+          done(err);
+        });
+      });
+
       describe('when there is no tabloid', function() {
         given('aTabloid', () => undefined);
 
