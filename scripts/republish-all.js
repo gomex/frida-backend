@@ -39,7 +39,10 @@ News.find({
   console.log('%s news articles found', result.length);
 
   async.eachSeries(result, publish, (err) => {
-    if(err) throw err;
+    if(err) {
+      console.error(err);
+      throw err;
+    }
 
     process.exit();
   });
