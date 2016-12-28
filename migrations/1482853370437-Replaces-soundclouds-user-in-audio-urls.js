@@ -7,8 +7,10 @@ exports.up = function(next) {
     }
 
     allNews.forEach((oneNews) => {
-      oneNews.audio = oneNews.audio.replace('user-146107752', 'radioagenciabdf');
-      oneNews.save((err) => { if(err) console.log('Could not update news id ', oneNews._id, err);});
+      if(oneNews.audio) {
+        oneNews.audio = oneNews.audio.replace('user-146107752', 'radioagenciabdf');
+        oneNews.save((err) => { if(err) console.log('Could not update news id ', oneNews._id, err);});
+      }
     });
 
     next();
@@ -24,8 +26,10 @@ exports.down = function(next) {
     }
 
     allNews.forEach((oneNews) => {
-      oneNews.audio = oneNews.audio.replace('radioagenciabdf', 'user-146107752');
-      oneNews.save((err) => { if(err) console.log('Could not update news id ', oneNews._id, err);});
+      if(oneNews.audio) {
+        oneNews.audio = oneNews.audio.replace('radioagenciabdf', 'user-146107752');
+        oneNews.save((err) => { if(err) console.log('Could not update news id ', oneNews._id, err);});
+      }
     });
 
     next();
