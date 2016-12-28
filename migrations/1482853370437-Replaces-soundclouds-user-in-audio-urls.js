@@ -1,6 +1,6 @@
 exports.up = function(next) {
   var News = this.model('News');
-  News.find({ tags: { $in: ['radioagencia'] } }, (err, allNews) => {
+  News.find({ tags: { $in: ['radioagencia', 'radioagência'] } }, (err, allNews) => {
     if(err) {
       console.error('Could not find news: ', err);
       return;
@@ -24,7 +24,7 @@ exports.up = function(next) {
 
 exports.down = function(next) {
   var News = this.model('News');
-  News.find({ tags: { $in: ['radioagencia'] } }, (err, allNews) => {
+  News.find({ tags: { $in: ['radioagencia', 'radioagência'] } }, (err, allNews) => {
     if(err) {
       console.error(err);
       return;
