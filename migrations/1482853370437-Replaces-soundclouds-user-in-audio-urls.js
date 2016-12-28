@@ -9,7 +9,12 @@ exports.up = function(next) {
     allNews.forEach((oneNews) => {
       if(oneNews.audio) {
         oneNews.audio = oneNews.audio.replace('user-146107752', 'radioagenciabdf');
-        oneNews.save((err) => { if(err) console.log('Could not update news id ', oneNews._id, err);});
+        oneNews.save((err, updatedNews) => {
+          if(err)
+            console.error('Could not update news id ', oneNews._id, err);
+          else
+            console.log('Successfully updated ', updatedNews.metadata.title);
+        });
       }
     });
 
