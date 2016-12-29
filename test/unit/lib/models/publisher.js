@@ -36,13 +36,17 @@ describe('publisher', function() {
         }
       )));
 
-      given('home', () => new Home({name: 'bdf'}));
+      given('bdf', () => new Home({name: 'bdf'}));
+      given('radioAgencia', () => new Home({name: 'radio_agencia'}));
 
       beforeEach(function() {
         sandbox.stub(news, 'save').yields(null);
         sandbox.stub(hexo, 'publish').yields(null);
         sandbox.stub(hexo, 'updateAreaPage').yields(null);
-        sandbox.stub(Home, 'findByName').yields(null, home);
+
+        var stub = sandbox.stub(Home, 'findByName');
+        stub.withArgs('bdf').yields(null, bdf);
+        stub.withArgs('radio_agencia').yields(null, radioAgencia);
       });
 
       it('updates status on database', function(done){
@@ -85,9 +89,17 @@ describe('publisher', function() {
         });
       });
 
-      it('publishes homes', (done) => {
+      it('publishes bdf home', (done) => {
         subject(news, function(err) {
-          expect(publisher.publishHome).to.have.been.calledWith(home);
+          expect(publisher.publishHome).to.have.been.calledWith(bdf);
+
+          done(err);
+        });
+      });
+
+      it('publishes radio_agencia home', (done) => {
+        subject(news, function(err) {
+          expect(publisher.publishHome).to.have.been.calledWith(radioAgencia);
 
           done(err);
         });
@@ -411,14 +423,18 @@ describe('publisher', function() {
 
     given('news', () => new News(newsFactory.build({ status: 'published' })));
     given('updatedNews', () => Object.assign({status: 'draft'}, news));
-    given('home', () => new Home({name: 'bdf'}));
+    given('bdf', () => new Home({name: 'bdf'}));
+    given('radioAgencia', () => new Home({name: 'radio_agencia'}));
 
     beforeEach(function() {
       sandbox.stub(news, 'save').yields(null, updatedNews);
       sandbox.stub(hexo, 'unpublish').yields(null);
       sandbox.stub(hexo, 'updateAreaPage').yields(null);
       sandbox.stub(publisher, 'publishHome').yields(null);
-      sandbox.stub(Home, 'findByName').yields(null, home);
+
+      var stub = sandbox.stub(Home, 'findByName');
+      stub.withArgs('bdf').yields(null, bdf);
+      stub.withArgs('radio_agencia').yields(null, radioAgencia);
     });
 
     it('exists', function() {
@@ -465,9 +481,17 @@ describe('publisher', function() {
       });
     });
 
-    it('publishes homes', (done) => {
+    it('publishes bdf home', (done) => {
       subject(news, function(err) {
-        expect(publisher.publishHome).to.have.been.calledWith(home);
+        expect(publisher.publishHome).to.have.been.calledWith(bdf);
+
+        done(err);
+      });
+    });
+
+    it('publishes radio_agencia home', (done) => {
+      subject(news, function(err) {
+        expect(publisher.publishHome).to.have.been.calledWith(radioAgencia);
 
         done(err);
       });
