@@ -21,6 +21,7 @@
     "moment": "^2.10.6",
     "mongodb": "^2.0.40",
     "mongoose": "^4.3.7",
+    "mongoose-migration": "^0.2.0",
     "passport": "^0.3.2",
     "passport-http": "^0.3.0",
     "password-hash-and-salt": "^0.1.3",

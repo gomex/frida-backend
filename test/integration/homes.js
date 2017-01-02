@@ -6,7 +6,7 @@ var shared = require('./shared');
 var Home = require('../../lib/models/home');
 var News = require('../../lib/models/news');
 var writer = require('../../lib/publisher/writer');
-var publisher = require('../../lib//models/publisher');
+var publisher = require('../../lib/models/publisher');
 var postFactory = require('../factories/post-attributes').post;
 var async = require('async');
 
@@ -21,6 +21,8 @@ describe('/homes', () => {
   beforeEach((done) => {
     shared.createUser(done);
   });
+
+  beforeEach(Home.init);
 
   describe('GET /:name', () => {
     var subject = () => {

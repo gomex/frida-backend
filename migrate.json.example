@@ -1,0 +1,8 @@
+{
+  "basepath": "migrations",
+  "connection": "mongodb://localhost/bdf",
+  "current_timestamp": 0,
+  "models": {
+    "News": "./lib/models/news.js"
+  }
+}

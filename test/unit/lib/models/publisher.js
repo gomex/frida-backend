@@ -21,6 +21,10 @@ describe('publisher', function() {
   describe('.publish', function() {
     var subject = function(news, callback) { publisher.publish(news, callback); };
 
+    beforeEach(() => {
+      sandbox.stub(publisher, 'publishHome').yields(null);
+    });
+
     describe('when news is not published', function() {
       var metadata = metadataFactory.build();
       given('news', () => new News(newsFactory.build(
@@ -32,25 +36,17 @@ describe('publisher', function() {
         }
       )));
 
+      given('bdf', () => new Home({name: 'bdf'}));
+      given('radioAgencia', () => new Home({name: 'radio_agencia'}));
+
       beforeEach(function() {
         sandbox.stub(news, 'save').yields(null);
         sandbox.stub(hexo, 'publish').yields(null);
         sandbox.stub(hexo, 'updateAreaPage').yields(null);
-      });
 
-      describe('and the area is "radioagencia"', function() {
-
-        beforeEach(function() {
-          news.metadata.area = 'radioagencia';
-        });
-
-        it('does not update area data file', function(done){
-          subject(news, function(err) {
-            expect(hexo.updateAreaPage).to.not.have.been.calledWith('radioagencia');
-
-            done(err);
-          });
-        });
+        var stub = sandbox.stub(Home, 'findByName');
+        stub.withArgs('bdf').yields(null, bdf);
+        stub.withArgs('radio_agencia').yields(null, radioAgencia);
       });
 
       it('updates status on database', function(done){
@@ -90,6 +86,36 @@ describe('publisher', function() {
           expect(publishedNews.metadata.url).to.exist;
 
           done(err);
+        });
+      });
+
+      it('publishes bdf home', (done) => {
+        subject(news, function(err) {
+          expect(publisher.publishHome).to.have.been.calledWith(bdf);
+
+          done(err);
+        });
+      });
+
+      it('publishes radio_agencia home', (done) => {
+        subject(news, function(err) {
+          expect(publisher.publishHome).to.have.been.calledWith(radioAgencia);
+
+          done(err);
+        });
+      });
+
+      describe('and the area is "radioagencia"', function() {
+        beforeEach(function() {
+          news.metadata.area = 'radioagencia';
+        });
+
+        it('does not update area data file', function(done){
+          subject(news, function(err) {
+            expect(hexo.updateAreaPage).to.not.have.been.calledWith('radioagencia');
+
+            done(err);
+          });
         });
       });
     });
@@ -194,18 +220,28 @@ describe('publisher', function() {
 
     describe('when is a tabloid news', () => {
       given('tabloidNews', () => new News(tabloidNewsFactory.build({
-        status: 'draft'
+        status: 'draft',
+        region: 'minas_gerais'
       })));
       given('aTabloid', () => new News(tabloidFactory.build()));
 
       beforeEach(() => {
         sandbox.stub(tabloids, 'findTabloid').yields(null, aTabloid);
         sandbox.stub(hexo, 'publish').yields(null);
+        sandbox.stub(hexo, 'updateAreaPage').yields(null);
       });
 
       it('publishes news', (done) => {
         subject(tabloidNews, (err) => {
           expect(hexo.publish).to.have.been.calledWith(tabloidNews);
+
+          done(err);
+        });
+      });
+
+      it('updates regional news data file', function(done){
+        subject(tabloidNews, function(err) {
+          expect(hexo.updateAreaPage).to.have.been.calledWith(tabloidNews.region);
 
           done(err);
         });
@@ -387,11 +423,18 @@ describe('publisher', function() {
 
     given('news', () => new News(newsFactory.build({ status: 'published' })));
     given('updatedNews', () => Object.assign({status: 'draft'}, news));
+    given('bdf', () => new Home({name: 'bdf'}));
+    given('radioAgencia', () => new Home({name: 'radio_agencia'}));
 
     beforeEach(function() {
       sandbox.stub(news, 'save').yields(null, updatedNews);
       sandbox.stub(hexo, 'unpublish').yields(null);
       sandbox.stub(hexo, 'updateAreaPage').yields(null);
+      sandbox.stub(publisher, 'publishHome').yields(null);
+
+      var stub = sandbox.stub(Home, 'findByName');
+      stub.withArgs('bdf').yields(null, bdf);
+      stub.withArgs('radio_agencia').yields(null, radioAgencia);
     });
 
     it('exists', function() {
@@ -438,6 +481,22 @@ describe('publisher', function() {
       });
     });
 
+    it('publishes bdf home', (done) => {
+      subject(news, function(err) {
+        expect(publisher.publishHome).to.have.been.calledWith(bdf);
+
+        done(err);
+      });
+    });
+
+    it('publishes radio_agencia home', (done) => {
+      subject(news, function(err) {
+        expect(publisher.publishHome).to.have.been.calledWith(radioAgencia);
+
+        done(err);
+      });
+    });
+
     describe('when is a tabloid news', () => {
       given('tabloidNews', () => new News(tabloidNewsFactory.build()));
       given('aTabloid', () => new News(tabloidFactory.build()));
@@ -458,6 +517,14 @@ describe('publisher', function() {
       it('publishes tabloid', (done) => {
         subject(tabloidNews, (err) => {
           expect(hexo.publish).to.have.been.calledWith(aTabloid);
+
+          done(err);
+        });
+      });
+
+      it('updates region', function(done) {
+        subject(tabloidNews, function(err, tabloidNews) {
+          expect(hexo.updateAreaPage).to.have.been.calledWith(tabloidNews.region);
 
           done(err);
         });

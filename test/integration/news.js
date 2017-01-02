@@ -1,21 +1,24 @@
-var fs          = require('fs');
-var grayMatter  = require('gray-matter');
-var slug        = require('slug');
-var supertest   = require('supertest');
+var fs = require('fs');
+var grayMatter = require('gray-matter');
+var slug = require('slug');
+var supertest = require('supertest');
 
-var News        = require('../../lib/models/news');
-var publisher   = require('../../lib/models/publisher');
-var server      = require('../../lib/http/server');
+var News = require('../../lib/models/news');
+var Home = require('../../lib/models/home');
+var publisher = require('../../lib/models/publisher');
+var server = require('../../lib/http/server');
 var shared = require('./shared');
-var metadataFactory     = require('../factories/news-attributes').metadata;
-var newsFactory         = require('../factories/news-attributes').news;
-var columnFactory       = require('../factories/column-attributes').column;
+var metadataFactory = require('../factories/news-attributes').metadata;
+var newsFactory = require('../factories/news-attributes').news;
+var columnFactory = require('../factories/column-attributes').column;
 var photoCaptionFactory = require('../factories/photo-caption-attributes').photoCaption;
-var tabloidFactory      = require('../factories/tabloid-attributes').tabloid;
+var tabloidFactory = require('../factories/tabloid-attributes').tabloid;
 
-var api             = supertest('https://localhost:5000');
+var api = supertest('https://localhost:5000');
 
 describe('REST API:', function() {
+  beforeEach(Home.init);
+
   var NEWS_RESOURCE = '/news';
 
   var newsYearMonthURL;

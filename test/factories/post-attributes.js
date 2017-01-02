@@ -29,7 +29,7 @@ var post = new Factory()
   .attr('metadata', function() { return metadata.build(); })
   .attr('published_at', function() { return faker.date.recent(); })
   .attr('tags', () => ([faker.lorem.word()]))
-  .attr('audio', function() { return 'https://soundcloud.com/user-146107752/oposicao-tenta-barrar-avanco-da-reforma-da-previdencia-no-congresso'; })
+  .attr('audio', function() { return 'https://soundcloud.com/radioagenciabdf/oposicao-tenta-barrar-avanco-da-reforma-da-previdencia-no-congresso'; })
   .attr('related_news', () => ([]));
 
 module.exports.metadata = metadata;
