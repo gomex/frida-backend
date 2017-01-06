@@ -6,7 +6,6 @@ var publisher = require('../../../../lib/models/publisher');
 var News = require('../../../../lib/models/news');
 var Home = require('../../../../lib/models/home');
 var tabloids = require('../../../../lib/models/news/tabloids');
-var advertisings = require('../../../../lib/models/news/advertisings');
 var photoCaptions = require('../../../../lib/models/news/photo-captions');
 var bdf = require('../../../../lib/models/home/bdf');
 var hexo = require('../../../../lib/publisher/hexo');
@@ -15,7 +14,6 @@ var metadataFactory = require('../../../factories/news-attributes').metadata;
 var tabloidFactory = require('../../../factories/tabloid-attributes').tabloid;
 var tabloidNewsFactory = require('../../../factories/tabloid-news-attributes').tabloid;
 var photoCaptionFactory = require('../../../factories/photo-caption-attributes').photoCaption;
-var advertisingFactory = require('../../../factories/advertising-attributes').advertising;
 
 describe('publisher', function() {
   describe('.publish', function() {
@@ -335,33 +333,6 @@ describe('publisher', function() {
         });
       });
     });
-
-    describe('when is an advertisement', () => {
-      given('news', () => new News(advertisingFactory.build({
-        status: 'draft'
-      })));
-
-      given('advertisingList', () => advertisingFactory.buildList(2));
-
-      beforeEach(() => {
-        sandbox.stub(advertisings, 'getList').yields(null, advertisingList);
-        sandbox.stub(hexo, 'updateAdvertisingData').yields(null);
-      });
-
-      it('queries list', function(done){
-        subject(news, function(err) {
-          expect(advertisings.getList).to.have.been.called;
-          done(err);
-        });
-      });
-
-      it('updates advertising data file', function(done){
-        subject(news, function(err) {
-          expect(hexo.updateAdvertisingData).to.have.been.calledWith(advertisingList);
-          done(err);
-        });
-      });
-    });
   });
 
   describe('.remove', function() {
@@ -544,33 +515,6 @@ describe('publisher', function() {
 
             done(err);
           });
-        });
-      });
-    });
-
-    describe('when is an advertisement', () => {
-      given('news', () => new News(advertisingFactory.build({
-        status: 'draft'
-      })));
-
-      given('advertisingList', () => advertisingFactory.buildList(2));
-
-      beforeEach(() => {
-        sandbox.stub(advertisings, 'getList').yields(null, advertisingList);
-        sandbox.stub(hexo, 'updateAdvertisingData').yields(null);
-      });
-
-      it('queries list', function(done){
-        subject(news, function(err) {
-          expect(advertisings.getList).to.have.been.called;
-          done(err);
-        });
-      });
-
-      it('updates advertising data file', function(done){
-        subject(news, function(err) {
-          expect(hexo.updateAdvertisingData).to.have.been.calledWith(advertisingList);
-          done(err);
         });
       });
     });

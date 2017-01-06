@@ -3,16 +3,13 @@
 var fs = require('fs');
 var grayMatter = require('gray-matter');
 var moment = require('moment');
-var YAML = require('js-yaml');
 
 var postFactory = require('../../../factories/post-attributes').post;
-var advertisingFactory = require('../../../factories/advertising-attributes').advertising;
 var newsMetadataFactory = require('../../../factories/news-attributes').metadata;
 var postPublisher = require('../../../../lib/publisher/presenters/post');
 var radioAgenciaPresenter = require('../../../../lib/publisher/presenters/radio-agencia');
 var bdfPresenter = require('../../../../lib/publisher/presenters/bdf');
 var presenter = require('../../../../lib/publisher/presenter');
-var advertisingsPresenter = require('../../../../lib/publisher/advertisings');
 var News = require('../../../../lib/models/news');
 var Home = require('../../../../lib/models/home');
 var hexo = require('../../../../lib/publisher/hexo');
@@ -245,39 +242,5 @@ describe('hexo', function() {
       });
     });
 
-  });
-
-  describe('updateAdvertisingData', function() {
-    var subject = (callback) => hexo.updateAdvertisingData(advertisingList, callback);
-
-    given('advertisingList', () => advertisingFactory.buildList(1));
-    given('advertisingData', () => ({bar: 'foo'}));
-    given('advertisingPath', () => path.join('_data', 'advertisings.yml'));
-    given('ymlData', () => YAML.dump(advertisingData));
-
-    beforeEach(() => {
-      sandbox.stub(advertisingsPresenter, 'getData').returns(advertisingData);
-      sandbox.stub(writer, 'write').yields(null);
-    });
-
-    it('calls presenter', (done) => {
-      subject((err) => {
-        expect(advertisingsPresenter.getData).to.have.been.calledWith(advertisingList);
-
-        done(err);
-      });
-    });
-
-    it('writes yaml data', (done) => {
-      subject((err) => {
-        expect(writer.write).to.have.been.calledWith(advertisingPath, ymlData);
-
-        done(err);
-      });
-    });
-
-    it('writes file', () => {
-
-    });
   });
 });
