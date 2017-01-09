@@ -12,6 +12,7 @@ describe('lib/publisher/presenters/column.js', () => {
   given('column', () => factory.build({
     metadata: metadata,
     url: 'some_url',
+    audio: 'some_audio_url',
     published_at: new Date()
   }));
 
@@ -26,6 +27,7 @@ describe('lib/publisher/presenters/column.js', () => {
       layout: column.metadata.layout,
       url: column.metadata.url,
       path: column.metadata.url,
+      audio: column.audio,
       hat: 'coluna',
       title: column.metadata.title,
       description: column.metadata.description,
@@ -58,6 +60,7 @@ describe('lib/publisher/presenters/column.js', () => {
       description: column.metadata.description,
       url: column.metadata.url,
       path: column.metadata.url,
+      audio: column.audio,
       date: column.published_at,
       columnist: column.metadata.columnist,
       published_at: column.published_at,
