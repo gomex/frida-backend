@@ -19,7 +19,7 @@
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "moment": "^2.10.6",
-    "mongodb": "^2.0.40",
+    "mongodb": "2.2.16",
     "mongoose": "^4.3.7",
     "mongoose-migration": "^0.2.0",
     "passport": "^0.3.2",
