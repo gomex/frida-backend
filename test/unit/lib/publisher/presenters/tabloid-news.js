@@ -12,6 +12,8 @@ describe('lib/publisher/presenters/tabloidNews.js', () => {
   given('tabloidNews', () => factory.build({
     metadata: metadata,
     url: 'some_url',
+    issuu: 'some_issuu_url',
+    edition: 'some_edition',
     published_at: new Date()
   }));
 
@@ -33,6 +35,8 @@ describe('lib/publisher/presenters/tabloidNews.js', () => {
       author: tabloidNews.metadata.author,
       place: tabloidNews.metadata.place,
       region: tabloidNews.region,
+      issuu: tabloidNews.issuu,
+      edition: tabloidNews.edition,
       labels: tabloidNews.tags,
       date: tabloidNews.published_at,
       published_at: tabloidNews.published_at,
