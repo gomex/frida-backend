@@ -211,8 +211,9 @@ describe('hexo', function() {
       });
     });
 
-    describe('when area is column', function() {
+    describe.only('when area is column', function() {
       var area = 'column';
+      var columnistArea = 'joaopedrostedile@gmail.com';
 
       it('creates column page file in a folder named "colunistas" under hexo source folder', function(done) {
         var expectedPath = process.env.HEXO_SOURCE_PATH + '/colunistas/index.md';
@@ -232,6 +233,33 @@ describe('hexo', function() {
           assert.equal(null, err);
 
           var areaIndexFilePath = process.env.HEXO_SOURCE_PATH + '/colunistas/index.md';
+          var areaIndexFile   = fs.readFileSync(areaIndexFilePath, 'utf-8');
+          var areaIndexData = grayMatter(areaIndexFile);
+
+          assert.notEqual(areaIndexData.data, null);
+
+          done();
+        });
+      });
+
+      it('creates area page for each columnist (when puplished) file in the correspondent hexo source folder', function(done) {
+        var expectedPath = process.env.HEXO_SOURCE_PATH + '/' + columnistArea  + '/index.md';
+
+        try { fs.unlinkSync(expectedPath); } catch(e) { /* make sure the file was not there before test execution */ }
+
+        hexo.updateColumnistPage(columnistArea, function(err) {
+          assert.equal(null, err);
+          assert.ok(fs.existsSync(expectedPath));
+
+          done();
+        });
+      });
+
+      it('columnit area page data file is valid front matter', function(done) {
+        hexo.updateColumnistPage(columnistArea, function(err) {
+          assert.equal(null, err);
+
+          var areaIndexFilePath = process.env.HEXO_SOURCE_PATH + '/' + area  + '/index.md';
           var areaIndexFile   = fs.readFileSync(areaIndexFilePath, 'utf-8');
           var areaIndexData = grayMatter(areaIndexFile);
 
