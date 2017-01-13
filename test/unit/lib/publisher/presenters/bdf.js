@@ -1,5 +1,6 @@
 /*eslint no-undef: "off"*/
 
+var _ = require('underscore');
 var Home = require('../../../../../lib/models/home');
 var News = require('../../../../../lib/models/news');
 var presenter = require('../../../../../lib/publisher/presenters/bdf');
@@ -40,7 +41,13 @@ describe('lib/publisher/presenters/bdf.js', () => {
       tabloid_mg: new News(tabloidFactory.build()),
       tabloid_pr: new News(tabloidFactory.build()),
       tabloid_pe: new News(tabloidFactory.build()),
-      tabloid_rj: new News(tabloidFactory.build())
+      tabloid_rj: new News(tabloidFactory.build()),
+
+      mostread_01: new News(postFactory.build()),
+      mostread_02: new News(postFactory.build()),
+      mostread_03: new News(postFactory.build()),
+      mostread_04: new News(postFactory.build()),
+      mostread_05: new News(postFactory.build())
     }));
 
     function behaviorLikeAListDataField(fieldName, dataName, optional) {
@@ -130,23 +137,25 @@ describe('lib/publisher/presenters/bdf.js', () => {
     describe('most_read', () => {
       given('data', () => ({foo: 'bar'}));
       given('most_read', () => ([
+        new News(postFactory.build()),
+        new News(postFactory.build()),
+        new News(postFactory.build()),
+        new News(postFactory.build()),
         new News(postFactory.build())
       ]));
 
       beforeEach(() => {
         home.most_read = most_read;
-
         sandbox.stub(presenters, 'getListData').returns(data);
       });
 
       it('gets list data of each item', () => {
         getData;
-
         expect(presenters.getListData).to.have.been.calledWith(home.most_read[0]);
       });
 
       it('returns data', () => {
-        expect(getData.most_read).to.deep.equal([data]);
+        expect(getData.most_read).to.deep.equal(_.times(most_read.length, () => { return data; }));
       });
     });
   });
