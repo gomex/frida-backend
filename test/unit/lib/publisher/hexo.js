@@ -255,11 +255,11 @@ describe('hexo', function() {
         });
       });
 
-      it('columnit area page data file is valid front matter', function(done) {
+      it('columnist area page data file is valid front matter', function(done) {
         hexo.updateColumnistPage(columnistArea, function(err) {
           assert.equal(null, err);
 
-          var areaIndexFilePath = process.env.HEXO_SOURCE_PATH + '/' + area  + '/index.md';
+          var areaIndexFilePath = process.env.HEXO_SOURCE_PATH + '/' + columnistArea  + '/index.md';
           var areaIndexFile   = fs.readFileSync(areaIndexFilePath, 'utf-8');
           var areaIndexData = grayMatter(areaIndexFile);
 
@@ -269,6 +269,5 @@ describe('hexo', function() {
         });
       });
     });
-
   });
 });
