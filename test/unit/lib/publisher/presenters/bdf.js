@@ -25,6 +25,10 @@ describe('lib/publisher/presenters/bdf.js', () => {
       featured_06: new News(postFactory.build()),
       featured_07: new News(postFactory.build()),
       featured_08: new News(postFactory.build()),
+      featured_09: new News(postFactory.build()),
+      featured_10: new News(postFactory.build()),
+      featured_11: new News(postFactory.build()),
+      featured_12: new News(postFactory.build()),
 
       column_01: new News(columnFactory.build()),
       column_02: new News(columnFactory.build()),
@@ -87,6 +91,10 @@ describe('lib/publisher/presenters/bdf.js', () => {
     behaviorLikeAListDataField('featured_06', 'featured_06');
     behaviorLikeAListDataField('featured_07', 'featured_07');
     behaviorLikeAListDataField('featured_08', 'featured_08');
+    behaviorLikeAListDataField('featured_09', 'featured_09');
+    behaviorLikeAListDataField('featured_10', 'featured_10');
+    behaviorLikeAListDataField('featured_11', 'featured_11');
+    behaviorLikeAListDataField('featured_12', 'featured_12');
 
     behaviorLikeAListDataField('column_01', 'column_01', optional);
     behaviorLikeAListDataField('column_02', 'column_02', optional);
