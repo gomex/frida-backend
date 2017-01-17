@@ -8,7 +8,6 @@ var presenters = require('../../../../../lib/publisher/presenter');
 var postFactory = require('../../../../factories/post-attributes').post;
 var columnFactory = require('../../../../factories/column-attributes').column;
 var spotlightFactory = require('../../../../factories/spotlight-attributes').spotlight;
-var tabloidFactory = require('../../../../factories/tabloid-attributes').tabloid;
 var photoCaptionFactory = require('../../../../factories/photo-caption-attributes').photoCaption;
 
 describe('lib/publisher/presenters/bdf.js', () => {
@@ -36,12 +35,6 @@ describe('lib/publisher/presenters/bdf.js', () => {
       spotlight_01: new News(spotlightFactory.build()),
       spotlight_02: new News(spotlightFactory.build()),
       spotlight_03: new News(spotlightFactory.build()),
-
-      tabloid_ce: new News(tabloidFactory.build()),
-      tabloid_mg: new News(tabloidFactory.build()),
-      tabloid_pr: new News(tabloidFactory.build()),
-      tabloid_pe: new News(tabloidFactory.build()),
-      tabloid_rj: new News(tabloidFactory.build()),
 
       mostread_01: new News(postFactory.build()),
       mostread_02: new News(postFactory.build()),
@@ -100,12 +93,6 @@ describe('lib/publisher/presenters/bdf.js', () => {
     behaviorLikeAListDataField('column_03', 'column_03', optional);
 
     behaviorLikeAListDataField('photo_caption', 'photo_caption');
-
-    behaviorLikeAListDataField('tabloid_ce', 'ceara', optional);
-    behaviorLikeAListDataField('tabloid_mg', 'minas_gerais', optional);
-    behaviorLikeAListDataField('tabloid_pr', 'parana', optional);
-    behaviorLikeAListDataField('tabloid_pe', 'pernambuco', optional);
-    behaviorLikeAListDataField('tabloid_rj', 'rio_de_janeiro', optional);
 
     behaviorLikeAListDataField('spotlight_01', 'spotlight_01', optional);
     behaviorLikeAListDataField('spotlight_02', 'spotlight_02', optional);
