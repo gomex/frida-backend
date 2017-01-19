@@ -184,10 +184,11 @@ describe('publisher', function() {
       given('aTabloid', () => new News(tabloidFactory.build({
         status: 'draft'
       })));
-      given('newsList', () => newsFactory.buildList(2));
+      given('newsList', () => [new News(tabloidNewsFactory.build()), new News(tabloidNewsFactory.build())]);
 
       beforeEach(() => {
         sandbox.stub(tabloids, 'findNews').yields(null, newsList);
+        sandbox.stub(tabloids, 'findTabloid').yields(null, aTabloid);
         sandbox.stub(hexo, 'publish').yields(null);
       });
 
@@ -210,6 +211,15 @@ describe('publisher', function() {
       it('enriches tabloid with news', (done) => {
         subject(aTabloid, (err) => {
           expect(aTabloid.news).to.equal(newsList);
+
+          done(err);
+        });
+      });
+
+      it('republishes tabloid news', (done) => {
+        subject(aTabloid, (err) => {
+          expect(hexo.publish).to.have.been.calledWith(newsList[0]);
+          expect(tabloids.findTabloid).to.have.been.calledWith(newsList[0]);
 
           done(err);
         });
