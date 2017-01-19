@@ -217,10 +217,20 @@ describe('news', () => {
     context('when url is already set', () => {
       given('metadata', () => metadataFactory.build({url: 'some_url'}));
 
-      it('url follows pattern YYYY/MM/DD/title', () => {
+      it('url follows pattern YYYY/MM/DD/title/', () => {
         news.generateUrl();
         expect(news.metadata.url).to.equal('some_url');
       });
     });
+
+    context('when is special', () => {
+      given('metadata', () => metadataFactory.build({layout: 'special', title: 'golpe no brasil'}));
+
+      it('url follows pattern /title/', () => {
+        news.generateUrl();
+        expect(news.metadata.url).to.equal('/especiais/golpe-no-brasil/');
+      });
+    });
+
   });
 });
