@@ -209,9 +209,18 @@ describe('news', () => {
       expect(news.generateUrl).to.exist;
     });
 
-    it('url follows pattern YYYY/MM/DD/title', () =>{
+    it('url follows pattern YYYY/MM/DD/title', () => {
+      news.generateUrl();
+      expect(news.metadata.url).to.equal('/2017/01/02/golpe-no-brasil/');
+    });
 
-      expect(news.generateUrl()).to.equal('/2017/01/02/golpe-no-brasil/');
+    context('when url is already set', () => {
+      given('metadata', () => metadataFactory.build({url: 'some_url'}));
+
+      it('url follows pattern YYYY/MM/DD/title', () => {
+        news.generateUrl();
+        expect(news.metadata.url).to.equal('some_url');
+      });
     });
   });
 });
