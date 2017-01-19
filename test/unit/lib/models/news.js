@@ -199,4 +199,19 @@ describe('news', () => {
       });
     });
   });
+
+  describe('generates url', () => {
+    given('news', () => new News(newsFactory.build({metadata: metadata, published_at: new Date(2017, 0, 2)})));
+    given('metadata', () => metadataFactory.build({title: 'golpe no brasil'}));
+
+
+    it('exists', () => {
+      expect(news.generateUrl).to.exist;
+    });
+
+    it('url follows pattern YYYY/MM/DD/title', () =>{
+
+      expect(news.generateUrl()).to.equal('/2017/01/02/golpe-no-brasil/');
+    });
+  });
 });
