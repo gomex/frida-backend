@@ -25,6 +25,7 @@ describe('lib/publisher/presenters/special.js', () => {
     given('expectedData', () => ({
       layout: special.metadata.layout,
       path: special.metadata.url,
+      hat: 'especial',
       url: special.metadata.url,
       title: special.metadata.title,
       description: special.metadata.description,
@@ -84,6 +85,7 @@ describe('lib/publisher/presenters/special.js', () => {
 
     given('expectedData', () => ({
       path: special.metadata.url,
+      hat: 'especial',
       title: special.metadata.title,
       published_at: special.published_at,
       cover: special.metadata.cover
