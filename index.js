@@ -1,10 +1,13 @@
 require('dotenv').config();
 
-require('./lib/db/initializer');
-require('./lib/http/server').startServer();
+var db = require('./lib/db/initializer');
 
 var Home = require('./lib/models/home');
 var columnistService = require('./lib/services/columnist');
+
+db.connect((connection) => {
+  require('./lib/http/server').startServer();
+});
 
 Home.init((err) => {
   if (err) {
