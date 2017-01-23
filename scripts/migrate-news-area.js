@@ -43,7 +43,7 @@ var publishArea = () => {
   });
 };
 
-db.connect((connection) => {
+db.connect(() => {
   News.find({
     'metadata.area': source
   })

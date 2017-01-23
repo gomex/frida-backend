@@ -30,7 +30,7 @@ var sleep = (cb) => {
   }, 100);
 };
 
-db.connect((connection) => {
+db.connect(() => {
   News.find({
     'status': 'published'
   })

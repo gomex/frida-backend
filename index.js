@@ -5,7 +5,7 @@ var db = require('./lib/db/initializer');
 var Home = require('./lib/models/home');
 var columnistService = require('./lib/services/columnist');
 
-db.connect((connection) => {
+db.connect(() => {
   require('./lib/http/server').startServer();
 });
 
