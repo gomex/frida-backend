@@ -1,5 +1,5 @@
 require('dotenv').config();
-require('../lib/db/initializer');
+var db = require('./lib/db/initializer');
 var async = require('async');
 var News = require('../lib/models/news');
 var publisher = require('../lib/models/publisher');
@@ -30,20 +30,22 @@ var sleep = (cb) => {
   }, 100);
 };
 
-News.find({
-  'status': 'published'
-})
-.exec((err, result) => {
-  if(err) throw err;
+db.connect((connection) => {
+  News.find({
+    'status': 'published'
+  })
+  .exec((err, result) => {
+    if(err) throw err;
 
-  console.log('%s news articles found', result.length);
+    console.log('%s news articles found', result.length);
 
-  async.eachSeries(result, publish, (err) => {
-    if(err) {
-      console.error(err);
-      throw err;
-    }
+    async.eachSeries(result, publish, (err) => {
+      if(err) {
+        console.error(err);
+        throw err;
+      }
 
-    process.exit();
+      process.exit();
+    });
   });
 });

@@ -1,5 +1,5 @@
 require('dotenv').config();
-require('../lib/db/initializer');
+var db = require('../db/initializer');
 var async = require('async');
 var News = require('../lib/models/news');
 var hexo = require('../lib/publisher/hexo');
@@ -43,17 +43,19 @@ var publishArea = () => {
   });
 };
 
-News.find({
-  'metadata.area': source
-})
-.exec((err, result) => {
-  if(err) throw err;
-
-  console.log('%s news found', result.length);
-
-  async.eachSeries(result, update, (err) => {
+db.connect((connection) => {
+  News.find({
+    'metadata.area': source
+  })
+  .exec((err, result) => {
     if(err) throw err;
 
-    publishArea();
+    console.log('%s news found', result.length);
+
+    async.eachSeries(result, update, (err) => {
+      if(err) throw err;
+
+      publishArea();
+    });
   });
 });

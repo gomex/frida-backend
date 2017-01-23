@@ -1,5 +1,5 @@
 require('dotenv').config();
-require('../../lib/db/initializer');
+require('../../lib/db/initializer').connect(() => {});
 
 var mongoose = require('mongoose');
 
@@ -10,7 +10,6 @@ global.sinonChai = require('sinon-chai');
 global.assert = require('assert');
 
 global.chai.use(global.sinonChai);
-
 
 beforeEach(function() {
   global.sandbox = sinon.sandbox.create();
