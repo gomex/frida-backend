@@ -211,7 +211,7 @@ describe('hexo', function() {
       });
     });
 
-    describe.only('when area is column', function() {
+    describe('when area is column', function() {
       var area = 'column';
       var columnistArea = 'joaopedrostedile@gmail.com';
 
