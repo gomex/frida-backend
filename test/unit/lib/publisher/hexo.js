@@ -211,7 +211,7 @@ describe('hexo', function() {
       });
     });
 
-    describe('when area is column', function() {
+    describe.only('when area is column', function() {
       var area = 'column';
       var columnistArea = 'joaopedrostedile@gmail.com';
 
@@ -243,7 +243,7 @@ describe('hexo', function() {
       });
 
       it('creates area page for each columnist (when puplished) file in the correspondent hexo source folder', function(done) {
-        var expectedPath = process.env.HEXO_SOURCE_PATH + 'colunista/joao-pedro-stedile/index.md';
+        var expectedPath = process.env.HEXO_SOURCE_PATH + '/colunistas/joao-pedro-stedile/index.md';
 
         try { fs.unlinkSync(expectedPath); } catch(e) { /* make sure the file was not there before test execution */ }
 
@@ -259,7 +259,7 @@ describe('hexo', function() {
         hexo.updateColumnistPage(columnistArea, function(err) {
           assert.equal(null, err);
 
-          var areaIndexFilePath = process.env.HEXO_SOURCE_PATH + 'colunista/joao-pedro-stedile/index.md';
+          var areaIndexFilePath = process.env.HEXO_SOURCE_PATH + '/colunistas/joao-pedro-stedile/index.md';
           var areaIndexFile   = fs.readFileSync(areaIndexFilePath, 'utf-8');
           var areaIndexData = grayMatter(areaIndexFile);
 
