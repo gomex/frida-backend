@@ -1,5 +1,6 @@
 /*eslint no-undef: "off"*/
 
+var News = require('../../../../../lib/models/news');
 var presenter = require('../../../../../lib/publisher/presenters/post');
 var coverPresenter = require('../../../../../lib/publisher/presenters/cover');
 var factory = require('../../../../factories/post-attributes').post;
@@ -59,7 +60,7 @@ describe('lib/publisher/presenters/post.js', () => {
     describe('when there is other_news', () => {
       given('post', () => factory.build({other_news: [otherNews]}));
 
-      given('otherNews', () => factory.build());
+      given('otherNews', () => new News(factory.build()));
       given('otherNewsData', () => ({bar: 'foo'}));
 
       beforeEach(() => {
@@ -87,7 +88,7 @@ describe('lib/publisher/presenters/post.js', () => {
     describe('when there is related_news', () => {
       given('post', () => factory.build({related_news: [relatedNews]}));
 
-      given('relatedNews', () => factory.build());
+      given('relatedNews', () => new News(factory.build()));
       given('relatedNewsData', () => ({bar: 'foo'}));
 
       beforeEach(() => {
