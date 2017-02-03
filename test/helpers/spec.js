@@ -1,5 +1,6 @@
 require('dotenv').config();
 require('../../lib/db/initializer').connect(() => {});
+var hexo = require('../../lib/publisher/hexo');
 
 var mongoose = require('mongoose');
 
@@ -13,6 +14,7 @@ global.chai.use(global.sinonChai);
 
 beforeEach(function() {
   global.sandbox = sinon.sandbox.create();
+  sandbox.stub(hexo, 'generate').yields();
 });
 
 afterEach(function(done) {
