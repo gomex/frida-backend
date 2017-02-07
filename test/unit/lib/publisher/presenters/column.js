@@ -4,6 +4,7 @@ var presenter = require('../../../../../lib/publisher/presenters/column');
 var coverPresenter = require('../../../../../lib/publisher/presenters/cover');
 var factory = require('../../../../factories/column-attributes').column;
 var metadataFactory = require('../../../../factories/column-attributes').metadata;
+var columnist = require('../../../../../lib/services/columnist');
 
 describe('lib/publisher/presenters/column.js', () => {
   given('metadata', () => metadataFactory.build({
@@ -63,6 +64,7 @@ describe('lib/publisher/presenters/column.js', () => {
       audio: column.audio,
       date: column.published_at,
       columnist: column.metadata.columnist,
+      author: columnist.columnistsByEmail()[column.metadata.columnist].name,
       published_at: column.published_at,
       cover: column.metadata.cover
     }));
