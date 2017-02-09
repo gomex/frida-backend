@@ -2,7 +2,16 @@
 
 var News = require('../../../../lib/models/news');
 var newsFactory = require('../../../factories/news-attributes').news;
-var metadataFactory     = require('../../../factories/news-attributes').metadata;
+var metadataFactory = require('../../../factories/news-attributes').metadata;
+
+var postFactory = require('../../../factories/post-attributes').post;
+var postMetadataFactory = require('../../../factories/post-attributes').metadata;
+
+var tabloidNewsFactory = require('../../../factories/tabloid-news-attributes').tabloid;
+var tabloidNewsMetadataFactory = require('../../../factories/tabloid-news-attributes').metadata;
+
+var specialFactory = require('../../../factories/special-attributes').special;
+var specialMetadataFactory = require('../../../factories/special-attributes').metadata;
 
 describe('news', () => {
   var behaviourAsIsLayout = (name, layout) => {
@@ -231,6 +240,98 @@ describe('news', () => {
         expect(news.metadata.url).to.equal('/especiais/golpe-no-brasil/');
       });
     });
+  });
 
+  describe('.byArea', () => {
+    var subject = (callback) => News.find().byArea(area).exec(callback);
+
+    given('area', () => 'some_area');
+
+    context('filter areas', () => {
+      given('news', () => new News(newsFactory.build({metadata: metadata})));
+      given('metadata', () => metadataFactory.build({area: area}));
+
+      given('newsWrongArea', () => new News(newsFactory.build()));
+
+      beforeEach((done) => { news.save(done); });
+      beforeEach((done) => { newsWrongArea.save(done); });
+
+      it('succeeds', (done) => {
+        subject((err) => {
+          done(err);
+        });
+      });
+
+      it('filters by area', (done) => {
+        subject((err, result) => {
+          expect(result.length).to.equal(1);
+          expect(result.pop().metadata.title).to.equal(news.metadata.title);
+
+          done(err);
+        });
+      });
+    });
+
+    context('filter layouts', () => {
+      given('post', () => new News(postFactory.build({metadata: postMetadata})));
+      given('postMetadata', () => postMetadataFactory.build({area: area}));
+
+      given('tabloidNews', () => new News(tabloidNewsFactory.build({metadata: tabloidNewsMetadata})));
+      given('tabloidNewsMetadata', () => tabloidNewsMetadataFactory.build({area: area}));
+
+      given('special', () => new News(specialFactory.build({metadata: specialMetadata})));
+      given('specialMetadata', () => specialMetadataFactory.build({area: area}));
+
+      given('wrongLayout', () => new News(newsFactory.build({metadata: wrongLayoutMetadata})));
+      given('wrongLayoutMetadata', () => metadataFactory.build({area: area, layout: 'wrong_layout'}));
+
+
+      beforeEach((done) => { post.save(done); });
+      beforeEach((done) => { tabloidNews.save(done); });
+      beforeEach((done) => { special.save(done); });
+      beforeEach((done) => { wrongLayout.save(done); });
+
+      it('succeeds', (done) => {
+        subject((err) => {
+          done(err);
+        });
+      });
+
+      it('filters by area', (done) => {
+        subject((err, result) => {
+          expect(result.length).to.equal(3);
+          expect(result[0].metadata.title).not.to.equal(wrongLayout.metadata.title);
+          expect(result[1].metadata.title).not.to.equal(wrongLayout.metadata.title);
+          expect(result[2].metadata.title).not.to.equal(wrongLayout.metadata.title);
+
+          done(err);
+        });
+      });
+    });
+  });
+
+  describe('.publisheds', () => {
+    var subject = (callback) => News.find().publisheds().exec(callback);
+
+    given('news', () => new News(newsFactory.build({status: 'published'})));
+    given('news2', () => new News(newsFactory.build()));
+
+    beforeEach((done) => { news.save(done); });
+    beforeEach((done) => { news2.save(done); });
+
+    it('succeeds', (done) => {
+      subject((err) => {
+        done(err);
+      });
+    });
+
+    it('filters by area', (done) => {
+      subject((err, result) => {
+        expect(result.length).to.equal(1);
+        expect(result.pop().metadata.title).to.equal(news.metadata.title);
+
+        done(err);
+      });
+    });
   });
 });

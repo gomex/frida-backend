@@ -336,7 +336,11 @@ describe('publisher', function() {
 
         it('publishes list', (done) => {
           subject(photoCaption, (err) => {
-            expect(hexo.publishList).to.have.been.calledWith(list);
+            expect(hexo.publishList).to.have.been.calledWith({
+              layout: 'photo_caption_list',
+              area: 'charges',
+              news: list
+            });
 
             done(err);
           });
@@ -410,6 +414,7 @@ describe('publisher', function() {
     beforeEach(function() {
       sandbox.stub(news, 'save').yields(null, updatedNews);
       sandbox.stub(hexo, 'unpublish').yields(null);
+      sandbox.stub(hexo, 'publishList').yields(null);
       sandbox.stub(hexo, 'updateAreaPage').yields(null);
       sandbox.stub(publisher, 'publishHome').yields(null);
 
@@ -448,7 +453,11 @@ describe('publisher', function() {
 
     it('updates area', function(done) {
       subject(news, function(err, news) {
-        expect(hexo.updateAreaPage).to.have.been.calledWith(news.metadata.area);
+        expect(hexo.publishList).to.have.been.calledWith({
+          layout: 'news_list',
+          area: news.metadata.area,
+          news: []
+        });
 
         done(err);
       });
