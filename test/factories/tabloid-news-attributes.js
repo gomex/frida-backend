@@ -10,6 +10,7 @@ var metadata = new Factory()
   .attr('hat', 'Olimpíadas')
   .attr('description', function() { return faker.lorem.sentences(); })
   .attr('author', function() { return faker.name.findName(); })
+  .attr('editor', function() { return faker.name.findName(); })
   .attr('place', function() { return faker.address.state(); })
   .attr('cover', function() { return coverAttributes.build(); });
 
