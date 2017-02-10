@@ -7,6 +7,9 @@ var metadataFactory = require('../../../factories/news-attributes').metadata;
 var postFactory = require('../../../factories/post-attributes').post;
 var postMetadataFactory = require('../../../factories/post-attributes').metadata;
 
+var columnFactory = require('../../../factories/column-attributes').column;
+var columnMetadataFactory = require('../../../factories/column-attributes').metadata;
+
 var tabloidNewsFactory = require('../../../factories/tabloid-news-attributes').tabloid;
 var tabloidNewsMetadataFactory = require('../../../factories/tabloid-news-attributes').metadata;
 
@@ -344,6 +347,57 @@ describe('news', () => {
         subject((err, result) => {
           expect(result.length).to.equal(1);
           expect(result[0].metadata.title).to.equal(tabloidNews.metadata.title);
+
+          done(err);
+        });
+      });
+    });
+  });
+
+  describe('.byColumnist', () => {
+    var subject = (callback) => News.find().byColumnist(columnist).exec(callback);
+
+    given('columnist', () => 'some_columnist');
+
+    it('succeeds', (done) => {
+      subject((err) => {
+        done(err);
+      });
+    });
+
+    context('filter columnist', () => {
+      given('news', () => new News(columnFactory.build({metadata})));
+      given('metadata', () => columnMetadataFactory.build({columnist}));
+
+      given('newsWronColumn', () => new News(columnFactory.build()));
+
+      beforeEach((done) => { news.save(done); });
+      beforeEach((done) => { newsWronColumn.save(done); });
+
+      it('filters by columnist', (done) => {
+        subject((err, result) => {
+          expect(result.length).to.equal(1);
+          expect(result.pop().metadata.title).to.equal(news.metadata.title);
+
+          done(err);
+        });
+      });
+    });
+
+    context('filter columns', () => {
+      given('column', () => new News(tabloidNewsFactory.build({metadata})));
+      given('metadata', () => columnMetadataFactory.build({columnist}));
+
+      given('post', () => new News(postFactory.build({postMetadata})));
+      given('postMetadata', () => postMetadataFactory.build({columnist}));
+
+      beforeEach((done) => { column.save(done); });
+      beforeEach((done) => { post.save(done); });
+
+      it('filters by columns', (done) => {
+        subject((err, result) => {
+          expect(result.length).to.equal(1);
+          expect(result[0].metadata.title).to.equal(column.metadata.title);
 
           done(err);
         });
