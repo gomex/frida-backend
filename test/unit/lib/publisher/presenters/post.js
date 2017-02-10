@@ -134,6 +134,7 @@ describe('lib/publisher/presenters/post.js', () => {
       audio: post.audio,
       hat: post.metadata.hat,
       description: post.metadata.description,
+      author: post.metadata.author,
       url: post.metadata.url,
       path: post.metadata.url,
       date: post.published_at,
