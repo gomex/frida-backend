@@ -41,6 +41,7 @@ describe('publisher', function() {
         sandbox.stub(news, 'save').yields(null);
         sandbox.stub(hexo, 'publish').yields(null);
         sandbox.stub(hexo, 'updateAreaPage').yields(null);
+        sandbox.stub(hexo, 'publishList').yields(null);
 
         var stub = sandbox.stub(Home, 'findByName');
         stub.withArgs('bdf').yields(null, bdf);
@@ -65,7 +66,11 @@ describe('publisher', function() {
 
       it('updates area data file', function(done){
         subject(news, function(err) {
-          expect(hexo.updateAreaPage).to.have.been.called;
+          expect(hexo.publishList).to.have.been.calledWith({
+            layout: 'news_list',
+            area: news.metadata.area,
+            news: []
+          });
 
           done(err);
         });
@@ -73,7 +78,11 @@ describe('publisher', function() {
 
       it('updates last news data file', function(done){
         subject(news, function(err) {
-          expect(hexo.updateAreaPage).to.have.been.calledWith('ultimas_noticias');
+          expect(hexo.publishList).to.have.been.calledWith({
+            layout: 'news_list',
+            area: 'ultimas_noticias',
+            news: []
+          });
 
           done(err);
         });
@@ -465,7 +474,11 @@ describe('publisher', function() {
 
     it('updates last news', function(done) {
       subject(news, function(err, _news) {
-        expect(hexo.updateAreaPage).to.have.been.calledWith('ultimas_noticias');
+        expect(hexo.publishList).to.have.been.calledWith({
+          layout: 'news_list',
+          area: news.metadata.area,
+          news: []
+        });
 
         done(err);
       });
