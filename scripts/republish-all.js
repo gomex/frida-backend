@@ -1,5 +1,5 @@
 require('dotenv').config();
-var db = require('./lib/db/initializer');
+var db = require('../lib/db/initializer');
 var async = require('async');
 var News = require('../lib/models/news');
 var publisher = require('../lib/models/publisher');
