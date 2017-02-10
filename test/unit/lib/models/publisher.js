@@ -246,6 +246,7 @@ describe('publisher', function() {
         sandbox.stub(tabloids, 'findTabloid').yields(null, aTabloid);
         sandbox.stub(hexo, 'publish').yields(null);
         sandbox.stub(hexo, 'updateAreaPage').yields(null);
+        sandbox.stub(hexo, 'publishList').yields(null);
       });
 
       it('publishes news', (done) => {
@@ -256,9 +257,12 @@ describe('publisher', function() {
         });
       });
 
-      it('updates regional news data file', function(done){
+      it('updates regional list', function(done){
         subject(tabloidNews, function(err) {
-          expect(hexo.updateAreaPage).to.have.been.calledWith(tabloidNews.region);
+          expect(hexo.publishList).to.have.been.calledWithMatch({
+            layout: 'news_list',
+            area: tabloidNews.region
+          });
 
           done(err);
         });
@@ -527,7 +531,10 @@ describe('publisher', function() {
 
       it('updates region', function(done) {
         subject(tabloidNews, function(err, tabloidNews) {
-          expect(hexo.updateAreaPage).to.have.been.calledWith(tabloidNews.region);
+          expect(hexo.publishList).to.have.been.calledWithMatch({
+            layout: 'news_list',
+            area: tabloidNews.region
+          });
 
           done(err);
         });

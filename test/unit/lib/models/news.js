@@ -304,6 +304,53 @@ describe('news', () => {
     });
   });
 
+  describe('.byRegion', () => {
+    var subject = (callback) => News.find().byRegion(region).exec(callback);
+
+    given('region', () => 'some_region');
+
+    it('succeeds', (done) => {
+      subject((err) => {
+        done(err);
+      });
+    });
+
+    context('filter region', () => {
+      given('news', () => new News(tabloidNewsFactory.build({region: region})));
+
+      given('newsWronRegion', () => new News(tabloidNewsFactory.build()));
+
+      beforeEach((done) => { news.save(done); });
+      beforeEach((done) => { newsWronRegion.save(done); });
+
+      it('filters by area', (done) => {
+        subject((err, result) => {
+          expect(result.length).to.equal(1);
+          expect(result.pop().metadata.title).to.equal(news.metadata.title);
+
+          done(err);
+        });
+      });
+    });
+
+    context('filter tabloidNews', () => {
+      given('tabloidNews', () => new News(tabloidNewsFactory.build({region: region})));
+      given('post', () => new News(postFactory.build({region: region})));
+
+      beforeEach((done) => { post.save(done); });
+      beforeEach((done) => { tabloidNews.save(done); });
+
+      it('filters by layouts with areas', (done) => {
+        subject((err, result) => {
+          expect(result.length).to.equal(1);
+          expect(result[0].metadata.title).to.equal(tabloidNews.metadata.title);
+
+          done(err);
+        });
+      });
+    });
+  });
+
   describe('.publisheds', () => {
     var subject = (callback) => News.find().publisheds().exec(callback);
 
