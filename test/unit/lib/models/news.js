@@ -247,6 +247,12 @@ describe('news', () => {
 
     given('area', () => 'some_area');
 
+    it('succeeds', (done) => {
+      subject((err) => {
+        done(err);
+      });
+    });
+
     context('filter areas', () => {
       given('news', () => new News(newsFactory.build({metadata: metadata})));
       given('metadata', () => metadataFactory.build({area: area}));
@@ -255,12 +261,6 @@ describe('news', () => {
 
       beforeEach((done) => { news.save(done); });
       beforeEach((done) => { newsWrongArea.save(done); });
-
-      it('succeeds', (done) => {
-        subject((err) => {
-          done(err);
-        });
-      });
 
       it('filters by area', (done) => {
         subject((err, result) => {
@@ -291,13 +291,7 @@ describe('news', () => {
       beforeEach((done) => { special.save(done); });
       beforeEach((done) => { wrongLayout.save(done); });
 
-      it('succeeds', (done) => {
-        subject((err) => {
-          done(err);
-        });
-      });
-
-      it('filters by area', (done) => {
+      it('filters by layouts with areas', (done) => {
         subject((err, result) => {
           expect(result.length).to.equal(3);
           expect(result[0].metadata.title).not.to.equal(wrongLayout.metadata.title);
@@ -329,6 +323,40 @@ describe('news', () => {
       subject((err, result) => {
         expect(result.length).to.equal(1);
         expect(result.pop().metadata.title).to.equal(news.metadata.title);
+
+        done(err);
+      });
+    });
+  });
+
+  describe('.byLayouts', () => {
+    var subject = (callback) => News.find().byLayouts(layouts).exec(callback);
+
+    given('layouts', () => (['post', 'tabloid_news', 'special']));
+
+    given('post', () => new News(postFactory.build()));
+    given('tabloidNews', () => new News(tabloidNewsFactory.build()));
+    given('special', () => new News(specialFactory.build()));
+    given('wrongLayout', () => new News(newsFactory.build({metadata: wrongLayoutMetadata})));
+    given('wrongLayoutMetadata', () => metadataFactory.build({layout: 'wrong_layout'}));
+
+    beforeEach((done) => { post.save(done); });
+    beforeEach((done) => { tabloidNews.save(done); });
+    beforeEach((done) => { special.save(done); });
+    beforeEach((done) => { wrongLayout.save(done); });
+
+    it('succeeds', (done) => {
+      subject((err) => {
+        done(err);
+      });
+    });
+
+    it('filters by layout', (done) => {
+      subject((err, result) => {
+        expect(result.length).to.equal(3);
+        expect(result[0].metadata.title).not.to.equal(wrongLayout.metadata.title);
+        expect(result[1].metadata.title).not.to.equal(wrongLayout.metadata.title);
+        expect(result[2].metadata.title).not.to.equal(wrongLayout.metadata.title);
 
         done(err);
       });
