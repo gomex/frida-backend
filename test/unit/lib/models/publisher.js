@@ -40,7 +40,6 @@ describe('publisher', function() {
       beforeEach(function() {
         sandbox.stub(news, 'save').yields(null);
         sandbox.stub(hexo, 'publish').yields(null);
-        sandbox.stub(hexo, 'updateAreaPage').yields(null);
         sandbox.stub(hexo, 'publishList').yields(null);
 
         var stub = sandbox.stub(Home, 'findByName');
@@ -119,7 +118,9 @@ describe('publisher', function() {
 
         it('does not update area data file', function(done){
           subject(news, function(err) {
-            expect(hexo.updateAreaPage).to.not.have.been.calledWith('radioagencia');
+            expect(hexo.publishList).to.not.have.been.calledWithMatch({
+              area: 'radioagencia',
+            });
 
             done(err);
           });
@@ -130,7 +131,6 @@ describe('publisher', function() {
     describe('when news is already published', function() {
       beforeEach(function() {
         sandbox.stub(hexo, 'publish').yields(null);
-        sandbox.stub(hexo, 'updateAreaPage').yields(null);
       });
 
       describe('and was modified', function() {
@@ -245,7 +245,6 @@ describe('publisher', function() {
       beforeEach(() => {
         sandbox.stub(tabloids, 'findTabloid').yields(null, aTabloid);
         sandbox.stub(hexo, 'publish').yields(null);
-        sandbox.stub(hexo, 'updateAreaPage').yields(null);
         sandbox.stub(hexo, 'publishList').yields(null);
       });
 
@@ -428,7 +427,6 @@ describe('publisher', function() {
       sandbox.stub(news, 'save').yields(null, updatedNews);
       sandbox.stub(hexo, 'unpublish').yields(null);
       sandbox.stub(hexo, 'publishList').yields(null);
-      sandbox.stub(hexo, 'updateAreaPage').yields(null);
       sandbox.stub(publisher, 'publishHome').yields(null);
 
       var stub = sandbox.stub(Home, 'findByName');
