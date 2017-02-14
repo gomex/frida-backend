@@ -5,7 +5,7 @@ var coverAttributes = require('./cover-attributes').cover;
 var metadata = new Factory()
   .attr('title', function() { return faker.lorem.sentence(); })
   .attr('layout', 'post')
-  .attr('area', 'nacional')
+  .attr('area', 'internacional')
   .attr('display_area', 'destaque_foto_grande')
   .attr('hat', 'Olimpíadas')
   .attr('description', function() { return faker.lorem.sentences(); })
