@@ -86,6 +86,7 @@ describe('lib/publisher/presenters/special.js', () => {
     given('expectedData', () => ({
       path: special.metadata.url,
       hat: 'especial',
+      author: 'Redação Brasil de Fato',
       title: special.metadata.title,
       published_at: special.published_at,
       cover: special.metadata.cover
