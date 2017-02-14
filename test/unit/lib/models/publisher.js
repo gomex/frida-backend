@@ -353,7 +353,6 @@ describe('publisher', function() {
             expect(hexo.publishList).to.have.been.calledWith({
               layout: 'photo_caption_list',
               path: 'charges',
-              area: 'charges',
               news: list
             });
 
