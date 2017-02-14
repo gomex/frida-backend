@@ -68,6 +68,7 @@ describe('publisher', function() {
           expect(hexo.publishList).to.have.been.calledWith({
             layout: 'news_list',
             area: news.metadata.area,
+            path: news.metadata.area,
             news: []
           });
 
@@ -80,6 +81,7 @@ describe('publisher', function() {
           expect(hexo.publishList).to.have.been.calledWith({
             layout: 'news_list',
             area: 'ultimas_noticias',
+            path: 'ultimas_noticias',
             news: []
           });
 
@@ -350,6 +352,7 @@ describe('publisher', function() {
           subject(photoCaption, (err) => {
             expect(hexo.publishList).to.have.been.calledWith({
               layout: 'photo_caption_list',
+              path: 'charges',
               area: 'charges',
               news: list
             });
@@ -466,6 +469,7 @@ describe('publisher', function() {
       subject(news, function(err, news) {
         expect(hexo.publishList).to.have.been.calledWith({
           layout: 'news_list',
+          path: news.metadata.area,
           area: news.metadata.area,
           news: []
         });
@@ -478,7 +482,8 @@ describe('publisher', function() {
       subject(news, function(err, _news) {
         expect(hexo.publishList).to.have.been.calledWith({
           layout: 'news_list',
-          area: news.metadata.area,
+          area: 'ultimas_noticias',
+          path: 'ultimas_noticias',
           news: []
         });
 
