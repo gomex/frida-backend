@@ -14,7 +14,7 @@ var News = require('../../../../lib/models/news');
 var Home = require('../../../../lib/models/home');
 var hexo = require('../../../../lib/publisher/hexo');
 var path = require('path');
-var writer = require('../../../../lib/publisher/writer');
+var hexoSource = require('../../../../lib/publisher/hexo_source');
 
 describe('hexo', function() {
   describe('unpublish', function() {
@@ -31,7 +31,7 @@ describe('hexo', function() {
     });
 
     beforeEach(function() {
-      sandbox.stub(writer, 'remove').yields(null);
+      sandbox.stub(hexoSource, 'remove').yields(null);
     });
 
     it('exists', function() {
@@ -40,7 +40,7 @@ describe('hexo', function() {
 
     it('removes md file', function(done) {
       subject(function(err) {
-        expect(writer.remove).to.have.been.calledWith(newsPath);
+        expect(hexoSource.remove).to.have.been.calledWith(newsPath);
 
         done(err);
       });
@@ -106,7 +106,7 @@ describe('hexo', function() {
     given('stringified', () => grayMatter.stringify('', homeData));
 
     beforeEach(() => {
-      sandbox.stub(writer, 'write').yields(null);
+      sandbox.stub(hexoSource, 'write').yields(null);
     });
 
     it('succeeds', (done) => {
@@ -117,7 +117,7 @@ describe('hexo', function() {
 
     it('writes home', (done) => {
       subject((err) => {
-        expect(writer.write).to.have.been.calledWith(`${home.path}/index.md`);
+        expect(hexoSource.write).to.have.been.calledWith(`${home.path}/index.md`);
 
         done(err);
       });
@@ -143,7 +143,7 @@ describe('hexo', function() {
 
       it('writes home', (done) => {
         subject((err) => {
-          expect(writer.write).to.have.been.calledWith(`${home.path}/index.md`, stringified);
+          expect(hexoSource.write).to.have.been.calledWith(`${home.path}/index.md`, stringified);
 
           done(err);
         });
@@ -170,7 +170,7 @@ describe('hexo', function() {
 
       it('writes home', (done) => {
         subject((err) => {
-          expect(writer.write).to.have.been.calledWith('index.md', stringified);
+          expect(hexoSource.write).to.have.been.calledWith('index.md', stringified);
 
           done(err);
         });

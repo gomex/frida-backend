@@ -2,7 +2,7 @@
 
 const columnist = require('../../../../lib/services/columnist');
 const columnistsModel = require('../../../../lib/models/columnist');
-const writer = require('../../../../lib/publisher/writer');
+const hexoSource = require('../../../../lib/publisher/hexo_source');
 var YAML = require('js-yaml');
 
 describe('lib/services/columnist.js', () => {
@@ -31,7 +31,7 @@ describe('lib/services/columnist.js', () => {
 
     beforeEach(() => {
       sandbox.stub(columnistsModel, 'all').returns(list);
-      sandbox.spy(writer, 'write');
+      sandbox.spy(hexoSource, 'write');
     });
 
     it('succeeds', (done) => {
@@ -42,7 +42,7 @@ describe('lib/services/columnist.js', () => {
 
     it('writes columnists', (done) => {
       subject((err) => {
-        expect(writer.write).to.have.been.calledWith('_data/columnists.yml');
+        expect(hexoSource.write).to.have.been.calledWith('_data/columnists.yml');
 
         done(err);
       });

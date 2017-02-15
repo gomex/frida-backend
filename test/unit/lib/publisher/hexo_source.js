@@ -3,11 +3,11 @@
 var path = require('path');
 var fs = require('fs');
 
-var writer = require('../../../../lib/publisher/writer');
+var hexoSource = require('../../../../lib/publisher/hexo_source');
 
-describe('lib/publisher/writer.js', () => {
+describe('lib/publisher/hexo_source.js', () => {
   describe('.write', () => {
-    var subject = (callback) => writer.write(filepath, content, callback);
+    var subject = (callback) => hexoSource.write(filepath, content, callback);
 
     given('sourcePath', () => process.env.HEXO_SOURCE_PATH);
     given('dir', () => 'some_dir');
@@ -48,7 +48,7 @@ describe('lib/publisher/writer.js', () => {
   });
 
   describe('remove', () => {
-    var subject = (callback) => writer.remove(filepath, callback);
+    var subject = (callback) => hexoSource.remove(filepath, callback);
 
     given('filepath', () => 'some_file2.txt');
     given('absoluteFilepath', () => path.join(process.env.HEXO_SOURCE_PATH, filepath));

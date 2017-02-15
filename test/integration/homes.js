@@ -5,7 +5,7 @@ var supertest   = require('supertest');
 var shared = require('./shared');
 var Home = require('../../lib/models/home');
 var News = require('../../lib/models/news');
-var writer = require('../../lib/publisher/writer');
+var hexoSource = require('../../lib/publisher/hexo_source');
 var publisher = require('../../lib/models/publisher');
 var postFactory = require('../factories/post-attributes').post;
 var async = require('async');
@@ -88,7 +88,7 @@ describe('/homes', () => {
     var updatedHome;
 
     beforeEach((done) => {
-      sandbox.spy(writer, 'write');
+      sandbox.spy(hexoSource, 'write');
 
       async.series([
         (callback) => Home.create(home, callback),
@@ -158,7 +158,7 @@ describe('/homes', () => {
       subject()
         .expect(200)
         .end((err) => {
-          expect(writer.write).to.have.been.calledWith('index.md');
+          expect(hexoSource.write).to.have.been.calledWith('index.md');
 
           done(err);
         });
