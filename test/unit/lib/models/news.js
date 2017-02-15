@@ -405,7 +405,7 @@ describe('news', () => {
     });
   });
 
-  describe.only('.byService', () => {
+  describe('.byService', () => {
     var subject = (callback) => News.find().byService(service).exec(callback);
 
     given('service', () => 'some_service');
