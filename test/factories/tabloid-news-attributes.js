@@ -17,6 +17,7 @@ var metadata = new Factory()
 var tabloid = new Factory()
   .attr('body', function() { return faker.lorem.paragraphs(); })
   .attr('metadata', function() { return metadata.build(); })
+  .attr('audio', function() { return 'https://soundcloud.com/radioagenciabdf/oposicao-tenta-barrar-avanco-da-reforma-da-previdencia-no-congresso'; })
   .attr('regional_area', function() { return faker.lorem.word(); });
 
 module.exports.metadata = metadata;
