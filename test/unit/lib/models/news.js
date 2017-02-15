@@ -405,6 +405,56 @@ describe('news', () => {
     });
   });
 
+  describe.only('.byService', () => {
+    var subject = (callback) => News.find().byService(service).exec(callback);
+
+    given('service', () => 'some_service');
+
+    it('succeeds', (done) => {
+      subject((err) => {
+        done(err);
+      });
+    });
+
+    context('layouts with tags', () => {
+      given('news', () => new News(postFactory.build({tags: [service]})));
+      given('tabloidNews', () => new News(tabloidNewsFactory.build({tags: [service]})));
+
+      given('newsWrongLayout', () => new News(columnFactory.build({tags: [service]})));
+
+      beforeEach((done) => { news.save(done); });
+      beforeEach((done) => { tabloidNews.save(done); });
+      beforeEach((done) => { newsWrongLayout.save(done); });
+
+      it('filters', (done) => {
+        subject((err, result) => {
+          expect(result.length).to.equal(2);
+          expect(result[0].metadata.title).to.equal(news.metadata.title);
+          expect(result[1].metadata.title).to.equal(tabloidNews.metadata.title);
+
+          done(err);
+        });
+      });
+    });
+
+    context('tags of service', () => {
+      given('news', () => new News(postFactory.build({tags: ['wrong_tag', service]})));
+      given('newsWrongTag', () => new News(postFactory.build({tags: ['wrong_tag']})));
+
+      beforeEach((done) => { news.save(done); });
+      beforeEach((done) => { newsWrongTag.save(done); });
+
+      it('filters', (done) => {
+        subject((err, result) => {
+          expect(result.length).to.equal(1);
+          expect(result[0].metadata.title).to.equal(news.metadata.title);
+
+          done(err);
+        });
+      });
+    });
+  });
+
   describe('.publisheds', () => {
     var subject = (callback) => News.find().publisheds().exec(callback);
 
@@ -429,6 +479,8 @@ describe('news', () => {
       });
     });
   });
+
+
 
   describe('.byLayouts', () => {
     var subject = (callback) => News.find().byLayouts(layouts).exec(callback);

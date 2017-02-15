@@ -127,6 +127,47 @@ describe('publisher', function() {
             done(err);
           });
         });
+
+        describe('and it is a service', function() {
+          var behaveAsService = function(tag, path) {
+            beforeEach(function() {
+              news.tags = [tag];
+            });
+
+            it('updates area', function(done){
+              subject(news, function(err) {
+                expect(hexo.publishList).to.have.been.calledWith({
+                  layout: 'news_list',
+                  area: tag,
+                  path: `radioagencia/${path}`,
+                  news: []
+                });
+
+                done(err);
+              });
+            });
+          };
+
+          describe('hoje na historia', () => {
+            behaveAsService('hojenahistoria', 'hoje-na-historia');
+          });
+
+          describe('alimento e saude', () => {
+            behaveAsService('alimentoesaude', 'alimento-e-saude');
+          });
+
+          describe('nossos direitos', () => {
+            behaveAsService('nossosdireitos', 'nossos-direitos');
+          });
+
+          describe('fatos curiosos', () => {
+            behaveAsService('fatoscuriosos', 'fatos-curiosos');
+          });
+
+          describe('mosaico cultural', () => {
+            behaveAsService('mosaicocultural', 'mosaico-cultural');
+          });
+        });
       });
     });
 
@@ -556,6 +597,63 @@ describe('publisher', function() {
 
             done(err);
           });
+        });
+      });
+    });
+
+    describe('and the area is "radioagencia"', function() {
+      beforeEach(function() {
+        news.metadata.area = 'radioagencia';
+      });
+
+      it('does not update area data file', function(done){
+        subject(news, function(err) {
+          expect(hexo.publishList).to.not.have.been.calledWithMatch({
+            area: 'radioagencia',
+          });
+
+          done(err);
+        });
+      });
+
+      describe('and it is a service', function() {
+        var behaveAsService = function(tag, path) {
+          beforeEach(function() {
+            news.tags = [tag];
+          });
+
+          it('updates area', function(done){
+            subject(news, function(err) {
+              expect(hexo.publishList).to.have.been.calledWith({
+                layout: 'news_list',
+                area: tag,
+                path: `radioagencia/${path}`,
+                news: []
+              });
+
+              done(err);
+            });
+          });
+        };
+
+        describe('hoje na historia', () => {
+          behaveAsService('hojenahistoria', 'hoje-na-historia');
+        });
+
+        describe('alimento e saude', () => {
+          behaveAsService('alimentoesaude', 'alimento-e-saude');
+        });
+
+        describe('nossos direitos', () => {
+          behaveAsService('nossosdireitos', 'nossos-direitos');
+        });
+
+        describe('fatos curiosos', () => {
+          behaveAsService('fatoscuriosos', 'fatos-curiosos');
+        });
+
+        describe('mosaico cultural', () => {
+          behaveAsService('mosaicocultural', 'mosaico-cultural');
         });
       });
     });
