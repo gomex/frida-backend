@@ -281,7 +281,7 @@ describe('publisher', function() {
     describe('when is a tabloid news', () => {
       given('tabloidNews', () => new News(tabloidNewsFactory.build({
         status: 'draft',
-        region: 'minas_gerais'
+        region: 'tabloid_mg'
       })));
       given('aTabloid', () => new News(tabloidFactory.build()));
 
@@ -573,10 +573,10 @@ describe('publisher', function() {
       });
 
       it('updates region', function(done) {
-        subject(tabloidNews, function(err, tabloidNews) {
+        subject(tabloidNews, function(err) {
           expect(hexo.publishList).to.have.been.calledWithMatch({
             layout: 'news_list',
-            area: tabloidNews.region
+            area: 'tabloid_mg'
           });
 
           done(err);
