@@ -17,7 +17,7 @@ var photoCaptionFactory = require('../../../factories/photo-caption-attributes')
 
 describe('publisher', function() {
   describe('.publish', function() {
-    var subject = function(news, callback) { publisher.publish(news, callback); };
+    var subject = function(news, callback) { publisher.publish([news], callback); };
 
     beforeEach(() => {
       sandbox.stub(publisher, 'publishHome').yields(null);
@@ -91,7 +91,7 @@ describe('publisher', function() {
 
       it('sets url', function(done) {
         subject(news, function(err, publishedNews) {
-          expect(publishedNews.metadata.url).to.exist;
+          expect(publishedNews[0].metadata.url).to.exist;
 
           done(err);
         });
@@ -191,7 +191,7 @@ describe('publisher', function() {
 
         it('does not change original published_at date', function(done) {
           subject(_.clone(news), function(err, publishedNews) {
-            expect(publishedNews.published_at).to.be.equal(news.published_at);
+            expect(publishedNews[0].published_at).to.be.equal(news.published_at);
 
             done(err);
           });
@@ -202,7 +202,7 @@ describe('publisher', function() {
           news.metadata.title = 'different title';
 
           subject(news, function(err, publishedNews) {
-            expect(publishedNews.metadata.url).to.be.equal(oldUrl);
+            expect(publishedNews[0].metadata.url).to.be.equal(oldUrl);
 
             done(err);
           });

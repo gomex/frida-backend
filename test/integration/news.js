@@ -336,7 +336,7 @@ describe('REST API:', function() {
         }
 
         newsId = news._id.valueOf();
-        publisher.publish(news, done);
+        publisher.publish([news], done);
       });
     });
 

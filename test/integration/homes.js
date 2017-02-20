@@ -95,7 +95,7 @@ describe('/homes', () => {
         (callback) => News.create(post, (err, post) => {
           updatedHome = Object.assign({featured_01: post.id}, home);
 
-          publisher.publish(post, callback);
+          publisher.publish([post], callback);
         })
       ], done);
     });
