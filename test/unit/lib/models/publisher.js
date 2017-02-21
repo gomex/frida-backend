@@ -660,7 +660,7 @@ describe('publisher', function() {
   });
 
   describe('publishHome', () => {
-    var subject = (callback) => publisher.publishHome(home, callback);
+    var subject = (callback) => publisher.publishHome(home, false, callback);
 
     given('home', () => new Home({name: 'bdf'}));
 
