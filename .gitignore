@@ -9,3 +9,4 @@ coverage/
 .env
 .node-version
 .migrate.json
+lupaProject.json
