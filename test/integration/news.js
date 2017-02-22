@@ -386,44 +386,63 @@ describe('REST API:', function() {
         return api.post(NEWS_RESOURCE + '/' + newsId + '/publish').send(news).auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
       };
 
-      shared.behavesAsAuthenticated(() =>
-        api.put(NEWS_RESOURCE + '/' + newsId + '/publish')
-      );
+      context('when incremental generation is disabled', () => {
+        beforeEach(() => {
+          process.env.TOGGLE_qVIq5Tnp_INCREMENTAL_GEN = 'enabled';
+          sandbox.stub(publisher, 'publishLater');
+        });
 
-      it('succeeds', function(done) {
-        subject()
-          .expect(202)
-          .end(done);
+        it('succeeds', function(done) {
+          subject()
+            .expect(202)
+            .end(done);
+        });
       });
 
-      it('returns json', function(done) {
-        subject()
-          .expect('Content-Type', /json/)
-          .end(done);
-      });
+      context('when incremental generation is disabled', () => {
+        beforeEach(() => {
+          process.env.TOGGLE_qVIq5Tnp_INCREMENTAL_GEN = false;
+        });
 
-      it('sets published_at date', function(done) {
-        subject()
-          .end(function(err, res) {
-            expect(new Date(res.body.published_at).getTime()).to.be.equal(Date.now());
-            done();
-          });
-      });
+        shared.behavesAsAuthenticated(() =>
+          api.put(NEWS_RESOURCE + '/' + newsId + '/publish')
+        );
 
-      it('sets status as published', function(done) {
-        subject()
-          .end(function(err, res) {
-            expect(res.body.status).to.be.equal('published');
-            done();
-          });
-      });
+        it('succeeds', function(done) {
+          subject()
+            .expect(202)
+            .end(done);
+        });
 
-      it('sets the path in which the news is available', function(done) {
-        subject()
-          .end(function(err, res) {
-            expect(res.body.metadata.url).to.be.equal(buildNewsHTTPPath(news.metadata.title));
-            done();
-          });
+        it('returns json', function(done) {
+          subject()
+            .expect('Content-Type', /json/)
+            .end(done);
+        });
+
+        it('sets published_at date', function(done) {
+          subject()
+            .end(function(err, res) {
+              expect(new Date(res.body.published_at).getTime()).to.be.equal(Date.now());
+              done();
+            });
+        });
+
+        it('sets status as published', function(done) {
+          subject()
+            .end(function(err, res) {
+              expect(res.body.status).to.be.equal('published');
+              done();
+            });
+        });
+
+        it('sets the path in which the news is available', function(done) {
+          subject()
+            .end(function(err, res) {
+              expect(res.body.metadata.url).to.be.equal(buildNewsHTTPPath(news.metadata.title));
+              done();
+            });
+        });
       });
     });
 
