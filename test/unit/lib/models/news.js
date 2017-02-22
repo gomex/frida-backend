@@ -106,9 +106,7 @@ describe('news', () => {
     })));
     given('attributes', () => ({
       foo: 'bar',
-      status: 'status',
       created_at:  'created_at',
-      published_at: 'published_at',
       metadata: {
         url: 'url'
       }
@@ -140,9 +138,7 @@ describe('news', () => {
 
     it('does not copy server fields', (done) => {
       subject((err) => {
-        expect(news.status).to.not.equal(attributes.status);
         expect(news.created_at).to.not.equal(attributes.created_at);
-        expect(news.published_at).to.not.equal(attributes.published_at);
         expect(news.metadata.url).to.not.equal(attributes.metadata.url);
 
         done(err);
