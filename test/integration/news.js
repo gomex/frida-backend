@@ -386,10 +386,10 @@ describe('REST API:', function() {
         return api.post(NEWS_RESOURCE + '/' + newsId + '/publish').send(news).auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
       };
 
-      context('when incremental generation is disabled', () => {
+      context('when incremental generation is enabled', () => {
         beforeEach(() => {
           process.env.TOGGLE_qVIq5Tnp_INCREMENTAL_GEN = 'enabled';
-          sandbox.stub(publisher, 'publishLater');
+          sandbox.stub(publisher, 'publishLater').yields(null, news);
         });
 
         it('succeeds', function(done) {
