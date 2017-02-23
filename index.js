@@ -1,22 +1,20 @@
 require('dotenv').config();
-
 var db = require('./lib/db/initializer');
-
 var Home = require('./lib/models/home');
-var columnistService = require('./lib/services/columnist');
+var columnist = require('./lib/services/columnist');
+var server = require('./lib/http/server');
+
+function initHome() {
+  Home.init((err) => {
+    if (err) console.error('Error Home.init', err);
+  });
+}
 
 db.connect(() => {
-  require('./lib/http/server').startServer();
+  initHome();
+  server.start();
 });
 
-Home.init((err) => {
-  if (err) {
-    console.error('Error Home.init', err);
-  }
-});
-
-columnistService.write((err) => {
-  if (err) {
-    console.error('Error columnistService.write', err);
-  }
+columnist.write((err) => {
+  if (err) console.error('Error columnist.write', err);
 });

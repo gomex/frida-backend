@@ -14,7 +14,7 @@ describe('/homes', () => {
   given('api', () => supertest('https://localhost:5000'));
 
   before((done) => {
-    server.startServer();
+    server.start();
     done();
   });
 

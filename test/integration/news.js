@@ -74,7 +74,7 @@ describe('REST API:', function() {
   var newsCreatedAt;
 
   before(function(done){
-    server.startServer();
+    server.start();
 
     var testDate = new Date('Feb 14, 2016 01:15:00');
 
