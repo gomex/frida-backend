@@ -16,6 +16,28 @@ var tabloidNewsFactory = require('../../../factories/tabloid-news-attributes').t
 var photoCaptionFactory = require('../../../factories/photo-caption-attributes').photoCaption;
 
 describe('publisher', function() {
+
+  describe('.publishLater', () => {
+    var subject = (news, callback) => { publisher.publishLater(news, callback); };
+
+    var metadata = metadataFactory.build();
+    given('news', () => new News(newsFactory.build(
+      {
+        metadata: metadata,
+        published_at: new Date(),
+        updated_at: new Date(),
+        status: 'draft'
+      }
+    )));
+
+    it('sets news status to "pending"', (done) => {
+      subject(news, (err, publishedNews) => {
+        expect(publishedNews.status).to.be.equal('pending');
+        done(err);
+      });
+    });
+  });
+
   describe('.publish', function() {
     var subject = function(news, callback) { publisher.publish([news], callback); };
 
