@@ -98,6 +98,14 @@ describe('news', () => {
     behaviourAsIsStatus('isChanged', 'changed');
   });
 
+  describe('#isScheduled', () => {
+    behaviourAsIsStatus('isScheduled', 'scheduled');
+  });
+
+  describe('#isPending', () => {
+    behaviourAsIsStatus('isPending', 'pending');
+  });
+
   describe('#updateSanitized', () => {
     var subject = (cb) => { news.updateSanitized(attributes, cb); };
 

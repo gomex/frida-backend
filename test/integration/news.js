@@ -73,15 +73,17 @@ describe('REST API:', function() {
 
   var newsCreatedAt;
 
-  before(function(done){
+  before(() => {
     server.start();
+  });
 
+  beforeEach(function(done){
     var testDate = new Date('Feb 14, 2016 01:15:00');
 
     newsYearMonthURL = '/2016/02/';
     newsYearMonthDayURL = '/2016/02/14/';
 
-    sinon.useFakeTimers(testDate.getTime(), 'Date');
+    sandbox.useFakeTimers(testDate.getTime(), 'Date');
     newsCreatedAt = Date.now();
 
     deleteDirSync(hexoPaths.sourcePath);
@@ -248,8 +250,6 @@ describe('REST API:', function() {
     });
 
     it('updates updated_at date', function(done){
-      sinon.useFakeTimers(Date.now(), 'Date');
-
       subject()
         .expect(200)
         .end(function(err, _res) {
