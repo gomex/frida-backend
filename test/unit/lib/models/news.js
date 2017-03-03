@@ -412,7 +412,7 @@ describe('news', () => {
   describe('.byService', () => {
     var subject = (callback) => News.find().byService(service).exec(callback);
 
-    given('service', () => ['some_service']);
+    given('service', () => 'some_service');
 
     it('succeeds', (done) => {
       subject((err) => {
