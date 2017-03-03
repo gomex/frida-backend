@@ -16,7 +16,6 @@ var tabloidNewsFactory = require('../../../factories/tabloid-news-attributes').t
 var photoCaptionFactory = require('../../../factories/photo-caption-attributes').photoCaption;
 
 describe('publisher', function() {
-
   describe('.publishLater', () => {
     var subject = (news, callback) => { publisher.publishLater(news, callback); };
 
@@ -41,34 +40,28 @@ describe('publisher', function() {
   describe('.publish', function() {
     var subject = function(news, callback) { publisher.publish([news], callback); };
 
-    beforeEach(() => {
+    given('news', () => new News(newsFactory.build(
+      {
+        published_at: new Date(),
+        updated_at: new Date(),
+        status: 'draft'
+      }
+    )));
+    given('bdf', () => new Home({name: 'bdf'}));
+    given('radioAgencia', () => new Home({name: 'radio_agencia'}));
+
+    beforeEach(function() {
       sandbox.stub(publisher, 'publishHome').yields(null);
+      sandbox.stub(news, 'save').yields(null);
+      sandbox.stub(hexo, 'publish').yields(null);
+      sandbox.stub(hexo, 'publishList').yields(null);
+
+      var stub = sandbox.stub(Home, 'findByName');
+      stub.withArgs('bdf').yields(null, bdf);
+      stub.withArgs('radio_agencia').yields(null, radioAgencia);
     });
 
     describe('when news is not published', function() {
-      var metadata = metadataFactory.build();
-      given('news', () => new News(newsFactory.build(
-        {
-          metadata: metadata,
-          published_at: new Date(),
-          updated_at: new Date(),
-          status: 'draft'
-        }
-      )));
-
-      given('bdf', () => new Home({name: 'bdf'}));
-      given('radioAgencia', () => new Home({name: 'radio_agencia'}));
-
-      beforeEach(function() {
-        sandbox.stub(news, 'save').yields(null);
-        sandbox.stub(hexo, 'publish').yields(null);
-        sandbox.stub(hexo, 'publishList').yields(null);
-
-        var stub = sandbox.stub(Home, 'findByName');
-        stub.withArgs('bdf').yields(null, bdf);
-        stub.withArgs('radio_agencia').yields(null, radioAgencia);
-      });
-
       it('updates status on database', function(done){
         subject(news, function(err) {
           expect(news.save).to.have.been.called;
@@ -194,10 +187,6 @@ describe('publisher', function() {
     });
 
     describe('when news is already published', function() {
-      beforeEach(function() {
-        sandbox.stub(hexo, 'publish').yields(null);
-      });
-
       describe('and was modified', function() {
         var metadata = metadataFactory.build({ url: '/2016/05/21/what' });
         given('news', () => new News(newsFactory.build({
@@ -263,7 +252,6 @@ describe('publisher', function() {
       beforeEach(() => {
         sandbox.stub(tabloids, 'findNews').yields(null, newsList);
         sandbox.stub(tabloids, 'findTabloid').yields(null, aTabloid);
-        sandbox.stub(hexo, 'publish').yields(null);
       });
 
       it('searches news', (done) => {
@@ -309,8 +297,6 @@ describe('publisher', function() {
 
       beforeEach(() => {
         sandbox.stub(tabloids, 'findTabloid').yields(null, aTabloid);
-        sandbox.stub(hexo, 'publish').yields(null);
-        sandbox.stub(hexo, 'publishList').yields(null);
       });
 
       it('publishes news', (done) => {
@@ -400,7 +386,6 @@ describe('publisher', function() {
       describe('republishes photo-caption list', () => {
         beforeEach(() => {
           sandbox.stub(photoCaptions, 'getList').yields(null, list);
-          sandbox.stub(hexo, 'publishList').yields(null);
         });
 
         it('searches list', (done) => {
