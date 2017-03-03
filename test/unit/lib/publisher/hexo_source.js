@@ -2,6 +2,7 @@
 
 var path = require('path');
 var fs = require('fs');
+var rmdir = require('rmdir');
 
 var hexoSource = require('../../../../lib/publisher/hexo_source');
 
@@ -17,10 +18,7 @@ describe('lib/publisher/hexo_source.js', () => {
     given('absoluteDirPath',  () => path.join(sourcePath, dir));
     given('absoluteFilePath',  () => path.join(absoluteDirPath, name));
 
-    beforeEach(() => {
-      fs.unlink(absoluteFilePath, () => {});
-      fs.rmdir(absoluteDirPath, () => {});
-    });
+    beforeEach((done) => rmdir(absoluteDirPath, () => { done(); }));
 
     it('creates directory', (done) => {
       subject((err) => {
