@@ -44,35 +44,4 @@ describe('lib/publisher/hexo_source.js', () => {
       });
     });
   });
-
-  describe('remove', () => {
-    var subject = (callback) => hexoSource.remove(filepath, callback);
-
-    given('filepath', () => 'some_file2.txt');
-    given('absoluteFilepath', () => path.join(process.env.HEXO_SOURCE_PATH, filepath));
-
-    beforeEach(() => {
-      fs.writeFileSync(absoluteFilepath, '');
-    });
-
-    it('removes file', (done) => {
-      subject((err) => {
-        expect(() => fs.statSync(absoluteFilepath)).to.throw();
-
-        done(err);
-      });
-    });
-
-    describe('when the file does not exists', () => {
-      beforeEach(() => {
-        fs.unlink(absoluteFilepath, () => {});
-      });
-
-      it('succeeds', (done) => {
-        subject((err) => {
-          done(err);
-        });
-      });
-    });
-  });
 });
