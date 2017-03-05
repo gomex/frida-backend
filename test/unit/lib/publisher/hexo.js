@@ -13,40 +13,9 @@ var presenter = require('../../../../lib/publisher/presenter');
 var News = require('../../../../lib/models/news');
 var Home = require('../../../../lib/models/home');
 var hexo = require('../../../../lib/publisher/hexo');
-var path = require('path');
 var hexoSource = require('../../../../lib/publisher/hexo_source');
 
 describe('hexo', function() {
-  describe('unpublish', function() {
-    var subject = function(callback) { return hexo.unpublish(news, callback); };
-
-    given('news', () => postFactory.build({
-      published_at: new Date(),
-      metadata: newsMetadataFactory.build({url: 'url'})
-    }));
-
-    given('newsPath', () => {
-      var dir = moment(news.published_at).format('YYYY/MM');
-      return path.join('_posts', dir, news._id + '.md');
-    });
-
-    beforeEach(function() {
-      sandbox.stub(hexoSource, 'remove').yields(null);
-    });
-
-    it('exists', function() {
-      expect(hexo.unpublish).to.exist;
-    });
-
-    it('removes md file', function(done) {
-      subject(function(err) {
-        expect(hexoSource.remove).to.have.been.calledWith(newsPath);
-
-        done(err);
-      });
-    });
-  });
-
   describe('publish', function() {
     var subject = function(callback) { return hexo.publish(news, callback); };
 
