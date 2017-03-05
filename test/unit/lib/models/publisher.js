@@ -477,6 +477,7 @@ describe('publisher', function() {
 
     beforeEach(function() {
       sandbox.stub(news, 'save').yields(null, updatedNews);
+      sandbox.stub(hexo, 'unpublish').yields(null); //remove when TOGGLE_qVIq5Tnp_INCREMENTAL_GEN is gone
       sandbox.stub(site, 'remove').yields(null);
       sandbox.stub(hexo, 'publishList').yields(null);
       sandbox.stub(publisher, 'publishHome').yields(null);
@@ -506,13 +507,27 @@ describe('publisher', function() {
       });
     });
 
-    it('delegates to site', function(done) {
-      subject(news, function(err, news) {
-        expect(site.remove).to.have.been.calledWith(news.metadata.url);
+    if(process.env.TOGGLE_qVIq5Tnp_INCREMENTAL_GEN == 'enabled') {
+      context('when TOGGLE_qVIq5Tnp_INCREMENTAL_GEN is enabled', () => {
+        it('delegates to site', function(done) {
+          subject(news, function(err, news) {
+            expect(site.remove).to.have.been.calledWith(news.metadata.url);
 
-        done(err);
+            done(err);
+          });
+        });
       });
-    });
+    } else {
+      context('when TOGGLE_qVIq5Tnp_INCREMENTAL_GEN is disabled', () => {
+        it('delegates to hexo', function(done) {
+          subject(news, function(err, news) {
+            expect(hexo.unpublish).to.have.been.calledWith(news);
+
+            done(err);
+          });
+        });
+      });
+    }
 
     it('updates area', function(done) {
       subject(news, function(err, news) {
