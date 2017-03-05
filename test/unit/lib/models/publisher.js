@@ -9,6 +9,7 @@ var tabloids = require('../../../../lib/models/news/tabloids');
 var photoCaptions = require('../../../../lib/models/news/photo-captions');
 var bdf = require('../../../../lib/models/home/bdf');
 var hexo = require('../../../../lib/publisher/hexo');
+var site = require('../../../../lib/publisher/site');
 var newsFactory = require('../../../factories/news-attributes').news;
 var metadataFactory = require('../../../factories/news-attributes').metadata;
 var tabloidFactory = require('../../../factories/tabloid-attributes').tabloid;
@@ -468,14 +469,15 @@ describe('publisher', function() {
   describe('.unpublish', function() {
     var subject = function(news, callback) { publisher.unpublish(news, callback); };
 
-    given('news', () => new News(newsFactory.build({ status: 'published' })));
+    var metadata = metadataFactory.build({ url: '/2017/03/03/bla-bla/' });
+    given('news', () => new News(newsFactory.build({metadata: metadata, status: 'published' })));
     given('updatedNews', () => Object.assign({status: 'draft'}, news));
     given('bdf', () => new Home({name: 'bdf'}));
     given('radioAgencia', () => new Home({name: 'radio_agencia'}));
 
     beforeEach(function() {
       sandbox.stub(news, 'save').yields(null, updatedNews);
-      sandbox.stub(hexo, 'unpublish').yields(null);
+      sandbox.stub(site, 'remove').yields(null);
       sandbox.stub(hexo, 'publishList').yields(null);
       sandbox.stub(publisher, 'publishHome').yields(null);
 
@@ -504,9 +506,9 @@ describe('publisher', function() {
       });
     });
 
-    it('delegates to hexo', function(done) {
+    it('delegates to site', function(done) {
       subject(news, function(err, news) {
-        expect(hexo.unpublish).to.have.been.calledWith(news);
+        expect(site.remove).to.have.been.calledWith(news.metadata.url);
 
         done(err);
       });
