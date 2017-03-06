@@ -6,6 +6,7 @@ var db = require('./lib/db/initializer');
 var Home = require('./lib/models/home');
 var columnist = require('./lib/services/columnist');
 var server = require('./lib/http/server');
+var recover = require('./lib/services/publisher/recover');
 var scheduler = require('./lib/services/scheduler');
 
 function initHome() {
@@ -21,6 +22,7 @@ function initScheduler() {
 
 db.connect(() => {
   initHome();
+  recover.publish(_.noop);
   initScheduler();
   server.start();
 });
