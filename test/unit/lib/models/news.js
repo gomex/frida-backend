@@ -102,8 +102,8 @@ describe('news', () => {
     behaviourAsIsStatus('isScheduled', 'scheduled');
   });
 
-  describe('#isPending', () => {
-    behaviourAsIsStatus('isPending', 'pending');
+  describe('#isPublishing', () => {
+    behaviourAsIsStatus('isPublishing', 'publishing');
   });
 
   describe('#updateSanitized', () => {
