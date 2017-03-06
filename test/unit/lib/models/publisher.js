@@ -467,7 +467,7 @@ describe('publisher', function() {
   });
 
   describe('.unpublish', function() {
-    var subject = function(news, callback) { publisher.unpublish(news, callback); };
+    var subject = function(news, callback) { publisher.unpublish([news], callback); };
 
     var metadata = metadataFactory.build({ url: '/2017/03/03/bla-bla/' });
     given('news', () => new News(newsFactory.build({metadata: metadata, status: 'published' })));
