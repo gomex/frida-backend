@@ -30,9 +30,9 @@ describe('publisher', function() {
       }
     )));
 
-    it('sets news status to "pending"', (done) => {
+    it('sets news status to "publishing"', (done) => {
       subject(news, (err, publishedNews) => {
-        expect(publishedNews.status).to.be.equal('pending');
+        expect(publishedNews.status).to.be.equal('publishing');
         done(err);
       });
     });
