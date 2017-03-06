@@ -5,7 +5,7 @@ var publisher = require('../../../../../lib/models/publisher');
 var recover = require('../../../../../lib/services/publisher/recover');
 var postFactory = require('../../../../factories/post-attributes').post;
 
-describe.only('lib/services/publisher/recover', () => {
+describe('lib/services/publisher/recover', () => {
   describe('.publish', () => {
     var subject = (callback) => recover.publish(callback);
 
