@@ -507,27 +507,31 @@ describe('publisher', function() {
       });
     });
 
-    if(process.env.TOGGLE_qVIq5Tnp_INCREMENTAL_GEN == 'enabled') {
-      context('when TOGGLE_qVIq5Tnp_INCREMENTAL_GEN is enabled', () => {
-        it('delegates to site', function(done) {
-          subject(news, function(err, news) {
-            expect(site.remove).to.have.been.calledWith(news.metadata.url);
+    context('when TOGGLE_qVIq5Tnp_INCREMENTAL_GEN is enabled', () => {
+      beforeEach(() => {
+        process.env.TOGGLE_qVIq5Tnp_INCREMENTAL_GEN = 'enabled';
+      });
+      it('delegates to site', function(done) {
+        subject(news, function(err, news) {
+          expect(site.remove).to.have.been.calledWith(news.metadata.url);
 
-            done(err);
-          });
+          done(err);
         });
       });
-    } else {
-      context('when TOGGLE_qVIq5Tnp_INCREMENTAL_GEN is disabled', () => {
-        it('delegates to hexo', function(done) {
-          subject(news, function(err, news) {
-            expect(hexo.unpublish).to.have.been.calledWith(news);
+    });
 
-            done(err);
-          });
+    context('when TOGGLE_qVIq5Tnp_INCREMENTAL_GEN is disabled', () => {
+      beforeEach(() => {
+        process.env.TOGGLE_qVIq5Tnp_INCREMENTAL_GEN = 'disabled';
+      });
+      it('delegates to hexo', function(done) {
+        subject(news, function(err, news) {
+          expect(hexo.unpublish).to.have.been.calledWith(news);
+
+          done(err);
         });
       });
-    }
+    });
 
     it('updates area', function(done) {
       subject(news, function(err, news) {
