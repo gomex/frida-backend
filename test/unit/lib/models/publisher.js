@@ -491,13 +491,6 @@ describe('publisher', function() {
       expect(publisher.unpublish).to.exist;
     });
 
-    it('returns updated news', function(done) {
-      subject(news, function(err, news) {
-        expect(news.status).to.equal('draft');
-
-        done(err);
-      });
-    });
 
     it('saves changes', function(done) {
       subject(news, function(err) {
@@ -513,7 +506,7 @@ describe('publisher', function() {
       });
       it('delegates to site', function(done) {
         subject(news, function(err, news) {
-          expect(site.remove).to.have.been.calledWith(news.metadata.url);
+          expect(site.remove).to.have.been.calledWith(news[0].metadata.url);
 
           done(err);
         });
@@ -526,7 +519,15 @@ describe('publisher', function() {
       });
       it('delegates to hexo', function(done) {
         subject(news, function(err, news) {
-          expect(hexo.unpublish).to.have.been.calledWith(news);
+          expect(hexo.unpublish).to.have.been.calledWith(news[0]);
+
+          done(err);
+        });
+      });
+
+      it('returns updated news', function(done) {
+        subject(news, function(err, news) {
+          expect(news[0].status).to.equal('draft');
 
           done(err);
         });
@@ -535,6 +536,7 @@ describe('publisher', function() {
 
     it('updates area', function(done) {
       subject(news, function(err, news) {
+        news = news[0];
         expect(hexo.publishList).to.have.been.calledWith({
           layout: 'news_list',
           path: news.metadata.area,
