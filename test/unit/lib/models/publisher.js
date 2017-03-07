@@ -38,6 +38,27 @@ describe('publisher', function() {
     });
   });
 
+  describe('.unpublishLater', () => {
+    var subject = (news, callback) => { publisher.unpublishLater(news, callback); };
+
+    var metadata = metadataFactory.build();
+    given('news', () => new News(newsFactory.build(
+      {
+        metadata: metadata,
+        published_at: new Date(),
+        updated_at: new Date(),
+        status: 'published'
+      }
+    )));
+
+    it('sets news status to "unpublishing"', (done) => {
+      subject(news, (err, unpublishedNews) => {
+        expect(unpublishedNews.status).to.be.equal('unpublishing');
+        done(err);
+      });
+    });
+  });
+
   describe('.publish', function() {
     var subject = function(news, callback) { publisher.publish([news], callback); };
 
