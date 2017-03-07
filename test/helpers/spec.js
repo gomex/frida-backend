@@ -12,9 +12,16 @@ global.assert = require('assert');
 
 global.chai.use(global.sinonChai);
 
+before(() => {
+  sinon.stub(hexo, 'generate').yields();
+});
+
+after(() => {
+  hexo.generate.restore();
+});
+
 beforeEach(function() {
   global.sandbox = sinon.sandbox.create();
-  sandbox.stub(hexo, 'generate').yields();
 });
 
 afterEach(function(done) {
