@@ -6,6 +6,7 @@ var supertest = require('supertest');
 var News = require('../../lib/models/news');
 var Home = require('../../lib/models/home');
 var publisher = require('../../lib/models/publisher');
+var republisher = require('../../lib/services/publisher/republisher');
 var server = require('../../lib/http/server');
 var shared = require('./shared');
 var metadataFactory = require('../factories/news-attributes').metadata;
@@ -370,7 +371,31 @@ describe('REST API:', function() {
     });
   });
 
-  describe('PUT /news/<id>/publish', function() {
+  describe('POST /news/republish', () => {
+    var subject = function() {
+      return api.post(NEWS_RESOURCE + '/republish').send().auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
+    };
+
+    beforeEach(() => {
+      sandbox.stub(republisher, 'publish').yields();
+    });
+
+    it('succeeds', function(done) {
+      subject()
+        .expect(202)
+        .end(done);
+    });
+
+    it('succeeds', function(done) {
+      subject()
+        .end(() => {
+          expect(republisher.publish).to.have.been.called;
+          done();
+        });
+    });
+  });
+
+  describe('POST /news/<id>/publish', function() {
     describe('when entity is of type news', function() {
       var news;
       var newsId;
