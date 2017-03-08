@@ -344,20 +344,29 @@ describe('REST API:', function() {
       api.post(NEWS_RESOURCE + '/' + newsId + '/unpublish')
     );
 
-    it('succeeds', function(done) {
-      subject().expect(200).end(done);
+    context('when incremental generation is enabled', () => {
+      beforeEach(() => {
+        process.env.TOGGLE_qVIq5Tnp_INCREMENTAL_GEN = 'enabled';
+        sandbox.stub(publisher, 'publishLater').yields(null, news);
+      });
+
+      it('succeeds', function(done) {
+        subject().expect(202).end(done);
+      });
+    });
+
+    context('when incremental generation is disabled', () => {
+      beforeEach(() => {
+        process.env.TOGGLE_qVIq5Tnp_INCREMENTAL_GEN = 'disabled';
+      });
+
+      it('succeeds', function(done) {
+        subject().expect(200).end(done);
+      });
     });
 
     it('has content type json', function(done) {
       subject().expect('Content-Type', /json/).end(done);
-    });
-
-    it('sets status to draft', function(done) {
-      subject().end(function(err, res) {
-        expect(res.body.status).to.equal('draft');
-
-        done(err);
-      });
     });
   });
 
