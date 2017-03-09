@@ -24,11 +24,9 @@ describe('app/services/scheduler', () => {
       subject(done);
     });
 
-    it('publishes scheduleds', (done) => {
+    it('publishes', (done) => {
       subject((err) => {
-        expect(publisher.publishLater).to.have.been.calledWithMatch({
-          metadata: {title: post.metadata.title}
-        });
+        expect(publisher.publishLater).to.have.been.called;
 
         done(err);
       });

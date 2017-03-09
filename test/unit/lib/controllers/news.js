@@ -3,7 +3,7 @@
 var controller = require('../../../../lib/controllers/news');
 var republisher = require('../../../../lib/services/publisher/republisher');
 
-describe('/lib/controllers/news', () => {
+describe('lib/controllers/news', () => {
   describe('.republishAll', () => {
     var subject = (callback) => controller.republishAll(req, {end: callback}, callback);
 

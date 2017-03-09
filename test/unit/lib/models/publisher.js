@@ -18,21 +18,26 @@ var photoCaptionFactory = require('../../../factories/photo-caption-attributes')
 
 describe('publisher', function() {
   describe('.publishLater', () => {
-    var subject = (news, callback) => { publisher.publishLater(news, callback); };
+    var subject = (news, callback) => {
+      publisher.publishLater([news], true, (err) => {
+        if (err) return callback(err);
 
-    var metadata = metadataFactory.build();
-    given('news', () => new News(newsFactory.build(
-      {
-        metadata: metadata,
-        published_at: new Date(),
-        updated_at: new Date(),
-        status: 'draft'
-      }
-    )));
+        News.findOne({}, callback);
+      });
+    };
+
+    given('news', () => new News(newsFactory.build({
+      published_at: new Date(),
+      updated_at: new Date(),
+      status: 'draft'
+    })));
+
+    beforeEach((done) => { news.save(done); });
 
     it('sets news status to "publishing"', (done) => {
-      subject(news, (err, publishedNews) => {
-        expect(publishedNews.status).to.be.equal('publishing');
+      subject(news, (err, published) => {
+        expect(published.status).to.be.equal('publishing');
+
         done(err);
       });
     });

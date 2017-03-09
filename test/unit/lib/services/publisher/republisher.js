@@ -23,11 +23,9 @@ describe('lib/services/publisher/republisher', () => {
       subject(done);
     });
 
-    it('publishes scheduleds', (done) => {
+    it('publishes', (done) => {
       subject((err) => {
-        expect(publisher.publishLater).to.have.been.calledWithMatch({
-          metadata: {title: post.metadata.title}
-        });
+        expect(publisher.publishLater).to.have.been.called;
 
         done(err);
       });
