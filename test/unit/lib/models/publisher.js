@@ -526,37 +526,19 @@ describe('publisher', function() {
       });
     });
 
-    context('when TOGGLE_qVIq5Tnp_INCREMENTAL_GEN is enabled', () => {
-      beforeEach(() => {
-        process.env.TOGGLE_qVIq5Tnp_INCREMENTAL_GEN = 'enabled';
-      });
-      it('delegates to site', function(done) {
-        subject(news, function(err, news) {
-          expect(site.remove).to.have.been.calledWith(news[0].metadata.url);
+    it('delegates to site', function(done) {
+      subject(news, function(err, news) {
+        expect(site.remove).to.have.been.calledWith(news[0].metadata.url);
 
-          done(err);
-        });
+        done(err);
       });
     });
 
-    context('when TOGGLE_qVIq5Tnp_INCREMENTAL_GEN is disabled', () => {
-      beforeEach(() => {
-        process.env.TOGGLE_qVIq5Tnp_INCREMENTAL_GEN = 'disabled';
-      });
-      it('delegates to hexo', function(done) {
-        subject(news, function(err, news) {
-          expect(hexo.unpublish).to.have.been.calledWith(news[0]);
+    it('returns updated news', function(done) {
+      subject(news, function(err, news) {
+        expect(news[0].status).to.equal('draft');
 
-          done(err);
-        });
-      });
-
-      it('returns updated news', function(done) {
-        subject(news, function(err, news) {
-          expect(news[0].status).to.equal('draft');
-
-          done(err);
-        });
+        done(err);
       });
     });
 

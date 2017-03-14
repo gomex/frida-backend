@@ -1,6 +1,4 @@
 var fs = require('fs');
-var grayMatter = require('gray-matter');
-var slug = require('slug');
 var supertest = require('supertest');
 
 var News = require('../../lib/models/news');
@@ -21,9 +19,6 @@ describe('REST API:', function() {
   beforeEach(Home.init);
 
   var NEWS_RESOURCE = '/news';
-
-  var newsYearMonthURL;
-  var newsYearMonthDayURL;
 
   var hexoPaths = {
     sourcePath: process.env.HEXO_SOURCE_PATH + '/',
@@ -68,10 +63,6 @@ describe('REST API:', function() {
     assert.equal(actualColumn.metadata.columnist, expectedColumn.metadata.columnist);
   };
 
-  var buildNewsHTTPPath = function(newsTitle) {
-    return newsYearMonthDayURL + slug(newsTitle, {lower: true}) + '/';
-  };
-
   var newsCreatedAt;
 
   before(() => {
@@ -80,9 +71,6 @@ describe('REST API:', function() {
 
   beforeEach(function(done){
     var testDate = new Date('Feb 14, 2016 01:15:00');
-
-    newsYearMonthURL = '/2016/02/';
-    newsYearMonthDayURL = '/2016/02/14/';
 
     sandbox.useFakeTimers(testDate.getTime(), 'Date');
     newsCreatedAt = Date.now();
@@ -345,25 +333,8 @@ describe('REST API:', function() {
       api.post(NEWS_RESOURCE + '/' + newsId + '/unpublish')
     );
 
-    context('when incremental generation is enabled', () => {
-      beforeEach(() => {
-        process.env.TOGGLE_qVIq5Tnp_INCREMENTAL_GEN = 'enabled';
-        sandbox.stub(publisher, 'publishLater').yields(null, news);
-      });
-
-      it('succeeds', function(done) {
-        subject().expect(202).end(done);
-      });
-    });
-
-    context('when incremental generation is disabled', () => {
-      beforeEach(() => {
-        process.env.TOGGLE_qVIq5Tnp_INCREMENTAL_GEN = 'disabled';
-      });
-
-      it('succeeds', function(done) {
-        subject().expect(200).end(done);
-      });
+    it('succeeds', function(done) {
+      subject().expect(202).end(done);
     });
 
     it('has content type json', function(done) {
@@ -422,20 +393,7 @@ describe('REST API:', function() {
 
       context('when incremental generation is enabled', () => {
         beforeEach(() => {
-          process.env.TOGGLE_qVIq5Tnp_INCREMENTAL_GEN = 'enabled';
           sandbox.stub(publisher, 'publishLater').yields(null, news);
-        });
-
-        it('succeeds', function(done) {
-          subject()
-            .expect(202)
-            .end(done);
-        });
-      });
-
-      context('when incremental generation is disabled', () => {
-        beforeEach(() => {
-          process.env.TOGGLE_qVIq5Tnp_INCREMENTAL_GEN = false;
         });
 
         shared.behavesAsAuthenticated(() =>
@@ -452,30 +410,6 @@ describe('REST API:', function() {
           subject()
             .expect('Content-Type', /json/)
             .end(done);
-        });
-
-        it('sets published_at date', function(done) {
-          subject()
-            .end(function(err, res) {
-              expect(new Date(res.body.published_at).getTime()).to.be.equal(Date.now());
-              done();
-            });
-        });
-
-        it('sets status as published', function(done) {
-          subject()
-            .end(function(err, res) {
-              expect(res.body.status).to.be.equal('published');
-              done();
-            });
-        });
-
-        it('sets the path in which the news is available', function(done) {
-          subject()
-            .end(function(err, res) {
-              expect(res.body.metadata.url).to.be.equal(buildNewsHTTPPath(news.metadata.title));
-              done();
-            });
         });
       });
     });
@@ -501,19 +435,10 @@ describe('REST API:', function() {
         return api.post(NEWS_RESOURCE + '/' + photoCaptionId + '/publish').send(photoCaption).auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
       };
 
-      it('does not create yaml front matter file', function(done) {
+      it('succeeds', function(done) {
         subject()
           .expect(202)
-          .end(function(err, _res) {
-            if(err) throw err;
-
-            News.findById(photoCaptionId, function(err, result) {
-              if(err) throw err;
-              assert.equal(result.status, 'published');
-              assert.equal(fs.existsSync(hexoPaths.postsPath + newsYearMonthURL + photoCaptionId + '.md'), true);
-              done();
-            });
-          });
+          .end(done);
       });
     });
 
@@ -538,27 +463,10 @@ describe('REST API:', function() {
         return api.post(NEWS_RESOURCE + '/' + tabloidId + '/publish').send(tabloid).auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
       };
 
-      it('creates tabloid data file', function(done) {
+      it('succeeds', function(done) {
         subject()
-          .expect('Content-Type', /json/)
           .expect(202)
-          .end(function(err, _res) {
-            if (err) done(err);
-
-            News.findById(tabloidId, function(err, result) {
-              var published_at = result.published_at;
-              assert.ok(published_at);
-              assert.equal(Date.now(), published_at.getTime());
-              assert.equal(result.status, 'published');
-              assert.equal(result.metadata.url, buildNewsHTTPPath(tabloid.metadata.title));
-
-              var tabloidFileAsFrontMatters = fs.readFileSync(hexoPaths.postsPath + newsYearMonthURL + tabloidId + '.md', 'utf-8');
-              var tabloidFileAsObj = grayMatter(tabloidFileAsFrontMatters);
-              assert.equal(tabloidFileAsObj.data.url, buildNewsHTTPPath(tabloid.metadata.title));
-
-              done();
-            });
-          });
+          .end(done);
       });
     });
   });
