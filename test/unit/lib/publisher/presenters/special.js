@@ -84,6 +84,7 @@ describe('lib/publisher/presenters/special.js', () => {
     subj('getListData', () => presenter.getListData(special));
 
     given('expectedData', () => ({
+      layout: special.metadata.layout,
       path: special.metadata.url,
       hat: 'especial',
       author: 'Redação Brasil de Fato',
