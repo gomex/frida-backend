@@ -2,6 +2,7 @@
 
 var presenter = require('../../../../../lib/publisher/presenters/photo-caption');
 var coverPresenter = require('../../../../../lib/publisher/presenters/cover');
+var optionsPresenter = require('../../../../../lib/publisher/presenters/options');
 var factory = require('../../../../factories/photo-caption-attributes').photoCaption;
 
 describe('lib/publisher/presenters/photoCaption.js', () => {
@@ -58,7 +59,7 @@ describe('lib/publisher/presenters/photoCaption.js', () => {
   });
 
   describe('getListData', () => {
-    subj('getListData', () => presenter.getListData(photoCaption));
+    subj('getListData', () => presenter.getListData(photoCaption, options));
 
     given('expectedData', () => ({
       title: photoCaption.metadata.title,
@@ -66,6 +67,12 @@ describe('lib/publisher/presenters/photoCaption.js', () => {
       path: photoCaption.metadata.url,
       cover: photoCaption.metadata.cover
     }));
+
+    given('options', () => ({ some: 'options' }));
+
+    beforeEach(() => {
+      sandbox.spy(optionsPresenter, 'getData');
+    });
 
     it('exists', () => {
       expect(presenter.getListData).to.exist;
@@ -78,6 +85,11 @@ describe('lib/publisher/presenters/photoCaption.js', () => {
     it('calls cover presenter', () => {
       getListData;
       expect(coverPresenter.getData).to.have.been.calledWith(photoCaption);
+    });
+
+    it('calls options presenter', () => {
+      getListData;
+      expect(optionsPresenter.getData).to.have.been.calledWith(photoCaption, options);
     });
   });
 });

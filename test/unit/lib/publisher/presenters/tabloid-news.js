@@ -2,6 +2,7 @@
 
 var presenter = require('../../../../../lib/publisher/presenters/tabloid-news');
 var coverPresenter = require('../../../../../lib/publisher/presenters/cover');
+var optionsPresenter = require('../../../../../lib/publisher/presenters/options');
 var factory = require('../../../../factories/tabloid-news-attributes').tabloid;
 var metadataFactory = require('../../../../factories/tabloid-news-attributes').metadata;
 
@@ -60,7 +61,7 @@ describe('lib/publisher/presenters/tabloidNews.js', () => {
   });
 
   describe('getListData', () => {
-    subj('getListData', () => presenter.getListData(tabloidNews));
+    subj('getListData', () => presenter.getListData(tabloidNews, options));
 
     given('expectedData', () => ({
       title: tabloidNews.metadata.title,
@@ -76,6 +77,12 @@ describe('lib/publisher/presenters/tabloidNews.js', () => {
       cover: tabloidNews.metadata.cover
     }));
 
+    given('options', () => ({ some: 'options' }));
+
+    beforeEach(() => {
+      sandbox.spy(optionsPresenter, 'getData');
+    });
+
     it('exists', () => {
       expect(presenter.getListData).to.exist;
     });
@@ -87,6 +94,11 @@ describe('lib/publisher/presenters/tabloidNews.js', () => {
     it('calls cover presenter', () => {
       getListData;
       expect(coverPresenter.getData).to.have.been.calledWith(tabloidNews);
+    });
+
+    it('calls options presenter', () => {
+      getListData;
+      expect(optionsPresenter.getData).to.have.been.calledWith(tabloidNews, options);
     });
   });
 });

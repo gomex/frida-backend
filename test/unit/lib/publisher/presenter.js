@@ -103,8 +103,9 @@ describe('lib/publisher/presenter.js', () => {
   });
 
   describe('getListData', () => {
-    subj('of', () => presenter.getListData(post));
+    subj('of', () => presenter.getListData(post, options));
     given('post', () => new News(postFactoty.build()));
+    given('options', () => ({some: 'options'}));
 
     beforeEach(() => {
       sandbox.spy(presenter, 'of');
@@ -118,7 +119,7 @@ describe('lib/publisher/presenter.js', () => {
 
     it('gets list data', () => {
       of;
-      expect(postPresenter.getListData).to.have.been.calledWith(post);
+      expect(postPresenter.getListData).to.have.been.calledWith(post, options);
     });
   });
 });

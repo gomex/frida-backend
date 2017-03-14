@@ -2,6 +2,7 @@
 
 var presenter = require('../../../../../lib/publisher/presenters/column');
 var coverPresenter = require('../../../../../lib/publisher/presenters/cover');
+var optionsPresenter = require('../../../../../lib/publisher/presenters/options');
 var factory = require('../../../../factories/column-attributes').column;
 var metadataFactory = require('../../../../factories/column-attributes').metadata;
 var columnist = require('../../../../../lib/services/columnist');
@@ -53,7 +54,7 @@ describe('lib/publisher/presenters/column.js', () => {
   });
 
   describe('getListData', () => {
-    subj('getListData', () => presenter.getListData(column));
+    subj('getListData', () => presenter.getListData(column, options));
 
     given('expectedData', () => ({
       title: column.metadata.title,
@@ -69,6 +70,12 @@ describe('lib/publisher/presenters/column.js', () => {
       cover: column.metadata.cover
     }));
 
+    given('options', () => ({ some: 'options' }));
+
+    beforeEach(() => {
+      sandbox.spy(optionsPresenter, 'getData');
+    });
+
     it('exists', () => {
       expect(presenter.getListData).to.exist;
     });
@@ -80,6 +87,11 @@ describe('lib/publisher/presenters/column.js', () => {
     it('calls cover presenter', () => {
       getListData;
       expect(coverPresenter.getData).to.have.been.calledWith(column);
+    });
+
+    it('calls options presenter', () => {
+      getListData;
+      expect(optionsPresenter.getData).to.have.been.calledWith(column, options);
     });
   });
 });

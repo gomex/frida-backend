@@ -3,6 +3,7 @@
 var presenter = require('../../../../../lib/publisher/presenters/tabloid');
 var postPresenter = require('../../../../../lib/publisher/presenters/post');
 var coverPresenter = require('../../../../../lib/publisher/presenters/cover');
+var optionsPresenter = require('../../../../../lib/publisher/presenters/options');
 var factory = require('../../../../factories/tabloid-attributes').tabloid;
 var metadataFactory = require('../../../../factories/tabloid-attributes').metadata;
 var tabloidNewsFactory = require('../../../../factories/tabloid-news-attributes').tabloid;
@@ -91,7 +92,7 @@ describe('lib/publisher/presenters/tabloid.js', () => {
   });
 
   describe('.getListData', () => {
-    subj('getListData', () => presenter.getListData(tabloid));
+    subj('getListData', () => presenter.getListData(tabloid, options));
 
     given('metadata', () => metadataFactory.build({
       url: 'some_url'
@@ -109,12 +110,23 @@ describe('lib/publisher/presenters/tabloid.js', () => {
       path: tabloid.metadata.url
     }));
 
+    given('options', () => ({ some: 'options' }));
+
+    beforeEach(() => {
+      sandbox.spy(optionsPresenter, 'getData');
+    });
+
     it('exists', () => {
       expect(presenter.getListData).to.exist;
     });
 
     it('returns data', () => {
       expect(getListData).to.eql(expectedData);
+    });
+
+    it('calls options presenter', () => {
+      getListData;
+      expect(optionsPresenter.getData).to.have.been.calledWith(tabloid, options);
     });
   });
 });

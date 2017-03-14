@@ -3,6 +3,7 @@
 var News = require('../../../../../lib/models/news');
 var presenter = require('../../../../../lib/publisher/presenters/post');
 var coverPresenter = require('../../../../../lib/publisher/presenters/cover');
+var optionsPresenter = require('../../../../../lib/publisher/presenters/options');
 var factory = require('../../../../factories/post-attributes').post;
 var metadataFactory = require('../../../../factories/post-attributes').metadata;
 
@@ -126,7 +127,7 @@ describe('lib/publisher/presenters/post.js', () => {
   });
 
   describe('getListData', () => {
-    subj('getListData', () => presenter.getListData(post));
+    subj('getListData', () => presenter.getListData(post, options));
 
     given('expectedData', () => ({
       title: post.metadata.title,
@@ -142,6 +143,12 @@ describe('lib/publisher/presenters/post.js', () => {
       cover: post.metadata.cover
     }));
 
+    given('options', () => ({ some: 'options' }));
+
+    beforeEach(() => {
+      sandbox.spy(optionsPresenter, 'getData');
+    });
+
     it('exists', () => {
       expect(presenter.getListData).to.exist;
     });
@@ -153,6 +160,11 @@ describe('lib/publisher/presenters/post.js', () => {
     it('calls cover presenter', () => {
       getListData;
       expect(coverPresenter.getData).to.have.been.calledWith(post);
+    });
+
+    it('calls options presenter', () => {
+      getListData;
+      expect(optionsPresenter.getData).to.have.been.calledWith(post, options);
     });
   });
 });
