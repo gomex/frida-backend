@@ -1,7 +1,7 @@
 /*eslint no-undef: "off"*/
 
 var News = require('../../../../../lib/models/news');
-var publisher = require('../../../../../lib/models/publisher');
+var worker = require('../../../../../lib/services/publisher/worker');
 var republisher = require('../../../../../lib/services/publisher/republisher');
 var postFactory = require('../../../../factories/post-attributes').post;
 
@@ -16,7 +16,7 @@ describe('lib/services/publisher/republisher', () => {
     beforeEach((done) => { post.save(done); });
 
     beforeEach(() => {
-      sandbox.stub(publisher, 'publishLater').yields(null);
+      sandbox.stub(worker, 'publishLater').yields(null);
     });
 
     it('succeeds', (done) => {
@@ -25,7 +25,7 @@ describe('lib/services/publisher/republisher', () => {
 
     it('publishes', (done) => {
       subject((err) => {
-        expect(publisher.publishLater).to.have.been.called;
+        expect(worker.publishLater).to.have.been.called;
 
         done(err);
       });

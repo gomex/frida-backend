@@ -5,6 +5,7 @@ var News = require('../../lib/models/news');
 var Home = require('../../lib/models/home');
 var publisher = require('../../lib/models/publisher');
 var republisher = require('../../lib/services/publisher/republisher');
+var worker = require('../../lib/services/publisher/worker');
 var server = require('../../lib/http/server');
 var shared = require('./shared');
 var metadataFactory = require('../factories/news-attributes').metadata;
@@ -393,7 +394,7 @@ describe('REST API:', function() {
 
       context('when incremental generation is enabled', () => {
         beforeEach(() => {
-          sandbox.stub(publisher, 'publishLater').yields(null, news);
+          sandbox.stub(worker, 'publishLater').yields(null, news);
         });
 
         shared.behavesAsAuthenticated(() =>
