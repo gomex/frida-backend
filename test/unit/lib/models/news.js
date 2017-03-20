@@ -485,10 +485,29 @@ describe('news', () => {
   });
 
   describe('.byMonth', () => {
-    var subject = (callback) => News.find().byMonth().exec(callback);
+    var subject = (callback) => News.find().byMonth(year, month).exec(callback);
+
+    given('year', () => 2017);
+    given('month', () => 0);
+    given('published_at', () => new Date(year, month, 15));
+    given('news', () => new News(newsFactory.build({ published_at: published_at })));
+
+    given('newsWithWrongMonth', () => new News(newsFactory.build()));
+
+    beforeEach((done) => { news.save(done); });
+    beforeEach((done) => { newsWithWrongMonth.save(done); });
 
     it('succeeds', (done) => {
       subject(done);
+    });
+
+    it('filters by date', (done) => {
+      subject((err, list) => {
+        expect(list[0].metadata.title).to.equal(news.metadata.title);
+        expect(list.length).to.equal(1);
+
+        done(err);
+      });
     });
   });
 
