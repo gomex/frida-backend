@@ -474,7 +474,7 @@ describe('news', () => {
       });
     });
 
-    it('filters by area', (done) => {
+    it('filters by status', (done) => {
       subject((err, result) => {
         expect(result.length).to.equal(1);
         expect(result.pop().metadata.title).to.equal(news.metadata.title);
@@ -484,7 +484,13 @@ describe('news', () => {
     });
   });
 
+  describe('.byMonth', () => {
+    var subject = (callback) => News.find().byMonth().exec(callback);
 
+    it('succeeds', (done) => {
+      subject(done);
+    });
+  });
 
   describe('.byLayouts', () => {
     var subject = (callback) => News.find().byLayouts(layouts).exec(callback);
