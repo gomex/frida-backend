@@ -488,14 +488,33 @@ describe('news', () => {
     var subject = (callback) => News.find().byMonth(year, month).exec(callback);
 
     given('year', () => 2017);
-    given('month', () => 0);
-    given('published_at', () => new Date(year, month, 15));
-    given('news', () => new News(newsFactory.build({ published_at: published_at })));
+    given('month', () => 1);
 
-    given('newsWithWrongMonth', () => new News(newsFactory.build()));
+    given('wrongMonth1', () => 0);
+    given('wrongMonth2', () => 2);
 
-    beforeEach((done) => { news.save(done); });
-    beforeEach((done) => { newsWithWrongMonth.save(done); });
+    
+    given('published_at1', () => new Date(year, month, 1));
+    given('published_at2', () => new Date(year, month, 15));
+    given('published_at3', () => new Date(year, month, 28));
+
+    given('newsWithWrongMonth1', () => new Date(year, wrongMonth1, 31));
+    given('newsWithWrongMonth2', () => new Date(year, wrongMonth2, 1));
+
+    given('news1', () => new News(newsFactory.build({ published_at: published_at1 })));
+    given('news2', () => new News(newsFactory.build({ published_at: published_at2 })));
+    given('news3', () => new News(newsFactory.build({ published_at: published_at3 })));
+
+    given('news1Wrong', () => new News(newsFactory.build({ published_at: newsWithWrongMonth1 })));
+    given('news2Wrong', () => new News(newsFactory.build({ published_at: newsWithWrongMonth2 })));
+    
+    beforeEach((done) => { news1.save(done); });
+    beforeEach((done) => { news2.save(done); });
+    beforeEach((done) => { news3.save(done); });
+
+    beforeEach((done) => { news1Wrong.save(done); });
+    beforeEach((done) => { news2Wrong.save(done); });
+
 
     it('succeeds', (done) => {
       subject(done);
@@ -503,8 +522,10 @@ describe('news', () => {
 
     it('filters by date', (done) => {
       subject((err, list) => {
-        expect(list[0].metadata.title).to.equal(news.metadata.title);
-        expect(list.length).to.equal(1);
+        expect(list[0].metadata.title).to.equal(news1.metadata.title);
+        expect(list[1].metadata.title).to.equal(news2.metadata.title);
+        expect(list[2].metadata.title).to.equal(news3.metadata.title);
+        expect(list.length).to.equal(3);
 
         done(err);
       });
