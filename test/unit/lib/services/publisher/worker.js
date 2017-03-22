@@ -6,6 +6,7 @@ var News = require('../../../../../lib/models/news');
 var hexoSource = require('../../../../../lib/publisher/hexo_source');
 var hexo = require('../../../../../lib/publisher/hexo');
 var postFactory = require('../../../../factories/post-attributes').post;
+var homePublisher = require('../../../../../lib/services/publisher/home');
 var mongoose = require('mongoose');
 
 describe('lib/services/publisher/worker.js', () => {
@@ -20,7 +21,7 @@ describe('lib/services/publisher/worker.js', () => {
       sandbox.stub(publisher, 'publishNew').yields();
       sandbox.stub(publisher, 'unpublishNew').yields();
       sandbox.stub(publisher, 'publishLists').yields();
-      sandbox.stub(publisher, 'publishHomes').yields();
+      sandbox.stub(homePublisher, 'publishAll').yields();
       sandbox.stub(hexoSource, 'removePosts').yields();
     });
 
@@ -46,7 +47,7 @@ describe('lib/services/publisher/worker.js', () => {
 
     it('publishes homes', (done) => {
       subject((err) => {
-        expect(publisher.publishHomes).to.have.been.called;
+        expect(homePublisher.publishAll).to.have.been.called;
 
         done(err);
       });

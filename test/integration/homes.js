@@ -5,8 +5,8 @@ var supertest   = require('supertest');
 var shared = require('./shared');
 var Home = require('../../lib/models/home');
 var News = require('../../lib/models/news');
-var hexoSource = require('../../lib/publisher/hexo_source');
 var publisher = require('../../lib/models/publisher');
+var worker = require('../../lib/services/publisher/worker');
 var postFactory = require('../factories/post-attributes').post;
 var async = require('async');
 
@@ -88,13 +88,12 @@ describe('/homes', () => {
     var updatedHome;
 
     beforeEach((done) => {
-      sandbox.spy(hexoSource, 'write');
+      sandbox.spy(worker, 'publishLater');
 
       async.series([
         (callback) => Home.create(home, callback),
         (callback) => News.create(post, (err, post) => {
           updatedHome = Object.assign({featured_01: post.id}, home);
-
           publisher.publish([post], callback);
         })
       ], done);
@@ -154,11 +153,11 @@ describe('/homes', () => {
         });
     });
 
-    it('writes file', (done) => {
+    it('schedules generate', (done) => {
       subject()
         .expect(200)
         .end((err) => {
-          expect(hexoSource.write).to.have.been.calledWith('index.md');
+          expect(worker.publishLater).to.have.been.called;
 
           done(err);
         });

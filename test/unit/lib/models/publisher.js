@@ -10,6 +10,7 @@ var photoCaptions = require('../../../../lib/models/news/photo-captions');
 var bdf = require('../../../../lib/models/home/bdf');
 var hexo = require('../../../../lib/publisher/hexo');
 var site = require('../../../../lib/publisher/site');
+var homePublisher = require('../../../../lib/services/publisher/home');
 var newsFactory = require('../../../factories/news-attributes').news;
 var metadataFactory = require('../../../factories/news-attributes').metadata;
 var tabloidFactory = require('../../../factories/tabloid-attributes').tabloid;
@@ -31,7 +32,7 @@ describe('publisher', function() {
     given('radioAgencia', () => new Home({name: 'radio_agencia'}));
 
     beforeEach(function() {
-      sandbox.stub(publisher, 'publishHome').yields(null);
+      sandbox.stub(homePublisher, 'publishAll').yields(null);
       sandbox.stub(news, 'save').yields(null);
       sandbox.stub(hexo, 'publish').yields(null);
       sandbox.stub(hexo, 'publishList').yields(null);
@@ -92,17 +93,9 @@ describe('publisher', function() {
         });
       });
 
-      it('publishes bdf home', (done) => {
+      it('publishes homes', (done) => {
         subject(news, function(err) {
-          expect(publisher.publishHome).to.have.been.calledWith(bdf);
-
-          done(err);
-        });
-      });
-
-      it('publishes radio_agencia home', (done) => {
-        subject(news, function(err) {
-          expect(publisher.publishHome).to.have.been.calledWith(radioAgencia);
+          expect(homePublisher.publishAll).to.have.been.called;
 
           done(err);
         });
@@ -459,7 +452,7 @@ describe('publisher', function() {
       sandbox.stub(hexo, 'unpublish').yields(null); //remove when TOGGLE_qVIq5Tnp_INCREMENTAL_GEN is gone
       sandbox.stub(site, 'remove').yields(null);
       sandbox.stub(hexo, 'publishList').yields(null);
-      sandbox.stub(publisher, 'publishHome').yields(null);
+      sandbox.stub(homePublisher, 'publishAll').yields(null);
 
       var stub = sandbox.stub(Home, 'findByName');
       stub.withArgs('bdf').yields(null, bdf);
@@ -522,17 +515,9 @@ describe('publisher', function() {
       });
     });
 
-    it('publishes bdf home', (done) => {
+    it('publishes homes', (done) => {
       subject(news, function(err) {
-        expect(publisher.publishHome).to.have.been.calledWith(bdf);
-
-        done(err);
-      });
-    });
-
-    it('publishes radio_agencia home', (done) => {
-      subject(news, function(err) {
-        expect(publisher.publishHome).to.have.been.calledWith(radioAgencia);
+        expect(homePublisher.publishAll).to.have.been.called;
 
         done(err);
       });
@@ -645,86 +630,6 @@ describe('publisher', function() {
 
         describe('mosaico cultural', () => {
           behaveAsService('mosaicocultural', 'mosaico-cultural');
-        });
-      });
-    });
-  });
-
-  describe('publishHome', () => {
-    var subject = (callback) => publisher.publishHome(home, false, callback);
-
-    given('home', () => new Home({name: 'bdf'}));
-
-    beforeEach(() => {
-      sandbox.spy(home, 'populateAllFields');
-      sandbox.stub(hexo, 'publishHome').yields(null);
-    });
-
-    it('succeeds', (done) => {
-      subject((err) => {
-        done(err);
-      });
-    });
-
-    it('populates news', (done) => {
-      subject((err) => {
-        expect(home.populateAllFields).to.have.been.called;
-        done(err);
-      });
-    });
-
-    it('delegates to hexo', (done) => {
-      subject((err) => {
-        expect(hexo.publishHome).to.have.been.calledWith(home);
-        done(err);
-      });
-    });
-
-    describe('when is radioagencia', () => {
-      given('newsList', () => newsFactory.buildList(2));
-      given('home', () => new Home({
-        name: 'radio_agencia',
-        featured_01: new News(newsFactory.build()),
-        service_01: new News(newsFactory.build()),
-        service_02: new News(newsFactory.build()),
-        service_03: new News(newsFactory.build()),
-        service_04: new News(newsFactory.build()),
-        service_05: new News(newsFactory.build())
-      }));
-
-      beforeEach(() => {
-        sandbox.stub(Home.prototype, 'populateAllFields').yields(null);
-        sandbox.stub(News, 'find').yields(null, newsList);
-      });
-
-      it('enriches home with latest radioagencia news', (done) => {
-        subject((err) => {
-          expect(home.latest_news).to.equal(newsList);
-          done(err);
-        });
-      });
-    });
-
-    describe('when is bdf', () => {
-      given('newsList', () => newsFactory.buildList(2));
-      given('home', () => new Home({name: 'bdf'}));
-
-      beforeEach(() => {
-        sandbox.stub(bdf, 'getLastNews').yields(null, newsList);
-        sandbox.stub(bdf, 'getMostRead').yields(null, newsList);
-      });
-
-      it('enriches with latest news', (done) => {
-        subject((err) => {
-          expect(home.last_news).to.equal(newsList);
-          done(err);
-        });
-      });
-
-      it('enriches with most_read', (done) => {
-        subject((err) => {
-          expect(home.most_read).to.equal(newsList);
-          done(err);
         });
       });
     });
