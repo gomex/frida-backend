@@ -27,7 +27,7 @@ When published news will be available in a folder, pointed by an environment var
 Before running frida-backend (or its tests) it is necessary to:
 
 * install
-  * Node.js v.0.12.7
+  * Node.js v.4.4.4
   * MongoDB v.3.0
 * create a `.env` file from the `.env_example` and edit the values
 
