@@ -4,13 +4,10 @@
 var _ = require('lodash');
 var publisher = require('../../../../lib/models/publisher');
 var News = require('../../../../lib/models/news');
-var Home = require('../../../../lib/models/home');
 var tabloids = require('../../../../lib/models/news/tabloids');
 var photoCaptions = require('../../../../lib/models/news/photo-captions');
-var bdf = require('../../../../lib/models/home/bdf');
 var hexo = require('../../../../lib/publisher/hexo');
 var site = require('../../../../lib/publisher/site');
-var homePublisher = require('../../../../lib/services/publisher/home');
 var newsFactory = require('../../../factories/news-attributes').news;
 var metadataFactory = require('../../../factories/news-attributes').metadata;
 var tabloidFactory = require('../../../factories/tabloid-attributes').tabloid;
@@ -19,7 +16,7 @@ var photoCaptionFactory = require('../../../factories/photo-caption-attributes')
 
 describe('publisher', function() {
   describe('.publish', function() {
-    var subject = function(news, callback) { publisher.publish([news], callback); };
+    var subject = function(news, callback) { publisher.publishOne(news, callback); };
 
     given('news', () => new News(newsFactory.build(
       {
@@ -28,18 +25,10 @@ describe('publisher', function() {
         status: 'draft'
       }
     )));
-    given('bdf', () => new Home({name: 'bdf'}));
-    given('radioAgencia', () => new Home({name: 'radio_agencia'}));
 
     beforeEach(function() {
-      sandbox.stub(homePublisher, 'publishAll').yields(null);
       sandbox.stub(news, 'save').yields(null);
       sandbox.stub(hexo, 'publish').yields(null);
-      sandbox.stub(hexo, 'publishList').yields(null);
-
-      var stub = sandbox.stub(Home, 'findByName');
-      stub.withArgs('bdf').yields(null, bdf);
-      stub.withArgs('radio_agencia').yields(null, radioAgencia);
     });
 
     describe('when news is not published', function() {
@@ -59,102 +48,11 @@ describe('publisher', function() {
         });
       });
 
-      it('updates area data file', function(done){
-        subject(news, function(err) {
-          expect(hexo.publishList).to.have.been.calledWith({
-            layout: 'news_list',
-            area: news.metadata.area,
-            path: news.metadata.area,
-            news: []
-          });
-
-          done(err);
-        });
-      });
-
-      it('updates last news data file', function(done){
-        subject(news, function(err) {
-          expect(hexo.publishList).to.have.been.calledWith({
-            layout: 'news_list',
-            area: 'ultimas_noticias',
-            path: 'ultimas_noticias',
-            news: []
-          });
-
-          done(err);
-        });
-      });
-
       it('sets url', function(done) {
         subject(news, function(err, publishedNews) {
-          expect(publishedNews[0].metadata.url).to.exist;
+          expect(publishedNews.metadata.url).to.exist;
 
           done(err);
-        });
-      });
-
-      it('publishes homes', (done) => {
-        subject(news, function(err) {
-          expect(homePublisher.publishAll).to.have.been.called;
-
-          done(err);
-        });
-      });
-
-      describe('and the area is "radioagencia"', function() {
-        beforeEach(function() {
-          news.metadata.area = 'radioagencia';
-        });
-
-        it('does not update area data file', function(done){
-          subject(news, function(err) {
-            expect(hexo.publishList).to.not.have.been.calledWithMatch({
-              area: 'radioagencia',
-            });
-
-            done(err);
-          });
-        });
-
-        describe('and it is a service', function() {
-          var behaveAsService = function(tag, path) {
-            beforeEach(function() {
-              news.tags = [tag];
-            });
-
-            it('updates area', function(done){
-              subject(news, function(err) {
-                expect(hexo.publishList).to.have.been.calledWith({
-                  layout: 'news_list',
-                  area: tag,
-                  path: `radioagencia/${path}`,
-                  news: []
-                });
-
-                done(err);
-              });
-            });
-          };
-
-          describe('hoje na historia', () => {
-            behaveAsService('hojenahistoria', 'hoje-na-historia');
-          });
-
-          describe('alimento e saude', () => {
-            behaveAsService('alimentoesaude', 'alimento-e-saude');
-          });
-
-          describe('nossos direitos', () => {
-            behaveAsService('nossosdireitos', 'nossos-direitos');
-          });
-
-          describe('fatos curiosos', () => {
-            behaveAsService('fatoscuriosos', 'fatos-curiosos');
-          });
-
-          describe('mosaico cultural', () => {
-            behaveAsService('mosaicocultural', 'mosaico-cultural');
-          });
         });
       });
     });
@@ -175,7 +73,7 @@ describe('publisher', function() {
 
         it('does not change original published_at date', function(done) {
           subject(_.clone(news), function(err, publishedNews) {
-            expect(publishedNews[0].published_at).to.be.equal(news.published_at);
+            expect(publishedNews.published_at).to.be.equal(news.published_at);
 
             done(err);
           });
@@ -186,7 +84,7 @@ describe('publisher', function() {
           news.metadata.title = 'different title';
 
           subject(news, function(err, publishedNews) {
-            expect(publishedNews[0].metadata.url).to.be.equal(oldUrl);
+            expect(publishedNews.metadata.url).to.be.equal(oldUrl);
 
             done(err);
           });
@@ -280,17 +178,6 @@ describe('publisher', function() {
         });
       });
 
-      it('updates regional list', function(done){
-        subject(tabloidNews, function(err) {
-          expect(hexo.publishList).to.have.been.calledWithMatch({
-            layout: 'news_list',
-            area: tabloidNews.region
-          });
-
-          done(err);
-        });
-      });
-
       it('searches tabloid', (done) => {
         subject(tabloidNews, (err) => {
           expect(tabloids.findTabloid).to.have.been.calledWith(tabloidNews);
@@ -355,32 +242,6 @@ describe('publisher', function() {
           done(err);
         });
       });
-
-      describe('republishes photo-caption list', () => {
-        beforeEach(() => {
-          sandbox.stub(photoCaptions, 'getList').yields(null, list);
-        });
-
-        it('searches list', (done) => {
-          subject(photoCaption, (err) => {
-            expect(photoCaptions.getList).to.have.been.called;
-
-            done(err);
-          });
-        });
-
-        it('publishes list', (done) => {
-          subject(photoCaption, (err) => {
-            expect(hexo.publishList).to.have.been.calledWith({
-              layout: 'photo_caption_list',
-              path: 'charges',
-              news: list
-            });
-
-            done(err);
-          });
-        });
-      });
     });
   });
 
@@ -439,30 +300,20 @@ describe('publisher', function() {
   });
 
   describe('.unpublish', function() {
-    var subject = function(news, callback) { publisher.unpublish([news], callback); };
+    var subject = function(news, callback) { publisher.unpublishOne(news, callback); };
 
     var metadata = metadataFactory.build({ url: '/2017/03/03/bla-bla/' });
     given('news', () => new News(newsFactory.build({metadata: metadata, status: 'published' })));
     given('updatedNews', () => Object.assign({status: 'draft'}, news));
-    given('bdf', () => new Home({name: 'bdf'}));
-    given('radioAgencia', () => new Home({name: 'radio_agencia'}));
 
     beforeEach(function() {
       sandbox.stub(news, 'save').yields(null, updatedNews);
-      sandbox.stub(hexo, 'unpublish').yields(null); //remove when TOGGLE_qVIq5Tnp_INCREMENTAL_GEN is gone
       sandbox.stub(site, 'remove').yields(null);
-      sandbox.stub(hexo, 'publishList').yields(null);
-      sandbox.stub(homePublisher, 'publishAll').yields(null);
-
-      var stub = sandbox.stub(Home, 'findByName');
-      stub.withArgs('bdf').yields(null, bdf);
-      stub.withArgs('radio_agencia').yields(null, radioAgencia);
     });
 
-    it('exists', function() {
-      expect(publisher.unpublish).to.exist;
+    it('succeeds', function(done) {
+      subject(news, done);
     });
-
 
     it('saves changes', function(done) {
       subject(news, function(err) {
@@ -474,7 +325,7 @@ describe('publisher', function() {
 
     it('delegates to site', function(done) {
       subject(news, function(err, news) {
-        expect(site.remove).to.have.been.calledWith(news[0].metadata.url);
+        expect(site.remove).to.have.been.calledWith(news.metadata.url);
 
         done(err);
       });
@@ -482,42 +333,7 @@ describe('publisher', function() {
 
     it('returns updated news', function(done) {
       subject(news, function(err, news) {
-        expect(news[0].status).to.equal('draft');
-
-        done(err);
-      });
-    });
-
-    it('updates area', function(done) {
-      subject(news, function(err, news) {
-        news = news[0];
-        expect(hexo.publishList).to.have.been.calledWith({
-          layout: 'news_list',
-          path: news.metadata.area,
-          area: news.metadata.area,
-          news: []
-        });
-
-        done(err);
-      });
-    });
-
-    it('updates last news', function(done) {
-      subject(news, function(err, _news) {
-        expect(hexo.publishList).to.have.been.calledWith({
-          layout: 'news_list',
-          area: 'ultimas_noticias',
-          path: 'ultimas_noticias',
-          news: []
-        });
-
-        done(err);
-      });
-    });
-
-    it('publishes homes', (done) => {
-      subject(news, function(err) {
-        expect(homePublisher.publishAll).to.have.been.called;
+        expect(news.status).to.equal('draft');
 
         done(err);
       });
@@ -548,17 +364,6 @@ describe('publisher', function() {
         });
       });
 
-      it('updates region', function(done) {
-        subject(tabloidNews, function(err) {
-          expect(hexo.publishList).to.have.been.calledWithMatch({
-            layout: 'news_list',
-            area: 'tabloid_mg'
-          });
-
-          done(err);
-        });
-      });
-
       describe('when there is no tabloid', function() {
         given('aTabloid', () => undefined);
 
@@ -573,63 +378,6 @@ describe('publisher', function() {
 
             done(err);
           });
-        });
-      });
-    });
-
-    describe('and the area is "radioagencia"', function() {
-      beforeEach(function() {
-        news.metadata.area = 'radioagencia';
-      });
-
-      it('does not update area data file', function(done){
-        subject(news, function(err) {
-          expect(hexo.publishList).to.not.have.been.calledWithMatch({
-            area: 'radioagencia',
-          });
-
-          done(err);
-        });
-      });
-
-      describe('and it is a service', function() {
-        var behaveAsService = function(tag, path) {
-          beforeEach(function() {
-            news.tags = [tag];
-          });
-
-          it('updates area', function(done){
-            subject(news, function(err) {
-              expect(hexo.publishList).to.have.been.calledWith({
-                layout: 'news_list',
-                area: tag,
-                path: `radioagencia/${path}`,
-                news: []
-              });
-
-              done(err);
-            });
-          });
-        };
-
-        describe('hoje na historia', () => {
-          behaveAsService('hojenahistoria', 'hoje-na-historia');
-        });
-
-        describe('alimento e saude', () => {
-          behaveAsService('alimentoesaude', 'alimento-e-saude');
-        });
-
-        describe('nossos direitos', () => {
-          behaveAsService('nossosdireitos', 'nossos-direitos');
-        });
-
-        describe('fatos curiosos', () => {
-          behaveAsService('fatoscuriosos', 'fatos-curiosos');
-        });
-
-        describe('mosaico cultural', () => {
-          behaveAsService('mosaicocultural', 'mosaico-cultural');
         });
       });
     });
