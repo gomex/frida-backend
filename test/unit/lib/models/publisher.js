@@ -16,7 +16,7 @@ var photoCaptionFactory = require('../../../factories/photo-caption-attributes')
 
 describe('publisher', function() {
   describe('.publish', function() {
-    var subject = function(news, callback) { publisher.publishOne(news, callback); };
+    var subject = function(news, callback) { publisher.publish(news, callback); };
 
     given('news', () => new News(newsFactory.build(
       {
@@ -300,7 +300,7 @@ describe('publisher', function() {
   });
 
   describe('.unpublish', function() {
-    var subject = function(news, callback) { publisher.unpublishOne(news, callback); };
+    var subject = function(news, callback) { publisher.unpublish(news, callback); };
 
     var metadata = metadataFactory.build({ url: '/2017/03/03/bla-bla/' });
     given('news', () => new News(newsFactory.build({metadata: metadata, status: 'published' })));

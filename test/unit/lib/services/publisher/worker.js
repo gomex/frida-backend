@@ -19,8 +19,8 @@ describe('lib/services/publisher/worker.js', () => {
     given('tasks', () => ([postId]));
 
     beforeEach(() => {
-      sandbox.stub(publisher, 'publishNew').yields();
-      sandbox.stub(publisher, 'unpublishNew').yields();
+      sandbox.stub(publisher, 'publish').yields();
+      sandbox.stub(publisher, 'unpublish').yields();
       sandbox.stub(listPublisher, 'publishAll').yields();
       sandbox.stub(homePublisher, 'publishAll').yields();
       sandbox.stub(hexoSource, 'removePosts').yields();
@@ -71,7 +71,7 @@ describe('lib/services/publisher/worker.js', () => {
 
       it('publishes news', (done) => {
         subject((err) => {
-          var posts = publisher.publishNew.args[0][0];
+          var posts = publisher.publish.args[0];
           expect(posts[0]._id).to.deep.equal(postId);
 
           done(err);
@@ -88,7 +88,7 @@ describe('lib/services/publisher/worker.js', () => {
 
       it('publishes news', (done) => {
         subject((err) => {
-          var posts = publisher.unpublishNew.args[0][0];
+          var posts = publisher.unpublish.args[0];
           expect(posts[0]._id).to.deep.equal(postId);
 
           done(err);
