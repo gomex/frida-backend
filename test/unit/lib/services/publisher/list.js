@@ -15,7 +15,7 @@ describe('lib/services/publisher/list', () => {
 
     it('succeeds', subject);
 
-    it('updates last news data file', function(done){
+    it('updates last news', function(done){
       subject((err) => {
         expect(hexo.publishList).to.have.been.calledWith({
           layout: 'news_list',
@@ -28,7 +28,7 @@ describe('lib/services/publisher/list', () => {
       });
     });
 
-    describe('and it is a service', function() {
+    describe('updates services', function() {
       var behaveAsService = function(tag, path) {
         it('updates area', function(done){
           subject(function(err) {
@@ -65,18 +65,44 @@ describe('lib/services/publisher/list', () => {
       });
     });
 
-    it('updates regional list', function(done){
-      subject(function(err) {
-        expect(hexo.publishList).to.have.been.calledWithMatch({
-          layout: 'news_list',
-          area: 'tabloid_mg'
-        });
+    describe('updates regional lists', function(){
+      var behaveAsRegionalList = function(area, path) {
+        it('updates area', function(done){
+          subject(function(err) {
+            expect(hexo.publishList).to.have.been.calledWith({
+              layout: 'news_list',
+              area: area,
+              path: path,
+              news: []
+            });
 
-        done(err);
+            done(err);
+          });
+        });
+      };
+
+      describe('tabloid mg', () => {
+        behaveAsRegionalList('tabloid_mg', 'minas-gerais');
+      });
+
+      describe('tabloid pe', () => {
+        behaveAsRegionalList('tabloid_pe', 'pernambuco');
+      });
+
+      describe('tabloid pr', () => {
+        behaveAsRegionalList('tabloid_pr', 'parana');
+      });
+
+      describe('tabloid ce', () => {
+        behaveAsRegionalList('tabloid_ce', 'ceara');
+      });
+
+      describe('tabloid rj', () => {
+        behaveAsRegionalList('tabloid_rj', 'rio-de-janeiro');
       });
     });
 
-    describe('republishes photo-caption list', () => {
+    describe('updates photo-captions', () => {
       given('list', () => ([photoCaptionFactory.build()]));
 
       beforeEach(() => {
