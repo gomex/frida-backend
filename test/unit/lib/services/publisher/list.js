@@ -1,9 +1,9 @@
 /*eslint no-undef: "off"*/
 
-var publisher = require('../../../../../lib/services/publisher/list');
-var hexo = require('../../../../../lib/publisher/hexo');
-var photoCaptions = require('../../../../../lib/models/news/photo-captions');
-var photoCaptionFactory = require('../../../../factories/photo-caption-attributes').photoCaption;
+var publisher = require('lib/services/publisher/list');
+var hexo = require('lib/services/hexo');
+var photoCaptions = require('lib/models/news/photo-captions');
+var photoCaptionFactory = require('test/factories/photo-caption-attributes').photoCaption;
 
 describe('lib/services/publisher/list', () => {
   describe('publishAll', () => {

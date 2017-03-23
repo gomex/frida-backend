@@ -1,11 +1,11 @@
 /*eslint no-undef: "off"*/
 
-var Home = require('../../../../../lib/models/home');
-var bdf = require('../../../../../lib/models/home/bdf');
-var radioAgencia = require('../../../../../lib/models/home/radio-agencia');
-var publisher = require('../../../../../lib/services/publisher/home');
-var hexo = require('../../../../../lib/publisher/hexo');
-var postFactory = require('../../../../factories/post-attributes').post;
+var Home = require('lib/models/home');
+var bdf = require('lib/models/home/bdf');
+var radioAgencia = require('lib/models/home/radio-agencia');
+var publisher = require('lib/services/publisher/home');
+var hexo = require('lib/services/hexo');
+var postFactory = require('test/factories/post-attributes').post;
 
 describe('lib/services/publisher/home', () => {
   describe('publish', () => {

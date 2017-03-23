@@ -1,8 +1,8 @@
 /*eslint no-undef: "off"*/
 
-const columnist = require('../../../../lib/services/columnist');
-const columnistsModel = require('../../../../lib/models/columnist');
-const hexoSource = require('../../../../lib/publisher/hexo_source');
+const columnist = require('lib/services/columnist');
+const columnistsModel = require('lib/models/columnist');
+const hexoSource = require('lib/services/hexo/source');
 var YAML = require('js-yaml');
 
 describe('lib/services/columnist.js', () => {

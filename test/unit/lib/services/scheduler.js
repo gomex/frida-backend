@@ -1,11 +1,11 @@
 /*eslint no-undef: "off"*/
 
-var News = require('../../../../lib/models/news');
-var worker = require('../../../../lib/services/publisher/worker');
-var scheduler = require('../../../../lib/services/scheduler');
-var postFactory = require('../../../factories/post-attributes').post;
+var News = require('lib/models/news');
+var worker = require('lib/services/publisher/worker');
+var scheduler = require('lib/services/scheduler');
+var postFactory = require('test/factories/post-attributes').post;
 
-describe('app/services/scheduler', () => {
+describe('lib/services/scheduler', () => {
   describe('.publish', () => {
     var subject = (callback) => scheduler.publish(callback);
 

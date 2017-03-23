@@ -1,8 +1,8 @@
 /*eslint no-undef: "off"*/
 
-var News = require('../../../../../lib/models/news');
-var advertisings = require('../../../../../lib/models/news/advertisings');
-var factory = require('../../../../factories/advertising-attributes').advertising;
+var News = require('lib/models/news');
+var advertisings = require('lib/models/news/advertisings');
+var factory = require('test/factories/advertising-attributes').advertising;
 
 describe('lib/models/news/t.js', () => {
   describe('.getList', () => {

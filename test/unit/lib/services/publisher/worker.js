@@ -1,13 +1,13 @@
 /*eslint no-undef: "off"*/
 
-var worker = require('../../../../../lib/services/publisher/worker');
-var publisher = require('../../../../../lib/services/publisher');
-var News = require('../../../../../lib/models/news');
-var hexoSource = require('../../../../../lib/publisher/hexo_source');
-var hexo = require('../../../../../lib/publisher/hexo');
-var postFactory = require('../../../../factories/post-attributes').post;
-var homePublisher = require('../../../../../lib/services/publisher/home');
-var listPublisher = require('../../../../../lib/services/publisher/list');
+var worker = require('lib/services/publisher/worker');
+var publisher = require('lib/services/publisher');
+var News = require('lib/models/news');
+var hexoSource = require('lib/services/hexo/source');
+var hexo = require('lib/services/hexo');
+var postFactory = require('test/factories/post-attributes').post;
+var homePublisher = require('lib/services/publisher/home');
+var listPublisher = require('lib/services/publisher/list');
 var mongoose = require('mongoose');
 
 describe('lib/services/publisher/worker.js', () => {

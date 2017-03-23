@@ -1,13 +1,13 @@
 /*eslint no-undef: "off"*/
 
-var server = require('../../lib/http/server');
+var server = require('lib/http/server');
 var supertest   = require('supertest');
-var shared = require('./shared');
-var Home = require('../../lib/models/home');
-var News = require('../../lib/models/news');
-var publisher = require('../../lib/services/publisher');
-var worker = require('../../lib/services/publisher/worker');
-var postFactory = require('../factories/post-attributes').post;
+var shared = require('test/integration/shared');
+var Home = require('lib/models/home');
+var News = require('lib/models/news');
+var publisher = require('lib/services/publisher');
+var worker = require('lib/services/publisher/worker');
+var postFactory = require('test/factories/post-attributes').post;
 var async = require('async');
 
 describe('/homes', () => {

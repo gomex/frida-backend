@@ -1,7 +1,7 @@
-var tabloid = require('../../../../../lib/models/news/tabloids');
-var News = require('../../../../../lib/models/news');
-var factory = require('../../../../factories/tabloid-attributes').tabloid;
-var tabloidNewsFactory = require('../../../../factories/tabloid-news-attributes').tabloid;
+var tabloid = require('lib/models/news/tabloids');
+var News = require('lib/models/news');
+var factory = require('test/factories/tabloid-attributes').tabloid;
+var tabloidNewsFactory = require('test/factories/tabloid-news-attributes').tabloid;
 
 
 describe('tabloid', () => {

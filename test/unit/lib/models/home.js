@@ -1,6 +1,6 @@
 /*eslint no-undef: "off"*/
 
-var Home = require('../../../../lib/models/home');
+var Home = require('lib/models/home');
 
 describe('unit/lib/models/home.js', () => {
   describe('findByName', () => {

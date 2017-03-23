@@ -2,17 +2,17 @@
 'use strict';
 
 var _ = require('lodash');
-var publisher = require('../../../../lib/services/publisher');
-var News = require('../../../../lib/models/news');
-var tabloids = require('../../../../lib/models/news/tabloids');
-var photoCaptions = require('../../../../lib/models/news/photo-captions');
-var hexo = require('../../../../lib/publisher/hexo');
-var site = require('../../../../lib/publisher/site');
-var newsFactory = require('../../../factories/news-attributes').news;
-var metadataFactory = require('../../../factories/news-attributes').metadata;
-var tabloidFactory = require('../../../factories/tabloid-attributes').tabloid;
-var tabloidNewsFactory = require('../../../factories/tabloid-news-attributes').tabloid;
-var photoCaptionFactory = require('../../../factories/photo-caption-attributes').photoCaption;
+var publisher = require('lib/services/publisher');
+var News = require('lib/models/news');
+var tabloids = require('lib/models/news/tabloids');
+var photoCaptions = require('lib/models/news/photo-captions');
+var hexo = require('lib/services/hexo');
+var site = require('lib/services/site');
+var newsFactory = require('test/factories/news-attributes').news;
+var metadataFactory = require('test/factories/news-attributes').metadata;
+var tabloidFactory = require('test/factories/tabloid-attributes').tabloid;
+var tabloidNewsFactory = require('test/factories/tabloid-news-attributes').tabloid;
+var photoCaptionFactory = require('test/factories/photo-caption-attributes').photoCaption;
 
 describe('publisher', function() {
   describe('.publish', function() {

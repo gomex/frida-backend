@@ -1,6 +1,8 @@
+require('app-module-path').addPath(__dirname + '/../../');
+
 require('dotenv').config();
-require('../../lib/db/initializer').connect(() => {});
-var hexo = require('../../lib/publisher/hexo');
+require('lib/db/initializer').connect(() => {});
+var hexo = require('lib/services/hexo');
 
 var mongoose = require('mongoose');
 

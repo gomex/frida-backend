@@ -1,18 +1,18 @@
 var fs = require('fs');
 var supertest = require('supertest');
 
-var News = require('../../lib/models/news');
-var Home = require('../../lib/models/home');
-var publisher = require('../../lib/services/publisher');
-var republisher = require('../../lib/services/publisher/republisher');
-var worker = require('../../lib/services/publisher/worker');
-var server = require('../../lib/http/server');
-var shared = require('./shared');
-var metadataFactory = require('../factories/news-attributes').metadata;
-var newsFactory = require('../factories/news-attributes').news;
-var columnFactory = require('../factories/column-attributes').column;
-var photoCaptionFactory = require('../factories/photo-caption-attributes').photoCaption;
-var tabloidFactory = require('../factories/tabloid-attributes').tabloid;
+var News = require('lib/models/news');
+var Home = require('lib/models/home');
+var publisher = require('lib/services/publisher');
+var republisher = require('lib/services/publisher/republisher');
+var worker = require('lib/services/publisher/worker');
+var server = require('lib/http/server');
+var shared = require('test/integration/shared');
+var metadataFactory = require('test/factories/news-attributes').metadata;
+var newsFactory = require('test/factories/news-attributes').news;
+var columnFactory = require('test/factories/column-attributes').column;
+var photoCaptionFactory = require('test/factories/photo-caption-attributes').photoCaption;
+var tabloidFactory = require('test/factories/tabloid-attributes').tabloid;
 
 var api = supertest('https://localhost:5000');
 

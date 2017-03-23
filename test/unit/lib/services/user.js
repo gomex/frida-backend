@@ -2,8 +2,8 @@
 
 'use strict';
 
-var User        = require('../../../../lib/models/user');
-var UserService = require('../../../../lib/services/user');
+var User        = require('lib/models/user');
+var UserService = require('lib/services/user');
 
 describe('UserService', () => {
 

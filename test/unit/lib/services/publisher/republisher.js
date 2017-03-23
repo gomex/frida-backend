@@ -1,9 +1,9 @@
 /*eslint no-undef: "off"*/
 
-var News = require('../../../../../lib/models/news');
-var worker = require('../../../../../lib/services/publisher/worker');
-var republisher = require('../../../../../lib/services/publisher/republisher');
-var postFactory = require('../../../../factories/post-attributes').post;
+var News = require('lib/models/news');
+var worker = require('lib/services/publisher/worker');
+var republisher = require('lib/services/publisher/republisher');
+var postFactory = require('test/factories/post-attributes').post;
 
 describe('lib/services/publisher/republisher', () => {
   describe('.publish', () => {

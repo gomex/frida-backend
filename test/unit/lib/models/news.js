@@ -1,20 +1,20 @@
 /*eslint no-undef: "off"*/
 
-var News = require('../../../../lib/models/news');
-var newsFactory = require('../../../factories/news-attributes').news;
-var metadataFactory = require('../../../factories/news-attributes').metadata;
+var News = require('lib/models/news');
+var newsFactory = require('test/factories/news-attributes').news;
+var metadataFactory = require('test/factories/news-attributes').metadata;
 
-var postFactory = require('../../../factories/post-attributes').post;
-var postMetadataFactory = require('../../../factories/post-attributes').metadata;
+var postFactory = require('test/factories/post-attributes').post;
+var postMetadataFactory = require('test/factories/post-attributes').metadata;
 
-var columnFactory = require('../../../factories/column-attributes').column;
-var columnMetadataFactory = require('../../../factories/column-attributes').metadata;
+var columnFactory = require('test/factories/column-attributes').column;
+var columnMetadataFactory = require('test/factories/column-attributes').metadata;
 
-var tabloidNewsFactory = require('../../../factories/tabloid-news-attributes').tabloid;
-var tabloidNewsMetadataFactory = require('../../../factories/tabloid-news-attributes').metadata;
+var tabloidNewsFactory = require('test/factories/tabloid-news-attributes').tabloid;
+var tabloidNewsMetadataFactory = require('test/factories/tabloid-news-attributes').metadata;
 
-var specialFactory = require('../../../factories/special-attributes').special;
-var specialMetadataFactory = require('../../../factories/special-attributes').metadata;
+var specialFactory = require('test/factories/special-attributes').special;
+var specialMetadataFactory = require('test/factories/special-attributes').metadata;
 
 describe('news', () => {
   var behaviourAsIsLayout = (name, layout) => {

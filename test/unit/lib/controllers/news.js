@@ -1,7 +1,7 @@
 /*eslint no-undef: "off"*/
 
-var controller = require('../../../../lib/controllers/news');
-var republisher = require('../../../../lib/services/publisher/republisher');
+var controller = require('lib/controllers/news');
+var republisher = require('lib/services/publisher/republisher');
 
 describe('lib/controllers/news', () => {
   describe('.republishAll', () => {

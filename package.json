@@ -5,6 +5,7 @@
   "private": true,
   "license": "GPLv2",
   "dependencies": {
+    "app-module-path": "^2.2.0",
     "async": "2.1.4",
     "basic-auth": "1.0.3",
     "body-parser": "1.13.3",

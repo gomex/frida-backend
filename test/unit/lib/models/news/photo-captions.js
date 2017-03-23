@@ -1,8 +1,8 @@
 /*eslint no-undef: "off"*/
 
-var photoCaptions = require('../../../../../lib/models/news/photo-captions');
-var News = require('../../../../../lib/models/news');
-var factory = require('../../../../factories/photo-caption-attributes').photoCaption;
+var photoCaptions = require('lib/models/news/photo-captions');
+var News = require('lib/models/news');
+var factory = require('test/factories/photo-caption-attributes').photoCaption;
 
 describe('photoCaptions', () => {
   describe('.getList', () => {
