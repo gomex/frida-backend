@@ -3,7 +3,7 @@ var supertest = require('supertest');
 
 var News = require('../../lib/models/news');
 var Home = require('../../lib/models/home');
-var publisher = require('../../lib/models/publisher');
+var publisher = require('../../lib/services/publisher');
 var republisher = require('../../lib/services/publisher/republisher');
 var worker = require('../../lib/services/publisher/worker');
 var server = require('../../lib/http/server');

@@ -1,7 +1,7 @@
 /*eslint no-undef: "off"*/
 
 var worker = require('../../../../../lib/services/publisher/worker');
-var publisher = require('../../../../../lib/models/publisher');
+var publisher = require('../../../../../lib/services/publisher');
 var News = require('../../../../../lib/models/news');
 var hexoSource = require('../../../../../lib/publisher/hexo_source');
 var hexo = require('../../../../../lib/publisher/hexo');

@@ -2,7 +2,7 @@
 'use strict';
 
 var _ = require('lodash');
-var publisher = require('../../../../lib/models/publisher');
+var publisher = require('../../../../lib/services/publisher');
 var News = require('../../../../lib/models/news');
 var tabloids = require('../../../../lib/models/news/tabloids');
 var photoCaptions = require('../../../../lib/models/news/photo-captions');
