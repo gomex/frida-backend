@@ -7,6 +7,7 @@ var hexoSource = require('../../../../../lib/publisher/hexo_source');
 var hexo = require('../../../../../lib/publisher/hexo');
 var postFactory = require('../../../../factories/post-attributes').post;
 var homePublisher = require('../../../../../lib/services/publisher/home');
+var listPublisher = require('../../../../../lib/services/publisher/list');
 var mongoose = require('mongoose');
 
 describe('lib/services/publisher/worker.js', () => {
@@ -20,7 +21,7 @@ describe('lib/services/publisher/worker.js', () => {
     beforeEach(() => {
       sandbox.stub(publisher, 'publishNew').yields();
       sandbox.stub(publisher, 'unpublishNew').yields();
-      sandbox.stub(publisher, 'publishLists').yields();
+      sandbox.stub(listPublisher, 'publishAll').yields();
       sandbox.stub(homePublisher, 'publishAll').yields();
       sandbox.stub(hexoSource, 'removePosts').yields();
     });
@@ -39,7 +40,7 @@ describe('lib/services/publisher/worker.js', () => {
 
     it('publishes lists', (done) => {
       subject((err) => {
-        expect(publisher.publishLists).to.have.been.called;
+        expect(listPublisher.publishAll).to.have.been.called;
 
         done(err);
       });
