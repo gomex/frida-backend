@@ -76,7 +76,7 @@ describe('hexo', function() {
     it('creates the news file in the configured hexo posts folder', function(done) {
       subject(function(err) {
         var newsPublishedAt = moment(news.published_at);
-        var year  = newsPublishedAt.format('YYYY');
+        var year = newsPublishedAt.format('YYYY');
         var month = newsPublishedAt.format('MM');
 
         var expectedPath = process.env.HEXO_SOURCE_PATH + '/_posts/' + year + '/' + month + '/' + news._id + '.md';

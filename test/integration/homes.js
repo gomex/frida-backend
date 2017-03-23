@@ -1,7 +1,7 @@
 /*eslint no-undef: "off"*/
 
 var server = require('lib/http/server');
-var supertest   = require('supertest');
+var supertest = require('supertest');
 var shared = require('test/integration/shared');
 var Home = require('lib/models/home');
 var News = require('lib/models/news');

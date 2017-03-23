@@ -2,8 +2,8 @@
 
 'use strict';
 
-var factory   = require('test/factories/user-attributes').user;
-var User      = require('lib/models/user');
+var factory = require('test/factories/user-attributes').user;
+var User = require('lib/models/user');
 
 describe('User', function() {
 
