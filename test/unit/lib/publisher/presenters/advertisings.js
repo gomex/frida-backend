@@ -1,9 +1,9 @@
 /*eslint no-undef: "off"*/
 
-var presenter = require('../../../../lib/publisher/presenters/advertising');
-var publisher = require('../../../../lib/publisher/advertisings');
-var factory = require('../../../factories/advertising-attributes').advertising;
-var metadataFactory = require('../../../factories/advertising-attributes').metadata;
+var presenter = require('../../../../../lib/publisher/presenters/advertising');
+var publisher = require('../../../../../lib/publisher/presenters/advertisings');
+var factory = require('../../../../factories/advertising-attributes').advertising;
+var metadataFactory = require('../../../../factories/advertising-attributes').metadata;
 
 describe('lib/publisher/advertisings.js', () => {
   describe('.getData', () => {
