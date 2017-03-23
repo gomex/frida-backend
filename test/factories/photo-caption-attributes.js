@@ -4,10 +4,10 @@ var coverAttributes = require('./cover-attributes').cover;
 
 var metadata = new Factory()
   .attr('layout', 'photo_caption')
-  .attr('title', function() { return faker.lorem.sentence(); })
-  .attr('cover', function() { return coverAttributes.build(); });
+  .attr('title', () => { return faker.lorem.sentence(); })
+  .attr('cover', () => { return coverAttributes.build(); });
 
 var photoCaption = new Factory()
-  .attr('metadata', function() { return metadata.build(); });
+  .attr('metadata', () => { return metadata.build(); });
 
 module.exports.photoCaption = photoCaption;

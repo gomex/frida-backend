@@ -15,7 +15,7 @@ describe('lib/services/publisher/list', () => {
 
     it('succeeds', subject);
 
-    it('updates last news', function(done){
+    it('updates last news', (done) => {
       subject((err) => {
         expect(hexo.publishList).to.have.been.calledWith({
           layout: 'news_list',
@@ -28,10 +28,10 @@ describe('lib/services/publisher/list', () => {
       });
     });
 
-    describe('updates services', function() {
-      var behaveAsService = function(tag, path) {
-        it('updates area', function(done){
-          subject(function(err) {
+    describe('updates services', () => {
+      var behaveAsService = (tag, path) => {
+        it('updates area', (done) => {
+          subject((err) => {
             expect(hexo.publishList).to.have.been.calledWith({
               layout: 'news_list',
               area: tag,
@@ -65,10 +65,10 @@ describe('lib/services/publisher/list', () => {
       });
     });
 
-    describe('updates regional lists', function(){
-      var behaveAsRegionalList = function(area, path) {
-        it('updates area', function(done){
-          subject(function(err) {
+    describe('updates regional lists', () => {
+      var behaveAsRegionalList = (area, path) => {
+        it('updates area', (done) => {
+          subject((err) => {
             expect(hexo.publishList).to.have.been.calledWith({
               layout: 'news_list',
               area: area,

@@ -7,14 +7,14 @@ var metadata = new Factory()
   .attr('layout', 'column')
   .attr('columnist', () => _.sample(['brunopadron@yahoo.com.br', 'joaopedrostedile@gmail.com']))
   .attr('hat', 'Opinião')
-  .attr('title', function() { return faker.lorem.sentence(); })
+  .attr('title', () => { return faker.lorem.sentence(); })
   .attr('display_area', 'column_01')
-  .attr('description', function() { return faker.lorem.sentences(); })
-  .attr('cover', function() { return coverAttributes.build(); });
+  .attr('description', () => { return faker.lorem.sentences(); })
+  .attr('cover', () => { return coverAttributes.build(); });
 
 var column = new Factory()
-  .attr('body', function() { return faker.lorem.paragraphs(); })
-  .attr('metadata', function() { return metadata.build(); });
+  .attr('body', () => { return faker.lorem.paragraphs(); })
+  .attr('metadata', () => { return metadata.build(); });
 
 module.exports.metadata = metadata;
 module.exports.column = column;

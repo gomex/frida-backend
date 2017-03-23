@@ -16,9 +16,9 @@ var hexo = require('lib/services/hexo');
 var path = require('path');
 var hexoSource = require('lib/services/hexo/source');
 
-describe('hexo', function() {
-  describe('unpublish', function() {
-    var subject = function(callback) { return hexo.unpublish(news, callback); };
+describe('hexo', () => {
+  describe('unpublish', () => {
+    var subject = (callback) => hexo.unpublish(news, callback);
 
     given('news', () => postFactory.build({
       published_at: new Date(),
@@ -30,16 +30,16 @@ describe('hexo', function() {
       return path.join('_posts', dir, news._id + '.md');
     });
 
-    beforeEach(function() {
+    beforeEach(() => {
       sandbox.stub(hexoSource, 'remove').yields(null);
     });
 
-    it('exists', function() {
+    it('exists', () => {
       expect(hexo.unpublish).to.exist;
     });
 
-    it('removes md file', function(done) {
-      subject(function(err) {
+    it('removes md file', (done) => {
+      subject((err) => {
         expect(hexoSource.remove).to.have.been.calledWith(newsPath);
 
         done(err);
@@ -47,25 +47,25 @@ describe('hexo', function() {
     });
   });
 
-  describe('publish', function() {
-    var subject = function(callback) { return hexo.publish(news, callback); };
+  describe('publish', () => {
+    var subject = (callback) => hexo.publish(news, callback);
 
     given('metadata', () => newsMetadataFactory.build({url: 'url'}));
     given('news', () => new News(postFactory.build({
       published_at: new Date(), metadata: metadata
     })));
 
-    beforeEach(function() {
+    beforeEach(() => {
       sandbox.spy(presenter, 'of');
     });
 
     describe('', () => {
-      beforeEach(function() {
+      beforeEach(() => {
         sandbox.spy(postPublisher, 'getData');
       });
 
-      it('gets news data', function(done) {
-        subject(function(err) {
+      it('gets news data', (done) => {
+        subject((err) => {
           expect(postPublisher.getData).to.have.been.called;
 
           done(err);
@@ -73,8 +73,8 @@ describe('hexo', function() {
       });
     });
 
-    it('creates the news file in the configured hexo posts folder', function(done) {
-      subject(function(err) {
+    it('creates the news file in the configured hexo posts folder', (done) => {
+      subject((err) => {
         var newsPublishedAt = moment(news.published_at);
         var year = newsPublishedAt.format('YYYY');
         var month = newsPublishedAt.format('MM');
@@ -86,8 +86,8 @@ describe('hexo', function() {
       });
     });
 
-    it('gets presenter for news', function(done) {
-      subject(function(err) {
+    it('gets presenter for news', (done) => {
+      subject((err) => {
         expect(presenter.of).to.have.been.calledWith(news);
 
         done(err);

@@ -5,9 +5,9 @@
 var factory = require('test/factories/user-attributes').user;
 var User = require('lib/models/user');
 
-describe('User', function() {
+describe('User', () => {
 
-  describe('.hash', function() {
+  describe('.hash', () => {
 
     var hashedPassword;
 
@@ -24,7 +24,7 @@ describe('User', function() {
     });
   });
 
-  describe('.verifyPassword', function() {
+  describe('.verifyPassword', () => {
 
     var user;
 

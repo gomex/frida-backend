@@ -22,11 +22,11 @@ after(() => {
   hexo.generate.restore();
 });
 
-beforeEach(function() {
+beforeEach(() => {
   global.sandbox = sinon.sandbox.create();
 });
 
-afterEach(function(done) {
+afterEach((done) => {
   global.sandbox.restore();
   mongoose.connection.db.dropDatabase(done);
 });
@@ -34,7 +34,7 @@ afterEach(function(done) {
 global.given = function(name, block) {
   var cache = null;
 
-  beforeEach(function() {
+  beforeEach(() => {
     var property = {
       configurable: true,
       get: function() {
@@ -44,7 +44,7 @@ global.given = function(name, block) {
     Object.defineProperty(global, name, property);
   });
 
-  afterEach(function() {
+  afterEach(() => {
     delete global[name];
     cache = null;
   });

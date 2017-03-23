@@ -16,7 +16,7 @@ var tabloidFactory = require('test/factories/tabloid-attributes').tabloid;
 
 var api = supertest('https://localhost:5000');
 
-describe('REST API:', function() {
+describe('REST API:', () => {
   beforeEach(Home.init);
 
   var NEWS_RESOURCE = '/news';
@@ -70,7 +70,7 @@ describe('REST API:', function() {
     server.start();
   });
 
-  beforeEach(function(done){
+  beforeEach((done) => {
     var testDate = new Date('Feb 14, 2016 01:15:00');
 
     sandbox.useFakeTimers(testDate.getTime(), 'Date');
@@ -84,13 +84,13 @@ describe('REST API:', function() {
     shared.createUser(done);
   });
 
-  after(function(done) {
+  after((done) => {
     deleteDirSync(hexoPaths.sourcePath);
     done();
   });
 
-  describe('POST /news', function() {
-    var subject = function(news) {
+  describe('POST /news', () => {
+    var subject = (news) => {
       return api.post(NEWS_RESOURCE).send(news).auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
     };
 
@@ -98,17 +98,17 @@ describe('REST API:', function() {
       api.post(NEWS_RESOURCE)
     );
 
-    it('persists news', function(done) {
+    it('persists news', (done) => {
       var news = newsFactory.build();
 
       subject(news)
         .expect(201)
-        .end(function(err, res) {
+        .end((err, res) => {
           if(err){ done(err); }
 
           var newsId = res.body.id;
           assert(typeof newsId !== 'undefined');
-          News.findById(newsId, function(err, result) {
+          News.findById(newsId, (err, result) => {
             verifyNewsAttributes(result, news);
             assert.equal(result.status, 'draft');
             assert.ok(result.created_at);
@@ -117,18 +117,18 @@ describe('REST API:', function() {
         });
     });
 
-    it('persists columns', function(done) {
+    it('persists columns', (done) => {
       var column = columnFactory.build();
 
       subject(column)
         .expect(201)
-        .end(function(err, res) {
+        .end((err, res) => {
           if(err){ done(err); }
 
           var columnId = res.body.id;
           assert(typeof columnId !== 'undefined');
 
-          News.findById(columnId, function(err, result) {
+          News.findById(columnId, (err, result) => {
             verifyColumnAttributes(result, column);
             assert.equal(result.status, 'draft');
             done();
@@ -137,18 +137,18 @@ describe('REST API:', function() {
     });
   });
 
-  describe('GET /news/<id>', function() {
+  describe('GET /news/<id>', () => {
 
     var news;
     var newsId;
 
-    beforeEach(function(done) {
+    beforeEach((done) => {
       news = newsFactory.build();
       api.post(NEWS_RESOURCE)
         .send(news)
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
         .expect(201)
-        .end(function(err, res) {
+        .end((err, res) => {
           if(err){
             done(err);
           } else {
@@ -158,7 +158,7 @@ describe('REST API:', function() {
         });
     });
 
-    var subject = function() {
+    var subject = () => {
       return api.get(NEWS_RESOURCE + '/' + newsId).send().auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
     };
 
@@ -166,10 +166,10 @@ describe('REST API:', function() {
       api.get(NEWS_RESOURCE + '/' + newsId)
     );
 
-    it('retrieves previously saved news or column', function(done){
+    it('retrieves previously saved news or column', (done) => {
       subject()
         .expect(200)
-        .end(function(err, res) {
+        .end((err, res) => {
           if(err){
             done(err);
           } else {
@@ -188,22 +188,22 @@ describe('REST API:', function() {
     });
   });
 
-  describe('PUT /news/<id>', function() {
+  describe('PUT /news/<id>', () => {
 
     var news;
     var newsId;
 
-    var subject = function() {
+    var subject = () => {
       return api.put(NEWS_RESOURCE + '/' + newsId).send(news).auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
     };
 
-    beforeEach(function(done) {
+    beforeEach((done) => {
       news = newsFactory.build();
       api.post(NEWS_RESOURCE)
         .send(news)
         .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
         .expect(201)
-        .end(function(err, res) {
+        .end((err, res) => {
           if(err){
             done(err);
           } else {
@@ -217,7 +217,7 @@ describe('REST API:', function() {
       api.put(NEWS_RESOURCE + '/' + newsId)
     );
 
-    it('updates previously saved news', function(done){
+    it('updates previously saved news', (done) => {
       news.metadata.title = 'Outro Título';
       news.metadata.area = 'direitos_humanos';
       news.metadata.hat = 'Outro Chapéu';
@@ -225,63 +225,63 @@ describe('REST API:', function() {
 
       subject()
         .expect(200)
-        .end(function(err, res) {
+        .end((err, res) => {
           if(err) return done(err);
 
           var id = res.body._id;
           assert(typeof id !== 'undefined');
           assert.equal(id, newsId);
 
-          News.findById(newsId, function(err, result) {
+          News.findById(newsId, (err, result) => {
             verifyNewsAttributes(result, news);
             done();
           });
         });
     });
 
-    it('updates updated_at date', function(done){
+    it('updates updated_at date', (done) => {
       subject()
         .expect(200)
-        .end(function(err, _res) {
+        .end((err, _res) => {
           if(err){ done(err); }
 
-          News.findById(newsId, function(err, result) {
+          News.findById(newsId, (err, result) => {
             assert.equal(result.updated_at.getTime(), Date.now());
             done();
           });
         });
     });
 
-    it('does not set news path', function(done){
+    it('does not set news path', (done) => {
       news.metadata.url = '/bad-bad-path';
 
       subject()
         .expect(200)
-        .end(function(err, res) {
+        .end((err, res) => {
           if(err){ done(err); }
 
           var id = res.body._id;
           assert(typeof id !== 'undefined');
           assert.equal(id, newsId);
 
-          News.findById(newsId, function(err, result) {
+          News.findById(newsId, (err, result) => {
             assert.equal(result.metadata.url, undefined);
             done();
           });
         });
     });
 
-    it('increments version', function(done){
+    it('increments version', (done) => {
       subject()
         .expect(200)
-        .end(function(err, res) {
+        .end((err, res) => {
           expect(res.body.__v).to.equal(1);
 
           done(err);
         });
     });
 
-    it('does not reset news path for published news', function(done) {
+    it('does not reset news path for published news', (done) => {
       var now = new Date();
       var past = new Date(1000);
 
@@ -289,17 +289,17 @@ describe('REST API:', function() {
       var news = newsFactory.build({ status: 'published', published_at: now, created_at: past, metadata: metadata});
 
       news = new News(news);
-      news.save(function(err, newsIdent) {
+      news.save((err, newsIdent) => {
         if(err) throw err;
 
         news.metadata.url = '';
 
         subject()
         .expect(200)
-        .end(function(err, _result) {
+        .end((err, _result) => {
           if (err) return done(err);
 
-          News.findById(newsIdent, function(err, result) {
+          News.findById(newsIdent, (err, result) => {
             assert.equal(result.metadata.url, '/this-path-should-not-disappear');
             done(err);
           });
@@ -309,17 +309,17 @@ describe('REST API:', function() {
 
   });
 
-  describe('POST /news/<id>/unpublish', function() {
+  describe('POST /news/<id>/unpublish', () => {
     var news;
     var newsId;
 
-    var subject = function() {
+    var subject = () => {
       return api.post(NEWS_RESOURCE + '/' + newsId + '/unpublish').send(news).auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
     };
 
-    beforeEach(function(done) {
+    beforeEach((done) => {
       news = new News(newsFactory.build({status: 'draft'}));
-      news.save(function(err) {
+      news.save((err) => {
         if (err) {
           done(err);
           return;
@@ -334,17 +334,17 @@ describe('REST API:', function() {
       api.post(NEWS_RESOURCE + '/' + newsId + '/unpublish')
     );
 
-    it('succeeds', function(done) {
+    it('succeeds', (done) => {
       subject().expect(202).end(done);
     });
 
-    it('has content type json', function(done) {
+    it('has content type json', (done) => {
       subject().expect('Content-Type', /json/).end(done);
     });
   });
 
   describe('POST /news/republish', () => {
-    var subject = function() {
+    var subject = () => {
       return api.post(NEWS_RESOURCE + '/republish').send().auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
     };
 
@@ -352,13 +352,13 @@ describe('REST API:', function() {
       sandbox.stub(republisher, 'publish').yields();
     });
 
-    it('succeeds', function(done) {
+    it('succeeds', (done) => {
       subject()
         .expect(202)
         .end(done);
     });
 
-    it('succeeds', function(done) {
+    it('succeeds', (done) => {
       subject()
         .end(() => {
           expect(republisher.publish).to.have.been.called;
@@ -367,18 +367,18 @@ describe('REST API:', function() {
     });
   });
 
-  describe('POST /news/<id>/publish', function() {
-    describe('when entity is of type news', function() {
+  describe('POST /news/<id>/publish', () => {
+    describe('when entity is of type news', () => {
       var news;
       var newsId;
 
-      beforeEach(function(done) {
+      beforeEach((done) => {
         news = newsFactory.build();
         api.post(NEWS_RESOURCE)
           .send(news)
           .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
           .expect(201)
-          .end(function(err, res) {
+          .end((err, res) => {
             if(err){
               done(err);
             } else {
@@ -388,7 +388,7 @@ describe('REST API:', function() {
           });
       });
 
-      var subject = function() {
+      var subject = () => {
         return api.post(NEWS_RESOURCE + '/' + newsId + '/publish').send(news).auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
       };
 
@@ -401,13 +401,13 @@ describe('REST API:', function() {
           api.put(NEWS_RESOURCE + '/' + newsId + '/publish')
         );
 
-        it('succeeds', function(done) {
+        it('succeeds', (done) => {
           subject()
             .expect(202)
             .end(done);
         });
 
-        it('returns json', function(done) {
+        it('returns json', (done) => {
           subject()
             .expect('Content-Type', /json/)
             .end(done);
@@ -415,16 +415,16 @@ describe('REST API:', function() {
       });
     });
 
-    describe('when entity is of type photo caption', function() {
+    describe('when entity is of type photo caption', () => {
       var photoCaption;
       var photoCaptionId;
-      beforeEach(function(done) {
+      beforeEach((done) => {
         photoCaption = photoCaptionFactory.build();
         api.post(NEWS_RESOURCE)
           .send(photoCaption)
           .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
           .expect(201)
-          .end(function(err, res) {
+          .end((err, res) => {
             if(err) throw err;
 
             photoCaptionId = res.body.id;
@@ -432,27 +432,27 @@ describe('REST API:', function() {
           });
       });
 
-      var subject = function() {
+      var subject = () => {
         return api.post(NEWS_RESOURCE + '/' + photoCaptionId + '/publish').send(photoCaption).auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
       };
 
-      it('succeeds', function(done) {
+      it('succeeds', (done) => {
         subject()
           .expect(202)
           .end(done);
       });
     });
 
-    describe('when entity is of type tabloid', function() {
+    describe('when entity is of type tabloid', () => {
       var tabloid;
       var tabloidId;
-      beforeEach(function(done) {
+      beforeEach((done) => {
         tabloid = tabloidFactory.build();
         api.post(NEWS_RESOURCE)
           .send(tabloid)
           .auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD)
           .expect(201)
-          .end(function(err, res) {
+          .end((err, res) => {
             if(err) throw err;
 
             tabloidId = res.body.id;
@@ -460,11 +460,11 @@ describe('REST API:', function() {
           });
       });
 
-      var subject = function() {
+      var subject = () => {
         return api.post(NEWS_RESOURCE + '/' + tabloidId + '/publish').send(tabloid).auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
       };
 
-      it('succeeds', function(done) {
+      it('succeeds', (done) => {
         subject()
           .expect(202)
           .end(done);

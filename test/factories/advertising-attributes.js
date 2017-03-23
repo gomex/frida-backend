@@ -3,13 +3,13 @@ var faker = require('faker');
 
 var metadata = new Factory()
   .attr('layout', 'advertising')
-  .attr('title', function() { return faker.lorem.sentence(); })
+  .attr('title', () => { return faker.lorem.sentence(); })
   .attr('display_area', 'advertising_01');
 
 var advertising = new Factory()
-  .attr('metadata', function() { return metadata.build(); })
-  .attr('link', function() { return faker.internet.url(); })
-  .attr('image', function() { return faker.image.imageUrl(); });
+  .attr('metadata', () => { return metadata.build(); })
+  .attr('link', () => { return faker.internet.url(); })
+  .attr('image', () => { return faker.image.imageUrl(); });
 
 module.exports.advertising = advertising;
 module.exports.metadata = metadata;
