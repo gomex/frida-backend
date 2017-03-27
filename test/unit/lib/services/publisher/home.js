@@ -8,7 +8,7 @@ var publisher = require('lib/services/publisher/home');
 var hexo = require('lib/services/hexo');
 var postFactory = require('test/factories/post-attributes').post;
 
-describe('lib/services/publisher/home', () => {
+describe.only('lib/services/publisher/home', () => {
   describe('publish', () => {
     var subject = (callback) => publisher.publish(home, callback);
 
@@ -81,7 +81,7 @@ describe('lib/services/publisher/home', () => {
       });
 
       var behavesAsService = (section, name) => {
-        describe('', () => {
+        describe(`with service ${name}`, () => {
           given('post', () => new News(postFactory.build({
             status: 'published', tags: [name]
           })));
@@ -92,7 +92,7 @@ describe('lib/services/publisher/home', () => {
             process.env.TOGGLE_6kDAA5TZ_AUTOMATIC_SERVICES = 'enabled';
           });
 
-          it(`enriches home with service ${name}`, (done) => {
+          it('enriches home', (done) => {
             subject((err) => {
               expect(home[section].metadata.title).to.equal(post.metadata.title);
               done(err);
@@ -106,6 +106,8 @@ describe('lib/services/publisher/home', () => {
       behavesAsService('service_03', 'nossosdireitos');
       behavesAsService('service_04', 'fatoscuriosos');
       behavesAsService('service_05', 'mosaicocultural');
+      behavesAsService('radio_01', 'programasp');
+      behavesAsService('radio_02', 'programape');
     });
   });
 });
