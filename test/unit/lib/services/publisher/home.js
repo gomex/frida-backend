@@ -1,6 +1,7 @@
 /*eslint no-undef: "off"*/
 
 var Home = require('lib/models/home');
+var News = require('lib/models/news');
 var bdf = require('lib/models/home/bdf');
 var radioAgencia = require('lib/models/home/radio-agencia');
 var publisher = require('lib/services/publisher/home');
@@ -78,6 +79,33 @@ describe('lib/services/publisher/home', () => {
           done(err);
         });
       });
+
+      var behavesAsService = (section, name) => {
+        describe('', () => {
+          given('post', () => new News(postFactory.build({
+            status: 'published', tags: [name]
+          })));
+
+          beforeEach((done) => { post.save(done); });
+
+          beforeEach(() => {
+            process.env.TOGGLE_6kDAA5TZ_AUTOMATIC_SERVICES = 'enabled';
+          });
+
+          it(`enriches home with service ${name}`, (done) => {
+            subject((err) => {
+              expect(home[section].metadata.title).to.equal(post.metadata.title);
+              done(err);
+            });
+          });
+        });
+      };
+
+      behavesAsService('service_01', 'hojenahistoria');
+      behavesAsService('service_02', 'alimentoesaude');
+      behavesAsService('service_03', 'nossosdireitos');
+      behavesAsService('service_04', 'fatoscuriosos');
+      behavesAsService('service_05', 'mosaicocultural');
     });
   });
 });

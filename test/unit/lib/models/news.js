@@ -493,7 +493,6 @@ describe('news', () => {
     given('wrongMonth1', () => 0);
     given('wrongMonth2', () => 2);
 
-
     given('published_at1', () => new Date(year, month, 1));
     given('published_at2', () => new Date(year, month, 15));
     given('published_at3', () => new Date(year, month, 28));
