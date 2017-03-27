@@ -8,7 +8,7 @@ var publisher = require('lib/services/publisher/home');
 var hexo = require('lib/services/hexo');
 var postFactory = require('test/factories/post-attributes').post;
 
-describe.only('lib/services/publisher/home', () => {
+describe('lib/services/publisher/home', () => {
   describe('publish', () => {
     var subject = (callback) => publisher.publish(home, callback);
 
