@@ -114,6 +114,9 @@ describe('lib/services/publisher/home', () => {
       behavesAsService('service_03', 'nossosdireitos');
       behavesAsService('service_04', 'fatoscuriosos');
       behavesAsService('service_05', 'mosaicocultural');
+      behavesAsService('service_06', 'conectados');
+      behavesAsService('service_07', 'momentoagroecologico');
+      behavesAsService('service_08', 'falaai');
       behavesAsService('radio_01', 'programasp');
       behavesAsService('radio_02', 'programape');
     });

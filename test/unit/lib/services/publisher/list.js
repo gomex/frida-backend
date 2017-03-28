@@ -63,6 +63,18 @@ describe('lib/services/publisher/list', () => {
       describe('mosaico cultural', () => {
         behaveAsService('mosaicocultural', 'mosaico-cultural');
       });
+
+      describe('conectados', () => {
+        behaveAsService('conectados', 'conectados');
+      });
+
+      describe('momento agroecologico', () => {
+        behaveAsService('momentoagroecologico', 'momento-agroecologico');
+      });
+
+      describe('mosaico cultural', () => {
+        behaveAsService('mosaicocultural', 'mosaico-cultural');
+      });
     });
 
     describe('updates regional lists', () => {
