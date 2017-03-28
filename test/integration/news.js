@@ -373,6 +373,8 @@ describe('REST API:', () => {
       var newsId;
 
       beforeEach((done) => {
+        sandbox.stub(worker, 'publishLater').yields(null, news);
+
         news = newsFactory.build();
         api.post(NEWS_RESOURCE)
           .send(news)
@@ -392,26 +394,20 @@ describe('REST API:', () => {
         return api.post(NEWS_RESOURCE + '/' + newsId + '/publish').send(news).auth(process.env.EDITOR_USERNAME, process.env.EDITOR_PASSWORD);
       };
 
-      context('when incremental generation is enabled', () => {
-        beforeEach(() => {
-          sandbox.stub(worker, 'publishLater').yields(null, news);
-        });
+      shared.behavesAsAuthenticated(() =>
+        api.put(NEWS_RESOURCE + '/' + newsId + '/publish')
+      );
 
-        shared.behavesAsAuthenticated(() =>
-          api.put(NEWS_RESOURCE + '/' + newsId + '/publish')
-        );
+      it('succeeds', (done) => {
+        subject()
+          .expect(202)
+          .end(done);
+      });
 
-        it('succeeds', (done) => {
-          subject()
-            .expect(202)
-            .end(done);
-        });
-
-        it('returns json', (done) => {
-          subject()
-            .expect('Content-Type', /json/)
-            .end(done);
-        });
+      it('returns json', (done) => {
+        subject()
+          .expect('Content-Type', /json/)
+          .end(done);
       });
     });
 
