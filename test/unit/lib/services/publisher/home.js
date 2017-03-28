@@ -46,6 +46,7 @@ describe('lib/services/publisher/home', () => {
       beforeEach(() => {
         sandbox.stub(bdf, 'getLastNews').yields(null, lastNews);
         sandbox.stub(bdf, 'getMostRead').yields(null, mostRead);
+        sandbox.stub(hexo, 'publishAdvertisingData').yields();
       });
 
       it('enriches with latest news', (done) => {
@@ -58,6 +59,13 @@ describe('lib/services/publisher/home', () => {
       it('enriches with most read', (done) => {
         subject((err) => {
           expect(home.most_read).to.equal(mostRead);
+          done(err);
+        });
+      });
+
+      it('publishes advertising data', (done) => {
+        subject((err) => {
+          expect(hexo.publishAdvertisingData).to.have.been.calledWith(home);
           done(err);
         });
       });
