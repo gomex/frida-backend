@@ -1,6 +1,6 @@
 var archives = require('lib/services/publisher/archives.js');
 
-describe.only('Chronological file', () => {
+describe('Chronological file', () => {
   var subject = (callback) =>  archives.publish(callback);
 
   it('succeeds', (done) => {
