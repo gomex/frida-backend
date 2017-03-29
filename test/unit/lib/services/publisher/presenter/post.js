@@ -6,6 +6,7 @@ var coverPresenter = require('lib/services/publisher/presenter/cover');
 var optionsPresenter = require('lib/services/publisher/presenter/options');
 var factory = require('test/factories/post-attributes').post;
 var metadataFactory = require('test/factories/post-attributes').metadata;
+var markdown = require('markdown').markdown;
 
 describe('lib/services/publisher/presenter/post.js', () => {
   given('metadata', () => metadataFactory.build({
@@ -36,7 +37,7 @@ describe('lib/services/publisher/presenter/post.js', () => {
       description: post.metadata.description,
       author: post.metadata.author,
       editor: post.metadata.editor,
-      place: post.metadata.place,
+      place: markdown.toHTML(post.metadata.place),
       labels: post.tags,
       audio: post.audio,
       date: post.published_at,

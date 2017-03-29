@@ -5,6 +5,7 @@ var coverPresenter = require('lib/services/publisher/presenter/cover');
 var optionsPresenter = require('lib/services/publisher/presenter/options');
 var factory = require('test/factories/tabloid-news-attributes').tabloid;
 var metadataFactory = require('test/factories/tabloid-news-attributes').metadata;
+var markdown = require('markdown').markdown;
 
 describe('lib/services/publisher/presenter/tabloidNews.js', () => {
   given('metadata', () => metadataFactory.build({
@@ -36,7 +37,7 @@ describe('lib/services/publisher/presenter/tabloidNews.js', () => {
       description: tabloidNews.metadata.description,
       author: tabloidNews.metadata.author,
       editor: tabloidNews.metadata.editor,
-      place: tabloidNews.metadata.place,
+      place: markdown.toHTML(tabloidNews.metadata.place),
       region: tabloidNews.region,
       issuu: tabloidNews.issuu,
       edition: tabloidNews.edition,
