@@ -529,6 +529,29 @@ describe('news', () => {
         done(err);
       });
     });
+
+    context('Mês fora de fevereiro', () => {
+
+      given('year', () => 2017);
+      given('month', () => 3);
+      
+      given('published_at1', () => new Date(year, month, 30));
+      
+      given('news1', () => new News(newsFactory.build({ published_at: published_at1 })));
+      
+      beforeEach((done) => { news1.save(done); });
+
+      it('Tentativa com outro mês', (done) => {
+        subject((err, list) => {
+          expect(list[0].metadata.title).to.equal(news1.metadata.title);
+          expect(list.length).to.equal(1);
+
+          done(err);
+
+        });
+      });
+
+    });
   });
 
   describe('.byLayouts', () => {
