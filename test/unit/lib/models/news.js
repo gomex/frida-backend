@@ -493,16 +493,16 @@ describe('news', () => {
     given('wrongMonth1', () => 0);
     given('wrongMonth2', () => 2);
 
-    given('published_at1', () => new Date(year, month, 1));
-    given('published_at2', () => new Date(year, month, 15));
-    given('published_at3', () => new Date(year, month, 28));
+    given('publishedAt1', () => new Date(year, month, 1));
+    given('publishedAt2', () => new Date(year, month, 15));
+    given('publishedAt3', () => new Date(year, month, 28));
 
     given('newsWithWrongMonth1', () => new Date(year, wrongMonth1, 31));
     given('newsWithWrongMonth2', () => new Date(year, wrongMonth2, 1));
 
-    given('news1', () => new News(newsFactory.build({ published_at: published_at1 })));
-    given('news2', () => new News(newsFactory.build({ published_at: published_at2 })));
-    given('news3', () => new News(newsFactory.build({ published_at: published_at3 })));
+    given('news1', () => new News(newsFactory.build({ published_at: publishedAt1 })));
+    given('news2', () => new News(newsFactory.build({ published_at: publishedAt2 })));
+    given('news3', () => new News(newsFactory.build({ published_at: publishedAt3 })));
 
     given('news1Wrong', () => new News(newsFactory.build({ published_at: newsWithWrongMonth1 })));
     given('news2Wrong', () => new News(newsFactory.build({ published_at: newsWithWrongMonth2 })));
@@ -530,24 +530,23 @@ describe('news', () => {
       });
     });
 
-    context('Mês fora de fevereiro', () => {
+    context('Month with different numbers of days', () => {
 
       given('year', () => 2017);
       given('month', () => 3);
       
-      given('published_at1', () => new Date(year, month, 30));
+      given('publishedAt1', () => new Date(year, month, 30));
       
-      given('news1', () => new News(newsFactory.build({ published_at: published_at1 })));
+      given('news1', () => new News(newsFactory.build({ published_at: publishedAt1 })));
       
       beforeEach((done) => { news1.save(done); });
 
-      it('Tentativa com outro mês', (done) => {
+      it('Month with 28 days', (done) => {
         subject((err, list) => {
           expect(list[0].metadata.title).to.equal(news1.metadata.title);
           expect(list.length).to.equal(1);
 
           done(err);
-
         });
       });
 
