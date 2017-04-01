@@ -87,6 +87,7 @@ describe('lib/services/publisher/presenter/special.js', () => {
       layout: special.metadata.layout,
       path: special.metadata.url,
       hat: 'especial',
+      url: special.metadata.url,
       author: 'Redação Brasil de Fato',
       title: special.metadata.title,
       published_at: special.published_at,
