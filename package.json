@@ -37,7 +37,7 @@
   },
   "scripts": {
     "start": "node ./index.js",
-    "test": "export NODE_TLS_REJECT_UNAUTHORIZED='0'; CERT_FILE_PATH=./test/ssl/ssl.crt KEY_FILE_PATH=./test/ssl/ssl.key HEXO_SOURCE_PATH=/tmp/site_source HEXO_SITE_DEST=/tmp/public ./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly --  test/ --recursive -R spec --timeout 30000",
+    "test": "export NODE_TLS_REJECT_UNAUTHORIZED='0'; export DATABASE_URL=mongodb://localhost/bdftest; CERT_FILE_PATH=./test/ssl/ssl.crt KEY_FILE_PATH=./test/ssl/ssl.key HEXO_SOURCE_PATH=/tmp/site_source HEXO_SITE_DEST=/tmp/public ./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly --  test/ --recursive -R spec --timeout 30000",
     "posttest": "npm run eslint",
     "debug": "node --debug-brk ./index.js",
     "eslint": "eslint .",
