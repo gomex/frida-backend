@@ -10,6 +10,7 @@ var postPublisher = require('lib/services/publisher/presenter/post');
 var radioAgenciaPresenter = require('lib/services/publisher/presenter/radio-agencia');
 var bdfPresenter = require('lib/services/publisher/presenter/bdf');
 var presenter = require('lib/services/publisher/presenter');
+var archivePresenter = require('lib/services/publisher/presenter/archive');
 var News = require('lib/models/news');
 var Home = require('lib/models/home');
 var hexo = require('lib/services/hexo');
@@ -180,11 +181,30 @@ describe('hexo', () => {
 
   describe('publishArchive', () => {
     var subject = (callback) =>  hexo.publishArchive(list, callback);
+
+    
+    given('list', () => new result({
+      list : 'list',
+      year : 'year',
+      month: 'month'
+    }));
+
+    beforeEach(() => {
+      sandbox.stub(archivePresenter, 'getData');
+    });
     
     given('list', () => postFactory.buildList(5));
 
     it('succeeds', (done) => {
       subject(done);
+    });
+
+    it('publishArchive with presenter ', (done) => {
+      subject((err) => {
+        expect(archivePresenter.getData).to.have.been.calledWith(list);
+        
+        done(err);  
+      });
     });
   });    
 });
