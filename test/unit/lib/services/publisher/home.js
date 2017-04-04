@@ -109,14 +109,11 @@ describe('lib/services/publisher/home', () => {
         });
       };
 
-      behavesAsService('service_01', 'hojenahistoria');
-      behavesAsService('service_02', 'alimentoesaude');
-      behavesAsService('service_03', 'nossosdireitos');
-      behavesAsService('service_04', 'fatoscuriosos');
-      behavesAsService('service_05', 'mosaicocultural');
-      behavesAsService('service_06', 'conectados');
-      behavesAsService('service_07', 'momentoagroecologico');
-      behavesAsService('service_08', 'falaai');
+      behavesAsService('service_01', 'alimentoesaude');
+      behavesAsService('service_02', 'mosaicocultural');
+      behavesAsService('service_03', 'conectados');
+      behavesAsService('service_04', 'momentoagroecologico');
+      behavesAsService('service_05', 'falaai');
       behavesAsService('radio_01', 'programasp');
       behavesAsService('radio_02', 'programape');
     });

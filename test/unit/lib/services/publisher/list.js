@@ -44,20 +44,8 @@ describe('lib/services/publisher/list', () => {
         });
       };
 
-      describe('hoje na historia', () => {
-        behaveAsService('hojenahistoria', 'hoje-na-historia');
-      });
-
       describe('alimento e saude', () => {
         behaveAsService('alimentoesaude', 'alimento-e-saude');
-      });
-
-      describe('nossos direitos', () => {
-        behaveAsService('nossosdireitos', 'nossos-direitos');
-      });
-
-      describe('fatos curiosos', () => {
-        behaveAsService('fatoscuriosos', 'fatos-curiosos');
       });
 
       describe('mosaico cultural', () => {
