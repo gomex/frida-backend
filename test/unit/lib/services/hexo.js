@@ -177,4 +177,14 @@ describe('hexo', () => {
       });
     });
   });
+
+  describe('publishArchive', () => {
+    var subject = (callback) =>  hexo.publishArchive(list, callback);
+    
+    given('list', () => postFactory.buildList(5));
+
+    it('succeeds', (done) => {
+      subject(done);
+    });
+  });    
 });
