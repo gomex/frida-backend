@@ -29,13 +29,20 @@ describe('Chronological file', () => {
     });
   });
 
-  it('publishes with Date', (done) => {
+  it('publishes with year', (done) => {
     subject((err) => {
       var args = hexo.publishArchive.args[0];
       expect(args[0].year).equal(post.published_at.getFullYear());
+      
+      done(err);    	
+    });
+  });
+  it('publishes with Month', (done) => {
+    subject((err) => {
+      var args = hexo.publishArchive.args[0];
       expect(args[0].month).equal(post.published_at.getMonth());
 
-      done(err);    	
+      done(err);
     });
   });
 });
