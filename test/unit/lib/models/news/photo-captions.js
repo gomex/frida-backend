@@ -48,7 +48,7 @@ describe('photoCaptions', () => {
 
     given('options', () => ({
       limit: 3,
-      sort: '-created_at'
+      sort: '-published_at'
     }));
 
     given('news', () => new News(factory.build()));
