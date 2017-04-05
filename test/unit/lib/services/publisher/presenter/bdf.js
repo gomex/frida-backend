@@ -34,6 +34,8 @@ describe('lib/services/publisher/presenter/bdf.js', () => {
       column_02: new News(columnFactory.build()),
       column_03: new News(columnFactory.build()),
 
+      article: new News(postFactory.build()),
+
       photo_caption: new News(photoCaptionFactory.build()),
 
       spotlight_01: new News(spotlightFactory.build()),
@@ -99,6 +101,8 @@ describe('lib/services/publisher/presenter/bdf.js', () => {
     behaviorLikeAListDataField('column_01', 'column_01', optional);
     behaviorLikeAListDataField('column_02', 'column_02', optional);
     behaviorLikeAListDataField('column_03', 'column_03', optional);
+
+    behaviorLikeAListDataField('article', 'article', optional);
 
     behaviorLikeAListDataField('photo_caption', 'photo_caption');
 
