@@ -6,7 +6,7 @@ var presenter = require('lib/services/publisher/presenter/home');
 var presenters = require('lib/services/publisher/presenter');
 var postFactory = require('test/factories/post-attributes').post;
 
-describe('lib/services/publisher/presenter/home.js', () => {
+describe('lib/services/publisher/presenter/home', () => {
   describe('getData', () => {
     subj('getData', () => presenter.getData(home));
 
