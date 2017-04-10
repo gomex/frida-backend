@@ -1,0 +1,9 @@
+dependencies:
+  override:
+    - npm cache clean
+    - npm install
+
+test:
+  override:
+    - npm test
+    - npm run coverage || true
