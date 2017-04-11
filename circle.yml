@@ -8,7 +8,8 @@ machine:
 
 dependencies:
   pre:
-    - openssl aes-256-ecb -d -in frida-cipher -k $KEY >> frida-plain
+    - echo $chave_frida > frida-plain
+    - chmod 400 frida-plain
   override:
     - npm cache clean
     - npm install
