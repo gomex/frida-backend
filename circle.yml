@@ -15,3 +15,16 @@ test:
   override:
     - npm test
     - npm run coverage || true
+
+deployment:
+  production:
+    tag: production
+    commands:
+      - ./deploy_prod.sh
+  staging:
+    branch: master
+    commands:
+      - openssl aes-256-cbc -d -in secret-test-cipher -out secret-test-plain -k $KEY
+      - ./config_env.sh
+      - scp -i secret-test-plain .env frida@cpmidias-teste.brasildefato.com.br:/home/frida/components/frida-backend/
+      - ssh -i secret-test-plain frida@cpmidias-teste.brasildefato.com.br -C "/home/frida/components/frida-scripts/deploy-frida-backend.sh $CIRCLE_SHA1"
