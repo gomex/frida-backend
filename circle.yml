@@ -1,4 +1,6 @@
 machine:
+  node:
+    version: 4.4.4
   environment:
     DATABASE_URL: "mongodb://localhost:27017:bdf_test"
     HEXO_SOURCE_PATH: "/tmp/source/"
@@ -9,9 +11,15 @@ machine:
 dependencies:
   pre:
     - openssl aes-256-cbc -d -in frida-cipher -out frida-plain -k $KEY
+    - chmod 400 frida-plain
   override:
     - npm cache clean
     - npm install
+
+test:
+  override:
+    - npm test
+    - npm run coverage || true
 
 deployment:
   production:
