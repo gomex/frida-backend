@@ -5,8 +5,6 @@ machine:
     CERT_FILE_PATH: "./test/ssl/ssl.crt"
     KEY_FILE_PATH: "./test/ssl/ssl.key"
     HEXO_DEST_PATH: "/tmp/dest/"
-  pre:
-    - tar -jxf phantomjs.tar.bz2
 
 dependencies:
   override:
