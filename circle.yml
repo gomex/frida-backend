@@ -7,8 +7,6 @@ machine:
     HEXO_DEST_PATH: "/tmp/dest/"
 
 dependencies:
-  pre:
-    - openssl aes-256-cbc -d -in frida-cipher -out frida-plain -k $KEY
   override:
     - npm cache clean
     - npm install
@@ -26,6 +24,7 @@ deployment:
   staging:
     branch: master
     commands:
+      - openssl aes-256-cbc -d -in frida-cipher -out frida-plain -k $KEY
       - ./config_env.sh
       - scp -i frida-plain .env frida@cpmidias-teste.brasildefato.com.br:/home/frida/components/frida-backend/
       - ssh -i frida-plain frida@cpmidias-teste.brasildefato.com.br -C "/home/frida/components/frida-scripts/deploy-frida-backend.sh $CIRCLE_SHA1"
