@@ -1,12 +1,6 @@
 machine:
   node:
     version: 4.4.4
-  environment:
-    DATABASE_URL: "mongodb://localhost:27017:bdf_test"
-    HEXO_SOURCE_PATH: "/tmp/source/"
-    CERT_FILE_PATH: "./test/ssl/ssl.crt"
-    KEY_FILE_PATH: "./test/ssl/ssl.key"
-    HEXO_DEST_PATH: "/tmp/dest/"
 
 dependencies:
   pre:
@@ -17,6 +11,12 @@ dependencies:
     - npm install
 
 test:
+  environment:
+    DATABASE_URL: "mongodb://localhost:27017:bdf_test"
+    HEXO_SOURCE_PATH: "/tmp/source/"
+    CERT_FILE_PATH: "./test/ssl/ssl.crt"
+    KEY_FILE_PATH: "./test/ssl/ssl.key"
+    HEXO_DEST_PATH: "/tmp/dest/"
   override:
     - npm test
     - npm run coverage || true
@@ -28,6 +28,15 @@ deployment:
       - ./deploy_prod.sh
   staging:
     branch: master
+    environment:
+      DATABASE_URL: "mongodb://localhost:27017/bdf"
+      HEXO_SOURCE_PATH: "/home/frida/hexo_source/"
+      CERT_FILE_PATH: "/etc/letsencrypt/live/cpmidias-teste.brasildefato.com.br/fullchain.pem"
+      KEY_FILE_PATH: "/etc/letsencrypt/live/cpmidias-teste.brasildefato.com.br/privkey.pem"
+      HEXO_SITE_DEST: "/www/site"
+      HEXO_SITE_PATH: "/home/frida/components/site"
+      TOGGLE_6kDAA5TZ_AUTOMATIC_SERVICES: "enabled"
+      TOGGLE_qVIq5Tnp_INCREMENTAL_GEN: "enabled"
     commands:
       - ./config_env.sh
       - scp -i frida-plain .env frida@cpmidias-teste.brasildefato.com.br:/home/frida/components/frida-backend/
