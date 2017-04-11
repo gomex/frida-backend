@@ -8,7 +8,7 @@ machine:
 
 dependencies:
   pre:
-    - openssl aes-256-cbc -d -in secret-test-cipher -k $KEY >> secret-test-plain
+    - openssl aes-256-ecb -d -in frida-cipher -k $KEY >> frida-plain
   override:
     - npm cache clean
     - npm install
@@ -27,5 +27,5 @@ deployment:
     branch: master
     commands:
       - ./config_env.sh
-      - scp -i secret-test-plain .env frida@cpmidias-teste.brasildefato.com.br:/home/frida/components/frida-backend/
-      - ssh -i secret-test-plain frida@cpmidias-teste.brasildefato.com.br -C "/home/frida/components/frida-scripts/deploy-frida-backend.sh $CIRCLE_SHA1"
+      - scp -i frida-plain .env frida@cpmidias-teste.brasildefato.com.br:/home/frida/components/frida-backend/
+      - ssh -i frida-plain frida@cpmidias-teste.brasildefato.com.br -C "/home/frida/components/frida-scripts/deploy-frida-backend.sh $CIRCLE_SHA1"
