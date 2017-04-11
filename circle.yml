@@ -13,11 +13,6 @@ dependencies:
     - npm cache clean
     - npm install
 
-test:
-  override:
-    - npm test
-    - npm run coverage || true
-
 deployment:
   production:
     tag: production
