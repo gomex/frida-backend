@@ -26,9 +26,22 @@ deployment:
   production:
     tag: production
     commands:
-      - ./deploy_prod.sh
+      - ./config_env.sh:
+          environment:
+            DATABASE_URL: "mongodb://localhost:27017/bdf"
+            HEXO_SOURCE_PATH: "/home/frida/hexo_source/"
+            CERT_FILE_PATH: "/etc/letsencrypt/live/cpmidias-teste.brasildefato.com.br/fullchain.pem"
+            KEY_FILE_PATH: "/etc/letsencrypt/live/cpmidias-teste.brasildefato.com.br/privkey.pem"
+            HEXO_SITE_DEST: "/www/site"
+            HEXO_SITE_PATH: "/home/frida/components/site"
+            TOGGLE_6kDAA5TZ_AUTOMATIC_SERVICES: "enabled"
+            TOGGLE_qVIq5Tnp_INCREMENTAL_GEN: "enabled"
+      - ssh -i frida-plain frida@cpmidias-teste.brasildefato.com.br -C "echo 'prod' > /home/frida/prod"
   staging:
     branch: master
+    tag:
+      ignore:
+        - production
     commands:
       - ./config_env.sh:
           environment:
