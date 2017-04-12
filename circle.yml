@@ -24,7 +24,7 @@ test:
 
 deployment:
   production:
-    tag: production
+    tag: /prod-.*/
     commands:
       - ./config_env.sh:
           environment:
@@ -41,7 +41,7 @@ deployment:
     branch: master
     tag:
       ignore:
-        - production
+        - /prod-.*/
     commands:
       - ./config_env.sh:
           environment:
