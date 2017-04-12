@@ -36,7 +36,7 @@ deployment:
             HEXO_SITE_PATH: "/home/frida/components/site"
             TOGGLE_6kDAA5TZ_AUTOMATIC_SERVICES: "enabled"
             TOGGLE_qVIq5Tnp_INCREMENTAL_GEN: "enabled"
-      - ssh -i frida-plain frida@cpmidias-teste.brasildefato.com.br -C "echo 'prod' > /home/frida/prod"
+      - ssh -i frida-plain frida@cpmidias-teste.brasildefato.com.br -C "echo 'production' > /home/frida/prod"
   staging:
     branch: master
     tag:
