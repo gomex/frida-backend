@@ -8,7 +8,6 @@ dependencies:
     - openssl aes-256-cbc -d -in frida-cipher -out frida-plain -k $KEY
     - chmod 400 frida-plain
   override:
-    - npm cache clean
     - npm install
 
 test:
